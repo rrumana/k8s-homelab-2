@@ -20,17 +20,17 @@ spec:
       helm:
         releaseName: haproxy-ingress
         valueFiles:
-          - $values/platform/networking/haproxy-ingress/values.yaml
+          - $values/cluster/platform/ingress/haproxy/values.yaml
     
     # Source 2: Values from your Git repo
-    - repoURL: https://github.com/rrumana/k8s-homelab
+    - repoURL: https://github.com/rrumana/k8s-homelab-2.git
       targetRevision: main
       ref: values
     
     # Source 3: IngressClass definitions from your Git repo
-    - repoURL: https://github.com/rrumana/k8s-homelab
+    - repoURL: https://github.com/rrumana/k8s-homelab-2.git
       targetRevision: main
-      path: platform/networking/haproxy-ingress/ingress-classes
+      path: cluster/platform/ingress/haproxy/ingress-classes
   
   destination:
     server: https://kubernetes.default.svc

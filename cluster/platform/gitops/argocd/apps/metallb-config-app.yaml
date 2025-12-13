@@ -10,9 +10,9 @@ spec:
   project: default
   
   source:
-    repoURL: https://github.com/rrumana/k8s-homelab
+    repoURL: https://github.com/rrumana/k8s-homelab-2.git
     targetRevision: main
-    path: platform/networking/metallb/config
+    path: cluster/platform/base/networking/metallb/config
   
   destination:
     server: https://kubernetes.default.svc

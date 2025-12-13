@@ -19,9 +19,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/rrumana/k8s-homelab
+    repoURL: https://github.com/rrumana/k8s-homelab-2.git
     targetRevision: main
-    path: platform/networking/cert-manager
+    path: cluster/platform/base/networking/cert-manager
     directory:
       recurse: true
   destination:

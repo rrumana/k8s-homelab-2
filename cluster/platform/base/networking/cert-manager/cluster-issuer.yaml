@@ -9,9 +9,11 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-staging
     solvers:
-    - http01:
-        ingress:
-          class: haproxy-restricted
+    - dns01:
+        cloudflare:
+          apiTokenSecretRef:
+            name: cloudflare-api-token-secret
+            key: api-token
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
@@ -24,17 +26,8 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-prod
     solvers:
-    - selector:
-        matchLabels:
-          use-public-solver: "true"
-      http01:
-        ingress:
-          class: haproxy-public
-    - selector:
-        matchLabels:
-          use-restricted-solver: "true"
-      http01:
-        ingress:
-          class: haproxy-restricted
-    - http01:
-        ingress: {}
+    - dns01:
+        cloudflare:
+          apiTokenSecretRef:
+            name: cloudflare-api-token-secret
+            key: api-token

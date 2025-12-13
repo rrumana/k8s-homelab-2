@@ -9,14 +9,17 @@ metadata:
 spec:
   project: default
   
-  source:
-    repoURL: https://metallb.github.io/metallb
-    targetRevision: "0.15.2"
-    chart: metallb
-    helm:
-      releaseName: metallb
-      valueFiles:
-        - https://raw.githubusercontent.com/rrumana/k8s-homelab/main/platform/networking/metallb/values.yaml
+  sources:
+    - repoURL: https://metallb.github.io/metallb
+      targetRevision: "0.15.3"
+      chart: metallb
+      helm:
+        releaseName: metallb
+        valueFiles:
+          - $values/cluster/platform/base/networking/metallb/values.yaml
+    - repoURL: https://github.com/rrumana/k8s-homelab-2.git
+      targetRevision: main
+      ref: values
   
   destination:
     server: https://kubernetes.default.svc

@@ -34,7 +34,7 @@ controller:
       cpu: 500m
       memory: 512Mi
   
-  replicaCount: 3
+  replicaCount: 2
   
   logs:
     enabled: true

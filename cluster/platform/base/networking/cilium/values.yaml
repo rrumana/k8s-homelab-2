@@ -28,9 +28,9 @@ k8sServicePort: 6443
 
 # Replace kube-proxy with eBPF (kube-proxy-free).
 #
-# The Cilium Helm chart (v1.18.4) requires this to be a boolean.
-# "Strict" is a cilium-agent mode/behavior, but it is not accepted here.
-kubeProxyReplacement: true
+# The Cilium Helm chart (v1.18.4) expects this as "true"/"false" (string).
+# "Strict" is not accepted by the chart validation.
+kubeProxyReplacement: "true"
 # Optional: provide a health endpoint compatible with kube-proxy's healthz port.
 kubeProxyReplacementHealthzBindAddr: "0.0.0.0:10256"
 
@@ -47,7 +47,12 @@ ipam:
 # SNAT / masquerade in BPF to avoid iptables.
 bpf:
   masquerade: true
-enableIPv4Masquerade: false
+#
+# Note: BPF masquerade still requires masquerading to be enabled for at least
+# one IP family (IPv4 and/or IPv6). This toggles *whether* to masquerade;
+# `bpf.masquerade` toggles *how* masquerade is implemented.
+enableIPv4Masquerade: true
+enableIPv6Masquerade: false
 enableIPv6: false
 
 # NodePort/HostPort:

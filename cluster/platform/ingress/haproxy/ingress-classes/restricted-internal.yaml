@@ -1,0 +1,10 @@
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: haproxy-restricted
+  labels:
+    app.kubernetes.io/name: haproxy-ingress
+    app.kubernetes.io/component: ingress-class
+    security.rcrumana.xyz/access-level: "restricted"
+spec:
+  controller: haproxy-ingress.github.io/controller

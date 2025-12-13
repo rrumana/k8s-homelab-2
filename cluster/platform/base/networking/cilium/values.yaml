@@ -1,0 +1,98 @@
+##
+# Cilium Helm values for k8s-homelab-2
+#
+# Assumptions from repo/bootstrap:
+# - Pod CIDR:     10.44.0.0/16
+# - Service CIDR: 10.45.0.0/16
+# - Control plane endpoint: k8s-api.lab.home:6443 (must resolve on all nodes)
+#
+# Goals:
+# - eBPF datapath (optionally replace kube-proxy later)
+# - Native routing (no overlay) on flat L2 LAN
+# - Hubble enabled for network observability
+# - Prometheus metrics enabled for kube-prometheus-stack
+# - No Cilium ingress/gateway; HAProxy Gateway + MetalLB handle north/south
+##
+
+cluster:
+  name: k8s-homelab
+  id: 1
+
+# Ensure Cilium can reach the API server during bootstrap, even before
+# kube-dns / Service routing is fully functional.
+#
+# Prefer a stable control-plane endpoint (VIP/DNS) that resolves on all nodes.
+# For the current single-node bootstrap, the node InternalIP also works.
+k8sServiceHost: 192.168.1.13
+k8sServicePort: 6443
+
+# Replace kube-proxy with eBPF (kube-proxy-free).
+kubeProxyReplacement: true
+# Optional: provide a health endpoint compatible with kube-proxy's healthz port.
+kubeProxyReplacementHealthzBindAddr: "0.0.0.0:10256"
+
+# Use native routing on the LAN (no VXLAN/Geneve overlay).
+routingMode: native
+autoDirectNodeRoutes: true
+ipv4NativeRoutingCIDR: 10.44.0.0/16
+
+# IPAM: let Kubernetes allocate per-node PodCIDRs (kubeadm sets this up via
+# kube-controller-manager flags).
+ipam:
+  mode: kubernetes
+
+# SNAT / masquerade in BPF to avoid iptables.
+bpf:
+  masquerade: true
+enableIPv4Masquerade: true
+enableIPv6: false
+
+# NodePort/HostPort:
+# - Required for kube-proxy replacement + BPF masquerade.
+nodePort:
+  enabled: true
+
+# Cilium operator (IPAM, GC, etc.). Start with 1; bump to 2+ once multiple nodes exist.
+operator:
+  replicas: 2
+  tolerations:
+    - operator: Exists
+  prometheus:
+    enabled: true
+
+# Export Cilium agent metrics for Prometheus.
+prometheus:
+  enabled: true
+
+# Hubble observability.
+hubble:
+  enabled: true
+  relay:
+    enabled: true
+    tolerations:
+      - operator: Exists
+  ui:
+    enabled: true
+    tolerations:
+      - operator: Exists
+  metrics:
+    enabled:
+      - dns
+      - drop
+      - tcp
+      - flow
+      - icmp
+      - port-distribution
+      - httpV2
+
+# Do not enable Cilium's ingress or Gateway API controllers; HAProxy handles this.
+ingressController:
+  enabled: false
+gatewayAPI:
+  enabled: false
+
+# Notes for dual-NIC hosts:
+# - Cilium will pick the interface with the default route.
+# - If that ever becomes wrong, set:
+#   devices:
+#     - <your-primary-lan-iface>

@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: plex
+  name: root
   namespace: argocd
 spec:
-  project: default # TODO: move to media AppProject once defined
+  project: default
   source:
-    repoURL: https://github.com/rrumana/k8s-homelab-2
+    repoURL: https://github.com/rrumana/k8s-homelab-2.git
     targetRevision: main
-    path: cluster/apps/media/plex
+    path: cluster/platform/gitops/argocd
   destination:
     server: https://kubernetes.default.svc
-    namespace: plex
+    namespace: argocd
   syncPolicy:
     automated:
       prune: true

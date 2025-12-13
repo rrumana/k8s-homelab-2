@@ -58,7 +58,7 @@ enableIPv6: false
 # NodePort/HostPort:
 # - Required for kube-proxy replacement + BPF masquerade.
 nodePort:
-  enabled: true
+  enabled: "true"
 
 # Cilium operator (IPAM, GC, etc.). Start with 1; bump to 2+ once multiple nodes exist.
 operator:

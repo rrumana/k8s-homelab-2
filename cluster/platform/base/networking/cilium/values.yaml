@@ -27,11 +27,7 @@ k8sServiceHost: 192.168.1.13
 k8sServicePort: 6443
 
 # Replace kube-proxy with eBPF (kube-proxy-free).
-#
-# The Cilium Helm chart (v1.18.4) expects this as "true"/"false" (string).
-# "Strict" is not accepted by the chart validation.
-kubeProxyReplacement: "true"
-# Optional: provide a health endpoint compatible with kube-proxy's healthz port.
+kubeProxyReplacement: true
 kubeProxyReplacementHealthzBindAddr: "0.0.0.0:10256"
 
 # Use native routing on the LAN (no VXLAN/Geneve overlay).
@@ -44,21 +40,16 @@ ipv4NativeRoutingCIDR: 10.44.0.0/16
 ipam:
   mode: kubernetes
 
-# SNAT / masquerade in BPF to avoid iptables.
-bpf:
-  masquerade: true
-#
-# Note: BPF masquerade still requires masquerading to be enabled for at least
-# one IP family (IPv4 and/or IPv6). This toggles *whether* to masquerade;
-# `bpf.masquerade` toggles *how* masquerade is implemented.
-enableIPv4Masquerade: true
-enableIPv6Masquerade: false
-enableIPv6: false
-
 # NodePort/HostPort:
 # - Required for kube-proxy replacement + BPF masquerade.
 nodePort:
-  enabled: "true"
+  enabled: true
+
+# SNAT / masquerade in BPF to avoid iptables.
+bpf:
+  masquerade: true
+enableIPv4Masquerade: true
+enableIPv6Masquerade: true
 
 # Cilium operator (IPAM, GC, etc.). Start with 1; bump to 2+ once multiple nodes exist.
 operator:

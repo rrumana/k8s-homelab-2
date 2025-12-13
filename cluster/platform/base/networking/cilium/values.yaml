@@ -27,8 +27,10 @@ k8sServiceHost: 192.168.1.13
 k8sServicePort: 6443
 
 # Replace kube-proxy with eBPF (kube-proxy-free).
-# Note: Cilium uses modes for kube-proxy replacement; "strict" fully replaces kube-proxy.
-kubeProxyReplacement: "strict"
+#
+# The Cilium Helm chart (v1.18.4) requires this to be a boolean.
+# "Strict" is a cilium-agent mode/behavior, but it is not accepted here.
+kubeProxyReplacement: true
 # Optional: provide a health endpoint compatible with kube-proxy's healthz port.
 kubeProxyReplacementHealthzBindAddr: "0.0.0.0:10256"
 

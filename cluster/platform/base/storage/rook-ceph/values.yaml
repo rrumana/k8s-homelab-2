@@ -10,6 +10,11 @@ crds:
 
 # Keep CSI enabled so we can validate provisioning as soon as a CephCluster exists.
 csi:
+  # Do not deploy the separate ceph-csi-operator (it installs very large CRDs that
+  # can exceed Kubernetes annotation size limits when applied by some GitOps tools).
+  # Rook can run CSI without it.
+  rookUseCsiOperator: false
+
   enableRbdDriver: true
 
   # Start with RBD only; enable CephFS later if/when you need it.
@@ -18,4 +23,3 @@ csi:
 # This cluster schedules workloads on control-plane nodes today; tolerate all taints.
 tolerations:
   - operator: Exists
-

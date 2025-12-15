@@ -1,6 +1,8 @@
 # Gateway API (HAProxy) in this repo
 
-This repo is moving from **Ingress** resources to **Gateway API** resources for north/south traffic.
+This repo explores **Gateway API** resources for north/south traffic, but HAProxy support is currently limited.
+
+For HAProxy Technologies `kubernetes-ingress`, Gateway API support is currently **TCPRoute-only** (no `HTTPRoute`), so HTTP/HTTPS host-based routing is still done with **Ingress** resources.
 
 ## Key resources (what replaces what)
 
@@ -17,17 +19,9 @@ Why this is nicer than Ingress:
 
 ## What’s checked into Git
 
-### Shared HAProxy Gateway
-
-- `cluster/platform/ingress/haproxy-gateway/gatewayclass.yaml`
-- `cluster/platform/ingress/haproxy-gateway/gateway.yaml`
-- `cluster/platform/ingress/haproxy-gateway/httproute-http-to-https-redirect.yaml`
-
-This defines a shared `Gateway` intended to front `*.k8s.rcrumana.xyz`.
-
 ### Wildcard TLS via cert-manager (DNS-01)
 
-- `cluster/platform/ingress/haproxy-gateway/certificate-wildcard-k8s-rcrumana-xyz.yaml`
+- `cluster/platform/base/networking/cert-manager/certificates/wildcard-k8s-rcrumana-xyz.yaml`
 
 This requests:
 - `k8s.rcrumana.xyz`
@@ -35,14 +29,11 @@ This requests:
 
 via the existing `ClusterIssuer/letsencrypt-prod` (Cloudflare DNS-01).
 
-### Example: ArgoCD route
+### Example: ArgoCD exposure (Ingress)
 
-- `cluster/apps/shared/gateway/routes/argocd.yaml`
-
-Routes `argocd.k8s.rcrumana.xyz` to `Service/argocd-server` and attaches to the shared `Gateway`.
+- `cluster/apps/shared/ingress/argocd.yaml`
 
 ## Notes / prerequisites
 
 - **Gateway API CRDs must exist** in the cluster (`GatewayClass`, `Gateway`, `HTTPRoute`, etc).
-- Your HAProxy controller must actually implement Gateway API and use the `GatewayClass.spec.controllerName` you configured.
-- For DNS: create a wildcard record in Cloudflare for `*.k8s.rcrumana.xyz` pointing at the Gateway’s `LoadBalancer` IP (and pin that Service to a stable MetalLB IP if desired).
+- For DNS: create a wildcard record in Cloudflare for `*.k8s.rcrumana.xyz` pointing at the HAProxy `LoadBalancer` IP (and pin that Service to a stable MetalLB IP if desired).

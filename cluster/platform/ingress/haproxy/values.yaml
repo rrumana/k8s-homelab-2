@@ -10,6 +10,14 @@ controller:
     enabled: true
     gatewayControllerName: haproxy.org/gateway-controller
 
+  # Default TLS cert used for SSL offloading when an Ingress does not specify `spec.tls`.
+  # This lets us keep a single wildcard cert in `ingress-haproxy` and still serve HTTPS for
+  # host-based Ingresses in other namespaces.
+  defaultTLSSecret:
+    enabled: true
+    secretNamespace: ingress-haproxy
+    secret: wildcard-k8s-rcrumana-xyz-tls
+
   service:
     type: LoadBalancer
     annotations:

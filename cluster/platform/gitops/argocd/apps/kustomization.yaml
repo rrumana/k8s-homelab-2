@@ -2,13 +2,13 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - gateway-api-crds-app.yaml
+  - gateway-api-app.yaml
   - cert-manager-app.yaml
   - cert-manager-extras-app.yaml
   - metallb-app.yaml
   - metallb-config-app.yaml
   - haproxy-app.yaml
-  - haproxy-gateway-resources-app.yaml
+  - haproxy-gateway-app.yaml
 
 commonLabels:
   app.kubernetes.io/managed-by: argocd

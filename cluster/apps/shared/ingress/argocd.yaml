@@ -5,11 +5,14 @@ metadata:
   namespace: argocd
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    # ArgoCD serves its own TLS; HAProxy re-encrypts to the backend.
     haproxy-ingress.github.io/whitelist-source-range: "192.168.0.0/16,172.16.0.0/12,10.0.0.0/8"
     haproxy-ingress.github.io/server-protocol: "h2"
     haproxy-ingress.github.io/secure-backends: "true"
     haproxy-ingress.github.io/backend-server-options: "ssl verify none"
+    # Prevent https→https redirect loops by making the original scheme explicit to ArgoCD.
+    haproxy-ingress.github.io/config-frontend: |
+      http-request set-header X-Forwarded-Proto https
+      http-request set-header X-Forwarded-Port 443
 spec:
   ingressClassName: haproxy-restricted
   tls:

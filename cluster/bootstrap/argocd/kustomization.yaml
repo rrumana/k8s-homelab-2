@@ -7,6 +7,12 @@ resources:
   - namespace.yaml
   - https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
-patchesStrategicMerge:
-  - patch-argocd-cm-url.yaml
-  - patch-argocd-cmd-params-insecure.yaml
+patches:
+  - path: patch-argocd-cm-url.yaml
+    target:
+      kind: ConfigMap
+      name: argocd-cm
+  - path: patch-argocd-cmd-params-insecure.yaml
+    target:
+      kind: ConfigMap
+      name: argocd-cmd-params-cm

@@ -1,0 +1,27 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: public
+  namespace: ingress-haproxy
+spec:
+  gatewayClassName: haproxy
+  listeners:
+    - name: http
+      port: 80
+      protocol: HTTP
+      hostname: "*.k8s.rcrumana.xyz"
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: https
+      port: 443
+      protocol: HTTPS
+      hostname: "*.k8s.rcrumana.xyz"
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: wildcard-k8s-rcrumana-xyz-tls
+      allowedRoutes:
+        namespaces:
+          from: All

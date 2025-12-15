@@ -1,0 +1,8 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: haproxy
+spec:
+  # For the existing `haproxy-ingress` controller, this usually matches the IngressClass controller.
+  # If you switch controllers (e.g. HAProxy Technologies kubernetes-ingress), update this value.
+  controllerName: haproxy-ingress.github.io/controller

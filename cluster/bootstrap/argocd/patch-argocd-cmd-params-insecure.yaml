@@ -4,4 +4,7 @@ metadata:
   name: argocd-cmd-params-cm
   namespace: argocd
 data:
-  server.insecure: "true"
+  # Serve HTTPS on the argocd-server Pod and let HAProxy re-encrypt to it.
+  # (If you want TLS terminated only at the ingress, set this to "true" and
+  # ensure the ingress sets X-Forwarded-Proto correctly to avoid redirect loops.)
+  server.insecure: "false"

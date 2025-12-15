@@ -1,0 +1,35 @@
+# platform/gitops/argocd/apps/rook-ceph-operator-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rook-ceph-operator
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  sources:
+    - repoURL: https://charts.rook.io/release
+      targetRevision: "v1.18.8"
+      chart: rook-ceph
+      helm:
+        releaseName: rook-ceph
+        valueFiles:
+          - $values/cluster/platform/base/storage/rook-ceph/values.yaml
+
+    - repoURL: https://github.com/rrumana/k8s-homelab-2.git
+      targetRevision: main
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: rook-ceph
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+

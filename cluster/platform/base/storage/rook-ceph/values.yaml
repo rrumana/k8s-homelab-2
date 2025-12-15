@@ -1,0 +1,21 @@
+##
+# Rook/Ceph operator Helm values (safe to apply before creating any CephCluster).
+#
+# This installs the Rook operator and CSI components only.
+# It does NOT consume any disks until you apply a CephCluster manifest.
+##
+
+crds:
+  enabled: true
+
+# Keep CSI enabled so we can validate provisioning as soon as a CephCluster exists.
+csi:
+  enableRbdDriver: true
+
+  # Start with RBD only; enable CephFS later if/when you need it.
+  enableCephfsDriver: false
+
+# This cluster schedules workloads on control-plane nodes today; tolerate all taints.
+tolerations:
+  - operator: Exists
+

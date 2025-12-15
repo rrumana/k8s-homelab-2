@@ -10,9 +10,6 @@ controller:
     enabled: true
     gatewayControllerName: haproxy.org/gateway-controller
 
-  # Default TLS cert used for SSL offloading when an Ingress does not specify `spec.tls`.
-  # This lets us keep a single wildcard cert in `ingress-haproxy` and still serve HTTPS for
-  # host-based Ingresses in other namespaces.
   defaultTLSSecret:
     enabled: true
     secretNamespace: ingress-haproxy
@@ -22,10 +19,17 @@ controller:
     type: LoadBalancer
     annotations:
       metallb.universe.tf/address-pool: default-pool
-    # Keep a stable MetalLB IP for split-DNS and Cloudflare records.
-    # Note: switching charts changes the Service name; you may need to delete the
-    # existing `Service/ingress-haproxy/haproxy-ingress` first to free this IP.
     loadBalancerIP: 192.168.1.230
+
+  config:
+    ssl-redirect: "true"
+    default-ssl-certificate: "ingress-haproxy/wildcard-k8s-rcrumana-xyz-tls"
+    ssl-options: "no-sslv3 no-tlsv10 no-tlsv11"
+    ssl-ciphers: "ECDHE+AESGCM:ECDHE+AES256:ECDHE+AES128:!DHE:!RSA:!AES128:!RC4:!DES:!3DES:!MD5:!DSS"
+    # Enable SNI debugging
+    syslog-endpoint: "stdout"
+    syslog-format: "raw"
+    syslog-tag: "haproxy"
 
   affinity:
     podAntiAffinity:

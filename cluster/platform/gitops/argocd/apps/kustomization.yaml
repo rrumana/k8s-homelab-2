@@ -10,6 +10,7 @@ resources:
   - haproxy-app.yaml
   - shared-ingress-app.yaml
   - rook-ceph-operator-app.yaml
+  - rook-ceph-temp-cluster-app.yaml
 
 commonLabels:
   app.kubernetes.io/managed-by: argocd

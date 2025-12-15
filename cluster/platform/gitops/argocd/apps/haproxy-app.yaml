@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: haproxy-complete
+  name: haproxy
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io

@@ -1,0 +1,13 @@
+apiVersion: ceph.rook.io/v1
+kind: CephBlockPool
+metadata:
+  name: ceph-block-temp
+  namespace: rook-ceph
+spec:
+  failureDomain: host
+  replicated:
+    # TEMP / DEV ONLY: no redundancy until you have 3 Ceph nodes.
+    size: 1
+    # Allow size=1 in this temporary setup.
+    requireSafeReplicaSize: false
+

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rook-ceph-tools
+  namespace: rook-ceph
+  labels:
+    app: rook-ceph-tools
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rook-ceph-tools
+  template:
+    metadata:
+      labels:
+        app: rook-ceph-tools
+    spec:
+      tolerations:
+        - operator: Exists
+      containers:
+        - name: rook-ceph-tools
+          image: rook/ceph:v1.18.8
+          command: ["/bin/bash", "-c", "sleep infinity"]
+          tty: true
+          stdin: true
+

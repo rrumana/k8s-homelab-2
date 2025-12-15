@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: gateway-api-crds
+  name: gateway-api
   namespace: argocd
   annotations:
     # CRDs must exist before Gateway/HTTPRoute resources can sync.

@@ -6,3 +6,5 @@ resources:
   - gateways.yaml
   - httproutes.yaml
   - referencegrants.yaml
+  - tcproutes.yaml
+  - tlsroutes.yaml

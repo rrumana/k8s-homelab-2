@@ -3,7 +3,9 @@ kind: CustomResourceDefinition
 metadata:
   name: gatewayclasses.gateway.networking.k8s.io
   annotations:
-    api-approved.kubernetes.io: "https://github.com/kubernetes/enhancements/pull/1111"
+    api-approved.kubernetes.io: "https://github.com/kubernetes-sigs/gateway-api/pull/1086"
+    gateway.networking.k8s.io/bundle-version: "v0.5.1"
+    gateway.networking.k8s.io/channel: "experimental"
 spec:
   group: gateway.networking.k8s.io
   names:
@@ -14,6 +16,15 @@ spec:
       - gateway-api
   scope: Cluster
   versions:
+    - name: v1alpha2
+      served: true
+      storage: false
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+      subresources:
+        status: {}
     - name: v1
       served: true
       storage: true

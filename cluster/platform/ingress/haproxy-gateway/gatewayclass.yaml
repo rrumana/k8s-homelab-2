@@ -3,6 +3,5 @@ kind: GatewayClass
 metadata:
   name: haproxy
 spec:
-  # For the existing `haproxy-ingress` controller, this usually matches the IngressClass controller.
-  # If you switch controllers (e.g. HAProxy Technologies kubernetes-ingress), update this value.
-  controllerName: haproxy-ingress.github.io/controller
+  # Matches HAProxy Technologies Kubernetes Ingress Controller when Gateway API support is enabled.
+  controllerName: haproxy.org/gateway-controller

@@ -14,9 +14,9 @@ spec:
   # Multiple sources allow us to combine Helm and raw manifests
   sources:
     # Source 1: HAProxy Helm Chart
-    - repoURL: https://haproxy-ingress.github.io/charts
-      targetRevision: "0.15.0"
-      chart: haproxy-ingress
+    - repoURL: https://haproxytech.github.io/helm-charts
+      targetRevision: "1.46.1"
+      chart: kubernetes-ingress
       helm:
         releaseName: haproxy-ingress
         valueFiles:

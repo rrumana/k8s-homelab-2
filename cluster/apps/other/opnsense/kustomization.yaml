@@ -5,9 +5,8 @@ namespace: other
 
 resources:
   - service.yaml
-  - endpoints.yaml
+  - endpointslice.yaml
 
 commonLabels:
   app.kubernetes.io/name: opnsense
   app.kubernetes.io/managed-by: argocd
-

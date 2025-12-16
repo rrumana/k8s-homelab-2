@@ -4,8 +4,8 @@ kind: Kustomization
 namespace: other
 
 resources:
+  - deployment.yaml
   - service.yaml
-  - endpointslice.yaml
 
 commonLabels:
   app.kubernetes.io/name: opnsense

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: truenas-proxy
+  labels:
+    app: truenas-proxy
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: truenas-proxy
+  template:
+    metadata:
+      labels:
+        app: truenas-proxy
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: truenas-proxy
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: tcp-proxy
+          image: alpine/socat:1.8.0.3
+          imagePullPolicy: IfNotPresent
+          args:
+            - -dd
+            - TCP-LISTEN:8443,fork,reuseaddr
+            - TCP:192.168.1.10:443
+          ports:
+            - name: https-proxy
+              containerPort: 8443
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: https-proxy
+            initialDelaySeconds: 2
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: https-proxy
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+

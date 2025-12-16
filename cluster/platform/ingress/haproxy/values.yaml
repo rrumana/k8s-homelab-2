@@ -20,6 +20,7 @@ controller:
     annotations:
       metallb.universe.tf/address-pool: default-pool
     loadBalancerIP: 192.168.1.230
+    externalTrafficPolicy: Local
 
   config:
     ssl-redirect: "true"

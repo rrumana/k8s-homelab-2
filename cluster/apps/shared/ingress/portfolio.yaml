@@ -10,7 +10,7 @@ spec:
   tls:
     - hosts:
         - k8s.rcrumana.xyz
-      secretName: portfolio-k8s-rcrumana-xyz-tls
+      secretName: k8s-rcrumana-xyz-tls
   rules:
     - host: k8s.rcrumana.xyz
       http:

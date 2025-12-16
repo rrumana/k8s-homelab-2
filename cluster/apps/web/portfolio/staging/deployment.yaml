@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portfolio-staging
+  labels:
+    app: portfolio-staging
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: portfolio-staging
+  template:
+    metadata:
+      labels:
+        app: portfolio-staging
+    spec:
+      imagePullSecrets:
+        - name: ghcr-creds
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: portfolio-staging
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: portfolio
+          image: ghcr.io/rrumana/portfolio:staging
+          imagePullPolicy: Always
+          env:
+            - name: RUST_LOG
+              value: "info"
+          ports:
+            - name: http
+              containerPort: 8085
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+

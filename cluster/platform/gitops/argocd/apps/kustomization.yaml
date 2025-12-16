@@ -10,6 +10,9 @@ resources:
   - haproxy-app.yaml
   - shared-ingress-app.yaml
   - portfolio-app.yaml
+  - portfolio-staging-app.yaml
+  - opnsense-app.yaml
+  - truenas-app.yaml
   - rook-ceph-operator-app.yaml
   - rook-ceph-temp-cluster-app.yaml
 

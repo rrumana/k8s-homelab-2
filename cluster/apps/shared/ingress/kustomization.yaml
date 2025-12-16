@@ -4,3 +4,6 @@ kind: Kustomization
 resources:
   - argocd.yaml
   - portfolio.yaml
+  - portfolio-staging.yaml
+  - opnsense.yaml
+  - truenas.yaml

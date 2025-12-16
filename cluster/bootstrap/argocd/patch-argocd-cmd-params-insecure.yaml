@@ -3,7 +3,6 @@ kind: ConfigMap
 metadata:
   name: argocd-cmd-params-cm
 data:
-  # Serve HTTPS on the argocd-server Pod and let HAProxy re-encrypt to it.
-  # (If you want TLS terminated only at the ingress, set this to "true" and
-  # ensure the ingress sets X-Forwarded-Proto correctly to avoid redirect loops.)
-  server.insecure: "false"
+  # Terminate TLS at the ingress and serve HTTP from argocd-server.
+  # This avoids redirect loops if the ingress does not set X-Forwarded-Proto.
+  server.insecure: "true"

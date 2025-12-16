@@ -9,6 +9,7 @@ resources:
   - metallb-config-app.yaml
   - haproxy-app.yaml
   - shared-ingress-app.yaml
+  - portfolio-app.yaml
   - rook-ceph-operator-app.yaml
   - rook-ceph-temp-cluster-app.yaml
 

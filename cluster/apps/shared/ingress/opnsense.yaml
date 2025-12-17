@@ -5,6 +5,7 @@ metadata:
   namespace: other
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    haproxy-ingress.github.io/backend-protocol: "h1-ssl"
     haproxy-ingress.github.io/timeout-client: "600s"
     haproxy-ingress.github.io/timeout-server: "600s"
     haproxy-ingress.github.io/whitelist-source-range: "192.168.0.0/16,172.16.0.0/12,10.0.0.0/8"
@@ -25,4 +26,3 @@ spec:
                 name: opnsense-https
                 port:
                   number: 4443
-

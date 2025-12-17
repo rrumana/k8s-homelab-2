@@ -61,6 +61,36 @@ kubectl -n kube-system patch configmap cilium-config --type merge -p '{
 }'
 ```
 
+## 2.1) Linkerd CNI: stop Cilium from overwriting `05-cilium.conflist`
+
+If you use the Linkerd CNI plugin (`linkerd2-cni`), you must prevent Cilium
+from rewriting `/etc/cni/net.d/05-cilium.conflist` after Linkerd patches it.
+
+First, set:
+
+```bash
+kubectl -n kube-system patch configmap cilium-config --type json -p '[
+  {"op":"add","path":"/data/custom-cni-conf","value":"true"}
+]'
+```
+
+Then remove the write-on-ready key (this is what rewrites the file):
+
+```bash
+kubectl -n kube-system patch configmap cilium-config --type json -p '[
+  {"op":"remove","path":"/data/write-cni-conf-when-ready"}
+]'
+```
+
+If present, also remove `cni-exclusive` (or set it to `"false"`), since Cilium
+is no longer responsible for owning the directory:
+
+```bash
+kubectl -n kube-system patch configmap cilium-config --type json -p '[
+  {"op":"remove","path":"/data/cni-exclusive"}
+]'
+```
+
 Restart Cilium components to pick up the updated config:
 
 ```bash
@@ -99,4 +129,3 @@ kubectl -n kube-system delete ds kube-proxy
 sudo kubeadm config view --kubeconfig /etc/kubernetes/admin.conf > /tmp/kubeadm-config.yaml
 sudo kubeadm init phase addon kube-proxy --config /tmp/kubeadm-config.yaml
 ```
-

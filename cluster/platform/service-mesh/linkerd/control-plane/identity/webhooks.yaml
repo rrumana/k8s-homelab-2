@@ -22,6 +22,8 @@ spec:
   privateKey:
     algorithm: ECDSA
     size: 256
+    # Linkerd components use Rust TLS stacks that expect PKCS8 keys.
+    encoding: PKCS8
   issuerRef:
     kind: Issuer
     name: linkerd-webhook-selfsigned
@@ -50,6 +52,7 @@ spec:
   privateKey:
     algorithm: ECDSA
     size: 256
+    encoding: PKCS8
   issuerRef:
     kind: Issuer
     name: linkerd-webhook-ca
@@ -69,6 +72,7 @@ spec:
   privateKey:
     algorithm: ECDSA
     size: 256
+    encoding: PKCS8
   issuerRef:
     kind: Issuer
     name: linkerd-webhook-ca
@@ -88,7 +92,7 @@ spec:
   privateKey:
     algorithm: ECDSA
     size: 256
+    encoding: PKCS8
   issuerRef:
     kind: Issuer
     name: linkerd-webhook-ca
-

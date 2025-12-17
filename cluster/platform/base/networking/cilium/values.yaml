@@ -90,6 +90,20 @@ ingressController:
 gatewayAPI:
   enabled: false
 
+# Linkerd CNI integration
+#
+# Linkerd's CNI plugin patches the active CNI config (e.g. `05-cilium.conflist`)
+# to add `linkerd-cni` as a chained plugin. By default, Cilium rewrites that
+# file on restart/upgrade, which removes Linkerd from the chain and causes
+# `linkerd-network-validator` init to fail.
+#
+# In this repo, we apply this setting via the runtime ConfigMap
+# `kube-system/cilium-config` (not via Helm values):
+#
+# - `custom-cni-conf: "true"` (stop rewriting `05-cilium.conflist`)
+# - remove `write-cni-conf-when-ready` (so it never rewrites the conflist)
+# - remove or set `cni-exclusive: "false"` (avoid fighting other chained plugins)
+
 # Notes for dual-NIC hosts:
 # - Cilium will pick the interface with the default route.
 # - If that ever becomes wrong, set:

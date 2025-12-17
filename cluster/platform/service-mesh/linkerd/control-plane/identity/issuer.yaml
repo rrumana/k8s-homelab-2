@@ -32,6 +32,7 @@ spec:
   privateKey:
     algorithm: ECDSA
     size: 256
+    encoding: PKCS8
   usages:
     - cert sign
     - crl sign

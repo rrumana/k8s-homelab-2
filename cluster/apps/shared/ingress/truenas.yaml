@@ -5,6 +5,7 @@ metadata:
   namespace: other
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    haproxy-ingress.github.io/secure-backends: "true"
     haproxy-ingress.github.io/backend-protocol: "h1-ssl"
     haproxy-ingress.github.io/timeout-client: "600s"
     haproxy-ingress.github.io/timeout-server: "600s"

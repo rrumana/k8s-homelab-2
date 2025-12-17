@@ -1,0 +1,94 @@
+# Webhook certificates for Linkerd control plane components.
+#
+# These are managed by cert-manager so Argo/Helm don't continuously churn
+# self-signed certs on each render.
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: linkerd-webhook-selfsigned
+  namespace: service-mesh
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: linkerd-webhook-ca
+  namespace: service-mesh
+spec:
+  isCA: true
+  secretName: linkerd-webhook-ca
+  commonName: linkerd-webhook-ca.service-mesh
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    kind: Issuer
+    name: linkerd-webhook-selfsigned
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: linkerd-webhook-ca
+  namespace: service-mesh
+spec:
+  ca:
+    secretName: linkerd-webhook-ca
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: linkerd-proxy-injector-webhook
+  namespace: service-mesh
+spec:
+  secretName: linkerd-proxy-injector-k8s-tls
+  dnsNames:
+    - linkerd-proxy-injector
+    - linkerd-proxy-injector.service-mesh
+    - linkerd-proxy-injector.service-mesh.svc
+    - linkerd-proxy-injector.service-mesh.svc.cluster.local
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    kind: Issuer
+    name: linkerd-webhook-ca
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: linkerd-sp-validator-webhook
+  namespace: service-mesh
+spec:
+  secretName: linkerd-sp-validator-k8s-tls
+  dnsNames:
+    - linkerd-sp-validator
+    - linkerd-sp-validator.service-mesh
+    - linkerd-sp-validator.service-mesh.svc
+    - linkerd-sp-validator.service-mesh.svc.cluster.local
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    kind: Issuer
+    name: linkerd-webhook-ca
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: linkerd-policy-validator-webhook
+  namespace: service-mesh
+spec:
+  secretName: linkerd-policy-validator-k8s-tls
+  dnsNames:
+    - linkerd-policy-validator
+    - linkerd-policy-validator.service-mesh
+    - linkerd-policy-validator.service-mesh.svc
+    - linkerd-policy-validator.service-mesh.svc.cluster.local
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    kind: Issuer
+    name: linkerd-webhook-ca
+

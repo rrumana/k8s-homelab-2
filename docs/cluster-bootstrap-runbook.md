@@ -257,6 +257,20 @@ Things to look for:
 If those are missing, adjust `cluster/platform/service-mesh/linkerd/cni/values.yaml`
 to match your kubelet CNI paths, then re-sync `linkerd2-cni`.
 
+If `linkerd2-cni` reports it installed/updated `05-cilium.conflist` but that file
+does not actually contain `"type": "linkerd-cni"`, Cilium may be overwriting the
+CNI config on restart/upgrade.
+
+Recommended Cilium setting for Linkerd CNI:
+
+- Set `cni.customConf: true` in your Cilium Helm release so Cilium stops rewriting
+  `/etc/cni/net.d/05-cilium.conflist`.
+
+After updating Cilium:
+
+- Re-sync `linkerd2-cni` (or restart its DaemonSet pods) so it can patch the
+  conflist again.
+
 
 ---
 

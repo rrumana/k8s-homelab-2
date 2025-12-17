@@ -37,3 +37,15 @@ controllerReplicas: 1
 # behavior while the Linkerd CNI daemonset converges.
 networkValidator:
   timeout: "60s"
+
+proxyInjector:
+  externalSecret: true
+  injectCaFrom: service-mesh/linkerd-webhook-ca
+
+profileValidator:
+  externalSecret: true
+  injectCaFrom: service-mesh/linkerd-webhook-ca
+
+policyValidator:
+  externalSecret: true
+  injectCaFrom: service-mesh/linkerd-webhook-ca

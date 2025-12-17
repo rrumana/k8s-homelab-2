@@ -7,3 +7,13 @@ linkerdNamespace: service-mesh
 
 dashboard:
   enforcedHostRegexp: ""
+
+# Prevent Helm from generating/churning self-signed TLS Secrets. These Secrets
+# are created by cert-manager via `cluster/platform/service-mesh/linkerd/control-plane/identity/viz-tap.yaml`.
+tap:
+  externalSecret: true
+  injectCaFrom: service-mesh/linkerd-webhook-ca
+
+tapInjector:
+  externalSecret: true
+  injectCaFrom: service-mesh/linkerd-webhook-ca

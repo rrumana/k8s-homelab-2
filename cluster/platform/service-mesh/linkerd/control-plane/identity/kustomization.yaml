@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - issuer.yaml
   - webhooks.yaml
-
+  - viz-tap.yaml

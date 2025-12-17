@@ -1,0 +1,47 @@
+# Linkerd Viz (tap) TLS certificates managed by cert-manager.
+#
+# This prevents the `linkerd-viz` Helm chart from continuously churning
+# self-signed TLS Secrets (and ArgoCD reporting drift).
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: linkerd-viz-tap
+  namespace: service-mesh
+spec:
+  secretName: tap-k8s-tls
+  dnsNames:
+    - tap
+    - tap.service-mesh
+    - tap.service-mesh.svc
+    - tap.service-mesh.svc.cluster.local
+  privateKey:
+    algorithm: RSA
+    size: 2048
+    encoding: PKCS1
+  usages:
+    - server auth
+  issuerRef:
+    kind: Issuer
+    name: linkerd-webhook-ca
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: linkerd-viz-tap-injector
+  namespace: service-mesh
+spec:
+  secretName: tap-injector-k8s-tls
+  dnsNames:
+    - tap-injector
+    - tap-injector.service-mesh
+    - tap-injector.service-mesh.svc
+    - tap-injector.service-mesh.svc.cluster.local
+  privateKey:
+    algorithm: RSA
+    size: 2048
+    encoding: PKCS1
+  usages:
+    - server auth
+  issuerRef:
+    kind: Issuer
+    name: linkerd-webhook-ca

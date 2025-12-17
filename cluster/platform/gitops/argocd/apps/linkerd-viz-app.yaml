@@ -33,3 +33,16 @@ spec:
       # which Argo applies via create; failed hook runs can leave resources
       # behind and cause subsequent syncs to fail with "already exists".
       - SkipHooks=true
+
+  # cert-manager injects CA bundles into these resources; ignore those mutations
+  # to avoid perpetual Argo diffs.
+  ignoreDifferences:
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+      jqPathExpressions:
+        - .webhooks[]?.clientConfig.caBundle
+    - group: apiregistration.k8s.io
+      kind: APIService
+      name: v1alpha1.tap.linkerd.io
+      jsonPointers:
+        - /spec/caBundle

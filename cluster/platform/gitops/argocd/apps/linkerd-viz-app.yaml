@@ -29,3 +29,7 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      # linkerd-viz includes Helm post-install hook resources (namespace-metadata)
+      # which Argo applies via create; failed hook runs can leave resources
+      # behind and cause subsequent syncs to fail with "already exists".
+      - SkipHooks=true

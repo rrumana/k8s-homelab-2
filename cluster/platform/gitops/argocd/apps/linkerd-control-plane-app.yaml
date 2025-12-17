@@ -29,3 +29,15 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+
+  # The Linkerd control plane generates/rotates webhook certs; the CA bundle in
+  # webhook configurations can legitimately drift from the rendered manifests.
+  ignoreDifferences:
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+      jqPathExpressions:
+        - .webhooks[]?.clientConfig.caBundle
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      jqPathExpressions:
+        - .webhooks[]?.clientConfig.caBundle

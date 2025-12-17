@@ -15,6 +15,11 @@ spec:
     targetRevision: "1.8.0"
     helm:
       releaseName: linkerd-crds
+      values: |
+        # We manage Gateway API CRDs separately (and at newer versions).
+        # The Linkerd CRDs chart includes an older HTTPRoute CRD which will
+        # conflict with a v1 Gateway API install.
+        enableHttpRoutes: false
   destination:
     server: https://kubernetes.default.svc
     namespace: service-mesh

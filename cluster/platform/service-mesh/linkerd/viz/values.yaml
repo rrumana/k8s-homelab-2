@@ -3,6 +3,7 @@
 # Defaults are fine to start; we'll likely revisit this once
 # kube-prometheus-stack is installed and we decide whether Viz should use its
 # bundled Prometheus or an external one.
+linkerdNamespace: service-mesh
+
 dashboard:
   enforcedHostRegexp: ""
-

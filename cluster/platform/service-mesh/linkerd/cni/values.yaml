@@ -1,5 +1,6 @@
 # Linkerd CNI Helm values.
 privileged: true
+useWaitFlag: true
 
 # Keep logs relatively quiet by default; bump to `debug` while bringing the
 # cluster up.
@@ -9,3 +10,6 @@ logLevel: info
 destCNINetDir: "/etc/cni/net.d"
 destCNIBinDir: "/opt/cni/bin"
 
+repairController:
+  enabled: true
+  logLevel: info

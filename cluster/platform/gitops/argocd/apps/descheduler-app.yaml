@@ -1,0 +1,35 @@
+# platform/gitops/argocd/apps/descheduler-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: descheduler
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  sources:
+    - repoURL: https://kubernetes-sigs.github.io/descheduler/
+      targetRevision: "0.34.0"
+      chart: descheduler
+      helm:
+        releaseName: descheduler
+        valueFiles:
+          - $values/cluster/platform/scheduling/descheduler/values.yaml
+
+    - repoURL: https://github.com/rrumana/k8s-homelab-2.git
+      targetRevision: main
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: scheduling
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+

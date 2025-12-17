@@ -1,0 +1,115 @@
+kind: CronJob
+
+schedule: "0 * * * *"
+successfulJobsHistoryLimit: 1
+failedJobsHistoryLimit: 3
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+cmdOptions:
+  v: 3
+  dry-run: true
+
+tolerations:
+  - key: node-role.kubernetes.io/control-plane
+    operator: Exists
+    effect: NoSchedule
+  - key: node-role.kubernetes.io/master
+    operator: Exists
+    effect: NoSchedule
+
+deschedulerPolicy:
+  maxNoOfPodsToEvictPerNode: 1
+  maxNoOfPodsToEvictPerNamespace: 1
+  maxNoOfPodsToEvictTotal: 5
+  gracePeriodSeconds: 60
+  profiles:
+    - name: default
+      pluginConfig:
+        - name: DefaultEvictor
+          args:
+            nodeFit: true
+            podProtections:
+              extraEnabled:
+                - PodsWithPVC
+                - PodsWithoutPDB
+        - name: RemoveDuplicates
+          args:
+            namespaces:
+              exclude:
+                - kube-system
+                - kube-public
+                - kube-node-lease
+                - default
+                - argocd
+                - cert-manager
+                - metallb-system
+                - ingress-haproxy
+                - rook-ceph
+                - monitoring
+                - security
+                - networking
+                - ingress
+                - backup
+                - databases
+                - scheduling
+                - service-mesh
+        - name: RemovePodsViolatingNodeAffinity
+          args:
+            nodeAffinityType:
+              - requiredDuringSchedulingIgnoredDuringExecution
+            namespaces:
+              exclude:
+                - kube-system
+                - kube-public
+                - kube-node-lease
+                - default
+                - argocd
+                - cert-manager
+                - metallb-system
+                - ingress-haproxy
+                - rook-ceph
+                - monitoring
+                - security
+                - networking
+                - ingress
+                - backup
+                - databases
+                - scheduling
+                - service-mesh
+        - name: RemovePodsViolatingNodeTaints
+          args:
+            namespaces:
+              exclude:
+                - kube-system
+                - kube-public
+                - kube-node-lease
+                - default
+                - argocd
+                - cert-manager
+                - metallb-system
+                - ingress-haproxy
+                - rook-ceph
+                - monitoring
+                - security
+                - networking
+                - ingress
+                - backup
+                - databases
+                - scheduling
+                - service-mesh
+      plugins:
+        balance:
+          enabled:
+            - RemoveDuplicates
+        deschedule:
+          enabled:
+            - RemovePodsViolatingNodeTaints
+            - RemovePodsViolatingNodeAffinity
+

@@ -1,0 +1,42 @@
+# Linkerd identity issuer certificate managed by cert-manager.
+#
+# Prereqs:
+# - cert-manager installed.
+# - `service-mesh` namespace exists.
+# - A trust-anchor CA Secret exists in `service-mesh` namespace:
+#     name: linkerd-trust-anchor
+#     type: kubernetes.io/tls
+#     data keys: tls.crt, tls.key
+#
+# The trust-anchor Secret is intentionally NOT stored in Git.
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: linkerd-trust-anchor
+  namespace: service-mesh
+spec:
+  ca:
+    secretName: linkerd-trust-anchor
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: linkerd-identity-issuer
+  namespace: service-mesh
+spec:
+  secretName: linkerd-identity-issuer
+  duration: 48h0m0s
+  renewBefore: 24h0m0s
+  commonName: identity.linkerd.cluster.local
+  isCA: true
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  usages:
+    - cert sign
+    - crl sign
+    - server auth
+    - client auth
+  issuerRef:
+    kind: Issuer
+    name: linkerd-trust-anchor

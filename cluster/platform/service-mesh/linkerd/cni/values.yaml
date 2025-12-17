@@ -1,0 +1,11 @@
+# Linkerd CNI Helm values.
+privileged: true
+
+# Keep logs relatively quiet by default; bump to `debug` while bringing the
+# cluster up.
+logLevel: info
+
+# The CNI install locations vary by distro/CNI; these are the common defaults.
+destCNINetDir: "/etc/cni/net.d"
+destCNIBinDir: "/opt/cni/bin"
+

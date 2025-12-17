@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: linkerd-identity
+  namespace: argocd
+  annotations:
+    # Needs cert-manager CRDs; should exist before control plane starts.
+    argocd.argoproj.io/sync-wave: "12"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/rrumana/k8s-homelab-2.git
+    targetRevision: main
+    path: cluster/platform/service-mesh/linkerd/control-plane/identity
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: service-mesh
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: linkerd-viz
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "14"
+spec:
+  project: default
+  sources:
+    - repoURL: https://helm.linkerd.io/stable
+      chart: linkerd-viz
+      targetRevision: "30.12.11"
+      helm:
+        releaseName: linkerd-viz
+        valueFiles:
+          - $values/cluster/platform/service-mesh/linkerd/viz/values.yaml
+    - repoURL: https://github.com/rrumana/k8s-homelab-2.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: service-mesh
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

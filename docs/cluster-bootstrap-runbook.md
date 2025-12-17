@@ -208,14 +208,36 @@ Goal: define logical groupings (media, productivity, ai, web, monitoring, rook-c
 
 ## 8. Service Mesh: Linkerd
 
-- In `cluster/platform/service-mesh/linkerd/control-plane/`:
-  - Deploy Linkerd control plane via Argo (Helm chart or manifests).
-- In `cluster/platform/service-mesh/linkerd/viz/`:
-  - Deploy Linkerd Viz extension.
-- Enable auto-injection for a low-risk namespace (e.g. a dedicated `test` ns) using `linkerd.io/inject: enabled`.
-- Deploy a small test app and:
-  - Confirm mTLS and metrics via Linkerd CLI and Viz.
-  - Confirm traffic graphs appear.
+This repo installs Linkerd with:
+
+- Linkerd CNI (`linkerd2-cni`) so meshed workloads can stay under PodSecurity `restricted` (no `NET_ADMIN` init container).
+- cert-manager-managed identity issuer certs (no private keys in Git).
+
+### 8.1 Generate and apply the trust anchor (one-time, out-of-band)
+
+- Run `scripts/linkerd/generate-trust-anchor.sh`.
+- Apply the generated Secret manifest under `secrets/linkerd/`:
+  - `kubectl apply -f secrets/linkerd/linkerd-trust-anchor-secret.yaml`
+- Copy the printed trust-anchor *public* certificate PEM into:
+  - `cluster/platform/service-mesh/linkerd/control-plane/values.yaml` (`identityTrustAnchorsPEM`)
+
+### 8.2 Sync Linkerd via ArgoCD
+
+- Sync Argo Applications (in order):
+  - `linkerd-crds`
+  - `linkerd2-cni`
+  - `linkerd-identity` (creates `linkerd-identity-issuer` via cert-manager)
+  - `linkerd-control-plane`
+  - `linkerd-viz`
+
+### 8.3 Mesh a test namespace first
+
+- Create a dedicated namespace (e.g. `mesh-test`) and add:
+  - `linkerd.io/inject: enabled`
+- Deploy a small echo service and validate:
+  - `linkerd check`
+  - Viz UI shows traffic + mTLS
+
 
 ---
 

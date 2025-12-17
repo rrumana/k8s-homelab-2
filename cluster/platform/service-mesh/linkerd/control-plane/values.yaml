@@ -1,0 +1,33 @@
+# Linkerd control plane Helm values.
+#
+# Notes:
+# - We use the Linkerd CNI plugin (`cniEnabled: true`) to avoid requiring the
+#   `linkerd-init` container with NET_ADMIN in meshed workloads.
+# - Identity is backed by cert-manager via a `kubernetes.io/tls` Secret
+#   (`linkerd-identity-issuer`) created in `cluster/platform/service-mesh/linkerd/control-plane/identity/`.
+# - The trust anchor PEM below must match the CA certificate in the
+#   out-of-band Secret `linkerd-trust-anchor` in the `service-mesh` namespace.
+#
+# See also: `scripts/linkerd/generate-trust-anchor.sh`
+cniEnabled: true
+
+# Must be a PEM-encoded certificate bundle.
+# Replace this placeholder before syncing Linkerd.
+identityTrustAnchorsPEM: |
+  -----BEGIN CERTIFICATE-----
+  MIIBlDCCATmgAwIBAgIUR64tJpH5ZiqUVDlC3ueKAlnkei0wCgYIKoZIzj0EAwIw
+  HzEdMBsGA1UEAwwUbGlua2VyZC10cnVzdC1hbmNob3IwHhcNMjUxMjE3MDYzODUy
+  WhcNMzUxMjE1MDYzODUyWjAfMR0wGwYDVQQDDBRsaW5rZXJkLXRydXN0LWFuY2hv
+  cjBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABPucq74W2+45lIcVZI2Am+FPo/jK
+  srQlvvh4POPpqKmG45K3pFgvK42ZQ9PAWmYysI86Qd2X5AihAbS8rtrSoHKjUzBR
+  MB0GA1UdDgQWBBTtsQCGZPqb2wm0HbF+IshYit3FOTAfBgNVHSMEGDAWgBTtsQCG
+  ZPqb2wm0HbF+IshYit3FOTAPBgNVHRMBAf8EBTADAQH/MAoGCCqGSM49BAMCA0kA
+  MEYCIQChTiICqYhdbQ8vnSffKJUX+MlA4QfHv7ROQp97t2l0/gIhAOmkZinO9jk7
+  68L8oqQ4n45cVASduEG+S3wV7cY07fdQ
+  -----END CERTIFICATE-----
+
+identity:
+  issuer:
+    scheme: kubernetes.io/tls
+
+controllerReplicas: 1

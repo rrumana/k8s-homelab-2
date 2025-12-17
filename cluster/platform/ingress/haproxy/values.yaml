@@ -1,19 +1,6 @@
-# HAProxy Technologies Kubernetes Ingress Controller values.
-# Chart: haproxytech/kubernetes-ingress
-
+# cluster/platform/ingress/haproxy/values.yaml
 controller:
-  kind: Deployment
-  replicaCount: 2
-
-  # Enable Gateway API reconciliation (GatewayClass/Gateway/HTTPRoute).
-  kubernetesGateway:
-    enabled: true
-    gatewayControllerName: haproxy.org/gateway-controller
-
-  defaultTLSSecret:
-    enabled: true
-    secretNamespace: ingress-haproxy
-    secret: wildcard-k8s-rcrumana-xyz-tls
+  configMap: haproxy-ingress-config
 
   service:
     type: LoadBalancer
@@ -22,23 +9,22 @@ controller:
     loadBalancerIP: 192.168.1.230
     externalTrafficPolicy: Local
 
-  config:
-    ssl-redirect: "true"
-    default-ssl-certificate: "ingress-haproxy/wildcard-k8s-rcrumana-xyz-tls"
-    ssl-options: "no-sslv3 no-tlsv10 no-tlsv11"
-    ssl-ciphers: "ECDHE+AESGCM:ECDHE+AES256:ECDHE+AES128:!DHE:!RSA:!AES128:!RC4:!DES:!3DES:!MD5:!DSS"
-    # Enable SNI debugging
-    syslog-endpoint: "stdout"
-    syslog-format: "raw"
-    syslog-tag: "haproxy"
-
   affinity:
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         - labelSelector:
             matchLabels:
-              app.kubernetes.io/name: kubernetes-ingress
+              app.kubernetes.io/name: haproxy-ingress
           topologyKey: kubernetes.io/hostname
+
+  config:
+    ssl-redirect: "true"
+    default-ssl-certificate: "ingress-haproxy/wildcard-k8s-rcrumana-xyz-tls"
+    ssl-options: "no-sslv3 no-tlsv10 no-tlsv11"
+    ssl-ciphers: "ECDHE+AESGCM:ECDHE+AES256:ECDHE+AES128:!DHE:!RSA:!AES128:!RC4:!DES:!3DES:!MD5:!DSS"
+    syslog-endpoint: "stdout"
+    syslog-format: "raw"
+    syslog-tag: "haproxy"
 
   resources:
     requests:
@@ -47,3 +33,18 @@ controller:
     limits:
       cpu: 500m
       memory: 512Mi
+
+  replicaCount: 2
+
+  logs:
+    enabled: true
+    level: debug
+
+defaultBackend:
+  enabled: false
+
+serviceMonitor:
+  enabled: true
+  namespace: ingress-haproxy
+  interval: 30s
+

@@ -6,11 +6,8 @@ metadata:
     haproxy-ingress.github.io/secure-backends: "true"
     haproxy-ingress.github.io/backend-protocol: "h1-ssl"
 spec:
-  type: ClusterIP
-  selector:
-    app: truenas-proxy
   ports:
     - name: https
       port: 443
-      targetPort: 8443
-
+      targetPort: 443
+  type: ClusterIP

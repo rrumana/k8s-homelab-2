@@ -8,4 +8,4 @@ metadata:
   annotations:
     ingressclass.kubernetes.io/is-default-class: "true"
 spec:
-  controller: haproxy.org/ingress-controller/haproxy
+  controller: haproxy-ingress.github.io/controller

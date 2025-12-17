@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+data:
+  # Avoid excluding Endpoints/EndpointSlice so Argo CD can manage manual Endpoints for LAN proxy Services.
+  resource.exclusions: |
+    - apiGroups:
+        - ""
+      kinds:
+        - Event
+      clusters:
+        - "*"
+    - apiGroups:
+        - "events.k8s.io"
+      kinds:
+        - Event
+      clusters:
+        - "*"
+    - apiGroups:
+        - "coordination.k8s.io"
+      kinds:
+        - Lease
+      clusters:
+        - "*"
+

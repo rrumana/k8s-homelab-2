@@ -33,6 +33,27 @@ spec:
   # The Linkerd control plane generates/rotates webhook certs; the CA bundle in
   # webhook configurations can legitimately drift from the rendered manifests.
   ignoreDifferences:
+    # Helm generates these TLS Secrets on first install using `gen*` functions.
+    # Those values are not stable across renders, so Argo will otherwise report
+    # perpetual drift and attempt to overwrite live certs.
+    - group: ""
+      kind: Secret
+      name: linkerd-policy-validator-k8s-tls
+      namespace: service-mesh
+      jsonPointers:
+        - /data
+    - group: ""
+      kind: Secret
+      name: linkerd-proxy-injector-k8s-tls
+      namespace: service-mesh
+      jsonPointers:
+        - /data
+    - group: ""
+      kind: Secret
+      name: linkerd-sp-validator-k8s-tls
+      namespace: service-mesh
+      jsonPointers:
+        - /data
     - group: admissionregistration.k8s.io
       kind: MutatingWebhookConfiguration
       jqPathExpressions:

@@ -238,6 +238,25 @@ This repo installs Linkerd with:
   - `linkerd check`
   - Viz UI shows traffic + mTLS
 
+### Troubleshooting: `linkerd-network-validator` init failures
+
+If Linkerd control-plane pods fail during init with logs like:
+`Failed to validate networking configuration ... ensure iptables rules are rewriting traffic`
+it usually means the Linkerd CNI plugin is not being invoked for pods (i.e. the
+CNI chain was not installed on the node).
+
+Run:
+
+- `scripts/linkerd/verify-cni.sh service-mesh`
+
+Things to look for:
+
+- `/etc/cni/net.d` contains a `*.conflist` (or `*.conf`) that includes `"type": "linkerd-cni"`.
+- `/opt/cni/bin/linkerd-cni` exists on the node (the script checks via hostPath mounts).
+
+If those are missing, adjust `cluster/platform/service-mesh/linkerd/cni/values.yaml`
+to match your kubelet CNI paths, then re-sync `linkerd2-cni`.
+
 
 ---
 

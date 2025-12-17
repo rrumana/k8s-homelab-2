@@ -31,3 +31,9 @@ identity:
     scheme: kubernetes.io/tls
 
 controllerReplicas: 1
+
+# During initial bring-up, Linkerd pods can be created before the CNI chain is
+# fully installed on every node. Increasing the timeout reduces noisy crashloop
+# behavior while the Linkerd CNI daemonset converges.
+networkValidator:
+  timeout: "60s"

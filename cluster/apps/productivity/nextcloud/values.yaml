@@ -107,9 +107,7 @@ cronjob:
 postgresql:
   enabled: true
   volumePermissions:
-    enabled: true
-    securityContext:
-      runAsUser: 0
+    enabled: false
   auth:
     existingSecret: nextcloud-db
     username: nextcloud

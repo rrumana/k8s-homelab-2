@@ -85,7 +85,7 @@ spec:
             privileged: true
             capabilities: { add: ["NET_ADMIN"] }
           envFrom:
-            - secretRef: { name: gluetun-env }
+            - secretRef: { name: gluetun-lts-env }
           env:
             - { name: FIREWALL_INPUT_PORTS, value: "8021" }
             - { name: HEALTH_TARGET_ADDRESS, value: "127.0.0.1:9999" }
@@ -107,8 +107,8 @@ spec:
           env:
             - { name: PF_FILE, value: "/pf/state/forwarded_port" }
             - { name: QB_WEBUI_PORT, value: "8021" }
-            - { name: QB_USERNAME, valueFrom: { secretKeyRef: { name: qb-webui-creds, key: username } } }
-            - { name: QB_PASSWORD, valueFrom: { secretKeyRef: { name: qb-webui-creds, key: password } } }
+            - { name: QB_USERNAME, valueFrom: { secretKeyRef: { name: qb-lts-webui-creds, key: username } } }
+            - { name: QB_PASSWORD, valueFrom: { secretKeyRef: { name: qb-lts-webui-creds, key: password } } }
           volumeMounts:
             - { name: pf-sync, mountPath: /scripts/pf-sync.sh, subPath: pf-sync.sh }
             - { name: pf-state, mountPath: /pf/state }

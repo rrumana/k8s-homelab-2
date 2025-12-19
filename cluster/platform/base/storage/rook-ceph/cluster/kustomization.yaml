@@ -8,4 +8,3 @@ resources:
   - ceph-block-pool.yaml
   - storage-class.yaml
   - toolbox.yaml
-

@@ -16,11 +16,15 @@ spec:
         app: rook-ceph-tools
     spec:
       tolerations:
-        - operator: Exists
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          effect: NoSchedule
       containers:
         - name: rook-ceph-tools
           image: rook/ceph:v1.18.8
           command: ["/bin/bash", "-c", "sleep infinity"]
           tty: true
           stdin: true
-

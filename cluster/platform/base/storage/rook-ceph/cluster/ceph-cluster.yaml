@@ -1,0 +1,61 @@
+apiVersion: ceph.rook.io/v1
+kind: CephCluster
+metadata:
+  name: rook-ceph
+  namespace: rook-ceph
+spec:
+  dataDirHostPath: /var/lib/rook
+
+  cephVersion:
+    image: quay.io/ceph/ceph:v18.2.2
+
+  # Use the dedicated 2.5Gb Ceph subnet for all Ceph traffic.
+  network:
+    provider: host
+    publicNetwork: "172.16.100.0/24"
+    clusterNetwork: "172.16.100.0/24"
+
+  mon:
+    count: 3
+    allowMultiplePerNode: false
+
+  mgr:
+    count: 2
+    allowMultiplePerNode: false
+
+  placement:
+    all:
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          effect: NoSchedule
+
+  monitoring:
+    enabled: true
+
+  # Conservative recovery/backfill settings for 2.5Gb links.
+  config:
+    osd_max_backfills: "1"
+    osd_recovery_max_active: "1"
+    osd_recovery_sleep: "0.1"
+    osd_backfill_sleep: "0.1"
+
+  storage:
+    useAllNodes: false
+    useAllDevices: false
+    nodes:
+      - name: melchior-1
+        devices:
+          - fullPath: /dev/disk/by-id/nvme-CT2000P310SSD8_252350935F8C
+          - fullPath: /dev/disk/by-id/nvme-CT2000P310SSD8_252350935FBF
+      - name: balthasar-2
+        devices:
+          - fullPath: /dev/disk/by-id/nvme-Sabrent_Rocket_Q_23CD0705089800199528
+          - fullPath: /dev/disk/by-id/nvme-ADATA_LEGEND_900_4N42210FA46C
+      - name: casper-3
+        devices:
+          - fullPath: /dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S7KHNJ0Y612649F
+          - fullPath: /dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S73WNJ0W944501L

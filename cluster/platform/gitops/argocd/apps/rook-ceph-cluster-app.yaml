@@ -1,8 +1,8 @@
-# platform/gitops/argocd/apps/rook-ceph-temp-cluster-app.yaml
+# platform/gitops/argocd/apps/rook-ceph-cluster-app.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: rook-ceph-temp-cluster
+  name: rook-ceph-cluster
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -12,12 +12,15 @@ spec:
   source:
     repoURL: https://github.com/rrumana/k8s-homelab-2.git
     targetRevision: main
-    path: cluster/platform/base/storage/rook-ceph/temp-cluster
+    path: cluster/platform/base/storage/rook-ceph/cluster
 
   destination:
     server: https://kubernetes.default.svc
     namespace: rook-ceph
 
   syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true

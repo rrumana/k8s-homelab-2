@@ -20,7 +20,7 @@ resources:
   - opnsense-app.yaml
   - truenas-app.yaml
   - rook-ceph-operator-app.yaml
-  - rook-ceph-temp-cluster-app.yaml
+  - rook-ceph-cluster-app.yaml
 
 commonLabels:
   app.kubernetes.io/managed-by: argocd

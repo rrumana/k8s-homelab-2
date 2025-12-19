@@ -46,10 +46,11 @@ spec:
               done
               pg_isready -h "$PGHOST" -p "$PGPORT" -U "$PGUSER" >/dev/null 2>&1 || {
                 echo "postgres not ready"; exit 1; }
-              if ! psql -v ON_ERROR_STOP=1 -v nc_pass="$NEXTCLOUD_PASSWORD" \
-                -c "CREATE ROLE nextcloud LOGIN PASSWORD :'nc_pass'"; then
-                psql -v ON_ERROR_STOP=1 -v nc_pass="$NEXTCLOUD_PASSWORD" \
-                  -c "ALTER ROLE nextcloud WITH PASSWORD :'nc_pass'"
+              NC_PASS_ESC="$(printf "%s" "$NEXTCLOUD_PASSWORD" | sed "s/'/''/g")"
+              if psql -v ON_ERROR_STOP=1 -tAc "SELECT 1 FROM pg_roles WHERE rolname='nextcloud'" | grep -q 1; then
+                psql -v ON_ERROR_STOP=1 -c "ALTER ROLE nextcloud WITH PASSWORD '$NC_PASS_ESC'"
+              else
+                psql -v ON_ERROR_STOP=1 -c "CREATE ROLE nextcloud LOGIN PASSWORD '$NC_PASS_ESC'"
               fi
               if ! psql -v ON_ERROR_STOP=1 -tc "SELECT 1 FROM pg_database WHERE datname='nextcloud'" | grep -q 1; then
                 psql -v ON_ERROR_STOP=1 -c "CREATE DATABASE nextcloud OWNER nextcloud;"

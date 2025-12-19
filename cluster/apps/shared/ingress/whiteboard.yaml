@@ -13,10 +13,10 @@ spec:
   ingressClassName: haproxy-restricted
   tls:
     - hosts:
-        - whiteboard.k8s.rcrumana.xyz
-      secretName: whiteboard-k8s-rcrumana-xyz-tls
+        - whiteboard.rcrumana.xyz
+      secretName: whiteboard-rcrumana-xyz-tls
   rules:
-    - host: whiteboard.k8s.rcrumana.xyz
+    - host: whiteboard.rcrumana.xyz
       http:
         paths:
           - path: /

@@ -12,10 +12,10 @@ metadata:
 spec:
   ingressClassName: haproxy-restricted
   tls:
-    - hosts: [ "lidarr.k8s.rcrumana.xyz" ]
-      secretName: lidarr-k8s-rcrumana-xyz-tls
+    - hosts: [ "lidarr.rcrumana.xyz" ]
+      secretName: lidarr-rcrumana-xyz-tls
   rules:
-    - host: lidarr.k8s.rcrumana.xyz
+    - host: lidarr.rcrumana.xyz
       http:
         paths:
           - path: /

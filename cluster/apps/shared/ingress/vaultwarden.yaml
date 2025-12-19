@@ -12,10 +12,10 @@ spec:
   ingressClassName: haproxy-restricted
   tls:
   - hosts:
-    - vault.k8s.rcrumana.xyz
-    secretName: vaultwarden-k8s-rcrumana-xyz-tls
+    - vault.rcrumana.xyz
+    secretName: vaultwarden-rcrumana-xyz-tls
   rules:
-  - host: vault.k8s.rcrumana.xyz
+  - host: vault.rcrumana.xyz
     http:
       paths:
       - path: /

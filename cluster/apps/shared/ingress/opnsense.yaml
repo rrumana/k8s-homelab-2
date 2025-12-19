@@ -14,10 +14,10 @@ spec:
   ingressClassName: haproxy-restricted
   tls:
     - hosts:
-        - router.k8s.rcrumana.xyz
-      secretName: router-k8s-rcrumana-xyz-tls
+        - router.rcrumana.xyz
+      secretName: router-rcrumana-xyz-tls
   rules:
-    - host: router.k8s.rcrumana.xyz
+    - host: router.rcrumana.xyz
       http:
         paths:
           - path: /

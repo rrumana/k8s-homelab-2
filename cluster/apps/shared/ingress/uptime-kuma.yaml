@@ -12,10 +12,10 @@ spec:
   ingressClassName: haproxy-restricted
   tls:
     - hosts:
-        - uptime.k8s.rcrumana.xyz
-      secretName: uptime-kuma-k8s-rcrumana-xyz-tls
+        - uptime.rcrumana.xyz
+      secretName: uptime-kuma-rcrumana-xyz-tls
   rules:
-    - host: uptime.k8s.rcrumana.xyz
+    - host: uptime.rcrumana.xyz
       http:
         paths:
           - path: /

@@ -13,10 +13,10 @@ spec:
   ingressClassName: haproxy-restricted
   tls:
     - hosts:
-        - homarr.k8s.rcrumana.xyz
-      secretName: homarr-k8s-rcrumana-xyz-tls
+        - homarr.rcrumana.xyz
+      secretName: homarr-rcrumana-xyz-tls
   rules:
-    - host: homarr.k8s.rcrumana.xyz
+    - host: homarr.rcrumana.xyz
       http:
         paths:
           - path: /

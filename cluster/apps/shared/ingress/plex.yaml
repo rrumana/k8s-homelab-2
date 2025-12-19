@@ -13,10 +13,10 @@ spec:
   ingressClassName: haproxy-restricted
   tls:
     - hosts:
-        - plex.k8s.rcrumana.xyz
-      secretName: plex-k8s-rcrumana-xyz-tls
+        - plex.rcrumana.xyz
+      secretName: plex-rcrumana-xyz-tls
   rules:
-    - host: plex.k8s.rcrumana.xyz
+    - host: plex.rcrumana.xyz
       http:
         paths:
           - path: /

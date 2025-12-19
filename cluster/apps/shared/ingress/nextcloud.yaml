@@ -14,10 +14,10 @@ spec:
   ingressClassName: haproxy-restricted
   tls:
     - hosts:
-        - nextcloud.k8s.rcrumana.xyz
-      secretName: nextcloud-k8s-rcrumana-xyz-tls
+        - nextcloud.rcrumana.xyz
+      secretName: nextcloud-rcrumana-xyz-tls
   rules:
-    - host: nextcloud.k8s.rcrumana.xyz
+    - host: nextcloud.rcrumana.xyz
       http:
         paths:
           - path: /

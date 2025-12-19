@@ -13,10 +13,10 @@ spec:
   ingressClassName: haproxy-restricted
   tls:
     - hosts:
-        - jellyfin.k8s.rcrumana.xyz
-      secretName: jellyfin-k8s-rcrumana-xyz-tls
+        - jellyfin.rcrumana.xyz
+      secretName: jellyfin-rcrumana-xyz-tls
   rules:
-    - host: jellyfin.k8s.rcrumana.xyz
+    - host: jellyfin.rcrumana.xyz
       http:
         paths:
           - path: /

@@ -13,10 +13,10 @@ spec:
   ingressClassName: haproxy-restricted
   tls:
     - hosts:
-        - collabora.k8s.rcrumana.xyz
-      secretName: collabora-k8s-rcrumana-xyz-tls
+        - collabora.rcrumana.xyz
+      secretName: collabora-rcrumana-xyz-tls
   rules:
-    - host: collabora.k8s.rcrumana.xyz
+    - host: collabora.rcrumana.xyz
       http:
         paths:
           - path: /

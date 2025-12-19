@@ -20,10 +20,10 @@ spec:
   ingressClassName: haproxy
   tls:
     - hosts:
-        - k8s.rcrumana.xyz
-      secretName: k8s-rcrumana-xyz-tls
+        - rcrumana.xyz
+      secretName: rcrumana-xyz-tls
   rules:
-    - host: k8s.rcrumana.xyz
+    - host: rcrumana.xyz
       http:
         paths:
           - path: /

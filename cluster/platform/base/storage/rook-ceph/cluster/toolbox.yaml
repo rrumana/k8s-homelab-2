@@ -31,12 +31,30 @@ spec:
           args:
             - |
               set -e
-              cat > /etc/ceph/ceph.client.admin.keyring <<EOF
-              [client.admin]
+              MON_HOST=$(echo "${ROOK_CEPH_MON_ENDPOINTS}" | sed -e 's/[a-z]=//g')
+              cat > /etc/ceph/ceph.conf <<EOF
+              [global]
+                fsid = ${ROOK_CEPH_FSID}
+                mon_host = ${MON_HOST}
+              EOF
+              cat > /etc/ceph/ceph.client.${ROOK_CEPH_USERNAME}.keyring <<EOF
+              [client.${ROOK_CEPH_USERNAME}]
                 key = ${ROOK_CEPH_SECRET}
               EOF
               sleep infinity
           env:
+            - name: ROOK_CEPH_MON_ENDPOINTS
+              valueFrom:
+                configMapKeyRef:
+                  name: rook-ceph-mon-endpoints
+                  key: data
+            - name: ROOK_CEPH_FSID
+              valueFrom:
+                secretKeyRef:
+                  name: rook-ceph-mon
+                  key: fsid
+            - name: ROOK_CEPH_USERNAME
+              value: admin
             - name: ROOK_CEPH_SECRET
               valueFrom:
                 secretKeyRef:
@@ -46,9 +64,7 @@ spec:
           stdin: true
           volumeMounts:
             - name: ceph-config
-              mountPath: /etc/ceph/ceph.conf
-              subPath: ceph.conf
+              mountPath: /etc/ceph
       volumes:
         - name: ceph-config
-          configMap:
-            name: rook-ceph-config
+          emptyDir: {}

@@ -19,6 +19,7 @@ resources:
   - portfolio-staging-app.yaml
   - opnsense-app.yaml
   - jellyfin-app.yaml
+  - immich-app.yaml
   - plex-app.yaml
   - truenas-app.yaml
   - rook-ceph-operator-app.yaml

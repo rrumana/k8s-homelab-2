@@ -1,0 +1,71 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrate-immich-postgres
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: restore
+          image: docker.io/library/postgres:17-alpine
+          command: ["/bin/sh", "-lc"]
+          env:
+            - name: PGHOST
+              value: immich-postgres-0.immich-postgres
+            - name: PGPORT
+              value: "5432"
+            - name: PGDATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: immich-config
+                  key: DB_DATABASE_NAME
+            - name: PGUSER
+              valueFrom:
+                configMapKeyRef:
+                  name: immich-config
+                  key: DB_USERNAME
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: immich-secret
+                  key: DB_PASSWORD
+          args:
+            - |
+              set -eu
+
+              DUMPS_DIR="/nas/immich/pgdump"
+              if [ ! -d "$DUMPS_DIR" ]; then
+                echo "missing dump dir $DUMPS_DIR"; exit 1
+              fi
+
+              DUMP="$(ls -1 "$DUMPS_DIR"/immich-*.dump 2>/dev/null | sort | tail -n 1)"
+              if [ -z "${DUMP:-}" ]; then
+                echo "no dump files found in $DUMPS_DIR"; exit 1
+              fi
+
+              if [ -f "${DUMP}.sha256" ]; then
+                (cd "$DUMPS_DIR" && sha256sum -c "$(basename "${DUMP}.sha256")")
+              fi
+
+              echo "Waiting for Postgres at ${PGHOST}:${PGPORT}..."
+              for i in $(seq 1 180); do
+                pg_isready -h "$PGHOST" -p "$PGPORT" -U "$PGUSER" -d "$PGDATABASE" >/dev/null 2>&1 && break
+                [ "$i" -eq 180 ] && { echo "Timed out waiting for Postgres"; exit 1; }
+                sleep 2
+              done
+
+              echo "Restoring $DUMP into $PGDATABASE"
+              pg_restore -h "$PGHOST" -p "$PGPORT" -U "$PGUSER" -d "$PGDATABASE" --clean --if-exists "$DUMP"
+          volumeMounts:
+            - name: nas
+              mountPath: /nas
+              readOnly: true
+      volumes:
+        - name: nas
+          hostPath:
+            path: /NAS/Longhorn
+            type: Directory

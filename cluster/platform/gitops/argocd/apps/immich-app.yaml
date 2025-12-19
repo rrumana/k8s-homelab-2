@@ -1,0 +1,24 @@
+# platform/gitops/argocd/apps/immich-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: immich
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/rrumana/k8s-homelab-2.git
+    targetRevision: main
+    path: cluster/apps/media/immich
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: media
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

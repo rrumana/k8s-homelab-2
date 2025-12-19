@@ -21,31 +21,6 @@ spec:
         supplementalGroups:
           - 989
           - 985
-      initContainers:
-        - name: seed-config
-          image: alpine:3.20
-          command: ["/bin/sh", "-lc"]
-          args:
-            - |
-              set -e
-              if [ ! -d /nas/jellyfin/jellyfin-config ]; then
-                echo "missing source /nas/jellyfin/jellyfin-config"; exit 1
-              fi
-              apk add --no-cache rsync
-              rsync -aHAX --numeric-ids /nas/jellyfin/jellyfin-config/ /config/
-          volumeMounts:
-            - name: config
-              mountPath: /config
-            - name: nas-migrate
-              mountPath: /nas
-              readOnly: true
-          resources:
-            requests:
-              cpu: 50m
-              memory: 128Mi
-            limits:
-              cpu: 500m
-              memory: 512Mi
       containers:
         - name: jellyfin
           image: lscr.io/linuxserver/jellyfin:latest
@@ -101,10 +76,6 @@ spec:
             claimName: jellyfin-config
         - name: cache
           emptyDir: {}
-        - name: nas-migrate
-          hostPath:
-            path: /NAS/Longhorn
-            type: Directory
         - name: tv
           hostPath:
             path: /NAS/Torrent/Shows

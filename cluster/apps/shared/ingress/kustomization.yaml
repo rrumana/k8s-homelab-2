@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - argocd.yaml
   - jellyfin.yaml
+  - immich.yaml
   - plex.yaml
   - portfolio.yaml
   - portfolio-staging.yaml

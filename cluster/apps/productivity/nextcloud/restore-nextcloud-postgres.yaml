@@ -18,14 +18,19 @@ spec:
             - name: PGPORT
               value: "5432"
             - name: PGUSER
-              value: nextcloud
+              value: postgres
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
                   name: nextcloud-db
-                  key: password
+                  key: postgres-password
             - name: PGDATABASE
               value: nextcloud
+            - name: NEXTCLOUD_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nextcloud-db
+                  key: password
           command: ["/bin/sh", "-c"]
           args:
             - |
@@ -44,6 +49,16 @@ spec:
               pg_restore --no-owner --no-privileges --clean --if-exists -f /tmp/nextcloud-restore.sql "$DUMP_FILE"
               sed -i '/transaction_timeout/d' /tmp/nextcloud-restore.sql
               psql -v ON_ERROR_STOP=1 -f /tmp/nextcloud-restore.sql
+              psql -v ON_ERROR_STOP=1 -v nc_pass="$NEXTCLOUD_PASSWORD" <<'SQL'
+              DO $$
+              BEGIN
+                IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'nextcloud') THEN
+                  CREATE ROLE nextcloud LOGIN PASSWORD :'nc_pass';
+                ELSE
+                  ALTER ROLE nextcloud WITH PASSWORD :'nc_pass';
+                END IF;
+              END$$;
+SQL
           volumeMounts:
             - name: nas-migrate
               mountPath: /nas

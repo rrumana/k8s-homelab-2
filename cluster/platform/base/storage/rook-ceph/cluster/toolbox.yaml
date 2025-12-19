@@ -54,12 +54,22 @@ spec:
                   name: rook-ceph-mon
                   key: fsid
             - name: ROOK_CEPH_USERNAME
-              value: admin
+              valueFrom:
+                secretKeyRef:
+                  name: rook-ceph-mon
+                  key: ceph-username
             - name: ROOK_CEPH_SECRET
               valueFrom:
                 secretKeyRef:
                   name: rook-ceph-mon
-                  key: admin-secret
+                  key: ceph-secret
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
           tty: true
           stdin: true
           volumeMounts:

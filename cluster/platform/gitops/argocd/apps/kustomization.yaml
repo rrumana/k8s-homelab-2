@@ -18,6 +18,9 @@ resources:
   - portfolio-app.yaml
   - portfolio-staging-app.yaml
   - opnsense-app.yaml
+  - arr-app.yaml
+  - arr-lts-app.yaml
+  - arr-lts2-app.yaml
   - jellyfin-app.yaml
   - immich-app.yaml
   - plex-app.yaml

@@ -4,8 +4,16 @@ kind: Kustomization
 resources:
   - argocd.yaml
   - jellyfin.yaml
+  - jellyseerr.yaml
   - immich.yaml
+  - lidarr.yaml
   - plex.yaml
+  - prowlarr.yaml
+  - qbit.yaml
+  - qbit-lts.yaml
+  - qbit-lts2.yaml
+  - radarr.yaml
+  - sonarr.yaml
   - portfolio.yaml
   - portfolio-staging.yaml
   - opnsense.yaml

@@ -21,23 +21,6 @@ spec:
       securityContext:
         runAsUser: 999
         runAsGroup: 999
-      initContainers:
-        - name: wipe-pgdata
-          image: alpine:3.20
-          command: ["/bin/sh", "-lc"]
-          securityContext:
-            runAsUser: 0
-            runAsGroup: 0
-          args:
-            - |
-              set -eu
-              PGDATA="/var/lib/postgresql/data/pgdata"
-              mkdir -p "$PGDATA"
-              rm -rf "$PGDATA"/*
-              chown -R 999:999 "$PGDATA"
-          volumeMounts:
-            - name: postgres-data
-              mountPath: /var/lib/postgresql/data
       containers:
         - name: postgres
           image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0

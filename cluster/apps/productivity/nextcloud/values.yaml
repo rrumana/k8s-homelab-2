@@ -106,6 +106,8 @@ cronjob:
 
 postgresql:
   enabled: true
+  volumePermissions:
+    enabled: true
   auth:
     existingSecret: nextcloud-db
     username: nextcloud
@@ -114,6 +116,13 @@ postgresql:
       adminPasswordKey: postgres-password
       userPasswordKey: password
   primary:
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1001
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 1001
+      runAsGroup: 1001
     persistence:
       enabled: true
       existingClaim: nextcloud-postgresql-data

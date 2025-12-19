@@ -10,7 +10,6 @@ resources:
   - unifi-deployment.yaml
   - unifi-service-tcp.yaml
   - unifi-service-udp.yaml
-  - restore-unifi-db.yaml
 
 commonLabels:
   app.kubernetes.io/name: unifi-controller

@@ -15,34 +15,6 @@ spec:
       labels:
         app: vaultwarden
     spec:
-      initContainers:
-        - name: seed-data
-          image: alpine:3.20
-          securityContext:
-            runAsUser: 0
-            runAsGroup: 0
-          command: ["/bin/sh", "-lc"]
-          args:
-            - |
-              set -e
-              apk add --no-cache rsync
-              src="/nas/vaultwarden/vaultwarden-data"
-              dst="/data"
-              if [ ! -d "$src" ]; then
-                echo "missing source $src"; exit 1
-              fi
-              mkdir -p "$dst"
-              rsync -aHAX --numeric-ids "$src"/ "$dst"/
-              chown -R 1000:1000 /data
-          volumeMounts:
-            - name: data
-              mountPath: /data
-            - name: nas-migrate
-              mountPath: /nas
-              readOnly: true
-          resources:
-            requests: { cpu: "50m", memory: "128Mi" }
-            limits:   { cpu: "500m", memory: "512Mi" }
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
@@ -76,7 +48,3 @@ spec:
       - name: data
         persistentVolumeClaim:
           claimName: vaultwarden-data
-      - name: nas-migrate
-        hostPath:
-          path: /NAS/Longhorn
-          type: Directory

@@ -16,30 +16,6 @@ spec:
       labels:
         app: unifi
     spec:
-      initContainers:
-        - name: seed-config
-          image: alpine:3.20
-          command: ["/bin/sh", "-lc"]
-          args:
-            - |
-              set -e
-              apk add --no-cache rsync
-              src="/nas/unifi/unifi-config"
-              dst="/config"
-              if [ ! -d "$src" ]; then
-                echo "missing source $src"; exit 1
-              fi
-              mkdir -p "$dst"
-              rsync -aHAX --numeric-ids "$src"/ "$dst"/
-          volumeMounts:
-            - name: config
-              mountPath: /config
-            - name: nas-migrate
-              mountPath: /nas
-              readOnly: true
-          resources:
-            requests: { cpu: "50m", memory: "128Mi" }
-            limits:   { cpu: "500m", memory: "512Mi" }
       containers:
         - name: unifi
           image: lscr.io/linuxserver/unifi-network-application:latest
@@ -110,7 +86,3 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: unifi-config
-        - name: nas-migrate
-          hostPath:
-            path: /NAS/Longhorn
-            type: Directory

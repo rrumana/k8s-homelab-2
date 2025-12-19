@@ -16,27 +16,6 @@ spec:
       labels:
         app: elasticsearch
     spec:
-      initContainers:
-        - name: seed-data
-          image: alpine:3.20
-          command: ["/bin/sh", "-lc"]
-          args:
-            - |
-              set -e
-              apk add --no-cache rsync
-              src="/nas/elasticsearch/elasticsearch-data"
-              dst="/seed"
-              if [ ! -d "$src" ]; then
-                echo "missing source $src"; exit 1
-              fi
-              mkdir -p "$dst"
-              rsync -aHAX --numeric-ids "$src"/ "$dst"/
-          volumeMounts:
-            - { name: data, mountPath: /seed }
-            - { name: nas-migrate, mountPath: /nas, readOnly: true }
-          resources:
-            requests: { cpu: "50m", memory: "128Mi" }
-            limits:   { cpu: "500m", memory: "512Mi" }
       containers:
         - name: elasticsearch
           image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
@@ -87,7 +66,3 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: elasticsearch-data
-        - name: nas-migrate
-          hostPath:
-            path: /NAS/Longhorn
-            type: Directory

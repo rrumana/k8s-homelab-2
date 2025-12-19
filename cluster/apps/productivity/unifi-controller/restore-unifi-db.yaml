@@ -34,6 +34,7 @@ spec:
               mongosh --host unifi-db --eval 'db.adminCommand({ ping: 1 })' >/dev/null 2>&1 || {
                 echo "mongo not ready"; exit 1; }
               mongorestore --drop --gzip --archive="$DUMP_FILE" \
+                --host unifi-db \
                 --username unifi --password "$MONGO_PASS" --authenticationDatabase unifi
           volumeMounts:
             - name: nas-migrate

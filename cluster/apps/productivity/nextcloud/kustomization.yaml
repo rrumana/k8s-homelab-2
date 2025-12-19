@@ -5,8 +5,6 @@ namespace: productivity
 
 resources:
   - pvc.yaml
-  - seed-nextcloud-appdata.yaml
-  - seed-nextcloud-redis.yaml
   - restore-nextcloud-postgres.yaml
 
 commonLabels:

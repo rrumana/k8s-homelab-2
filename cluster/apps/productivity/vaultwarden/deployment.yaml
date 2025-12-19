@@ -18,6 +18,9 @@ spec:
       initContainers:
         - name: seed-data
           image: alpine:3.20
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
           command: ["/bin/sh", "-lc"]
           args:
             - |
@@ -30,6 +33,7 @@ spec:
               fi
               mkdir -p "$dst"
               rsync -aHAX --numeric-ids "$src"/ "$dst"/
+              chown -R 1000:1000 /data
           volumeMounts:
             - name: data
               mountPath: /data

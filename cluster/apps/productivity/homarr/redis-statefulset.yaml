@@ -60,13 +60,6 @@ spec:
           ports:
             - name: redis
               containerPort: 6379
-          env:
-            - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: homarr-redis
-                  key: redis-password
-                  optional: true
           readinessProbe:
             exec:
               command:

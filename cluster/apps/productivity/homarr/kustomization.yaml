@@ -8,7 +8,6 @@ resources:
   - mysql-statefulset.yaml
   - redis-service.yaml
   - redis-statefulset.yaml
-  - restore-homarr-mysql.yaml
 
 commonLabels:
   app.kubernetes.io/name: homarr

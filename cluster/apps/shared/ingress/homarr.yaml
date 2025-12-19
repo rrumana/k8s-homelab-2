@@ -25,4 +25,4 @@ spec:
               service:
                 name: homarr-helm
                 port:
-                  number: 80
+                  number: 7575

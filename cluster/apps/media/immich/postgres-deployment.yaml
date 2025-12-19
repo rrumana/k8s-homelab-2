@@ -25,6 +25,9 @@ spec:
         - name: initdb
           image: docker.io/library/postgres:14
           command: ["/bin/sh", "-lc"]
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
           env:
             - name: POSTGRES_PASSWORD
               valueFrom:
@@ -53,14 +56,23 @@ spec:
                 exit 0
               fi
 
+              if getent passwd 999 >/dev/null 2>&1; then
+                RUNUSER="$(getent passwd 999 | cut -d: -f1)"
+              else
+                echo "postgres:x:999:999:Postgres:/var/lib/postgresql:/bin/sh" >> /etc/passwd
+                echo "postgres:x:999:" >> /etc/group
+                RUNUSER="postgres"
+              fi
+
+              chown -R 999:999 "$PGDATA"
               PWFILE="$(mktemp)"
               printf "%s" "$POSTGRES_PASSWORD" > "$PWFILE"
-              initdb $POSTGRES_INITDB_ARGS -D "$PGDATA" --username="$POSTGRES_USER" --pwfile="$PWFILE"
+              su -s /bin/sh -c "initdb $POSTGRES_INITDB_ARGS -D \"$PGDATA\" --username=\"$POSTGRES_USER\" --pwfile=\"$PWFILE\"" "$RUNUSER"
               rm -f "$PWFILE"
 
-              pg_ctl -D "$PGDATA" -o "-c listen_addresses=''" -w start
-              createdb -U "$POSTGRES_USER" "$POSTGRES_DB"
-              pg_ctl -D "$PGDATA" -m fast -w stop
+              su -s /bin/sh -c "pg_ctl -D \"$PGDATA\" -o \"-c listen_addresses=''\" -w start" "$RUNUSER"
+              su -s /bin/sh -c "createdb -U \"$POSTGRES_USER\" \"$POSTGRES_DB\"" "$RUNUSER"
+              su -s /bin/sh -c "pg_ctl -D \"$PGDATA\" -m fast -w stop" "$RUNUSER"
           volumeMounts:
             - name: postgres-data
               mountPath: /var/lib/postgresql/data

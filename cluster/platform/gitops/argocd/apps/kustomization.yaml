@@ -19,6 +19,7 @@ resources:
   - portfolio-staging-app.yaml
   - opnsense-app.yaml
   - truenas-app.yaml
+  - ceph-smoke-app.yaml
   - rook-ceph-operator-app.yaml
   - rook-ceph-cluster-app.yaml
 

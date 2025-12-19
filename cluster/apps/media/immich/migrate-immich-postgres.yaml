@@ -59,7 +59,10 @@ spec:
               done
 
               echo "Restoring $DUMP into $PGDATABASE"
-              pg_restore -h "$PGHOST" -p "$PGPORT" -U "$PGUSER" -d "$PGDATABASE" --clean --if-exists "$DUMP"
+              TMP_SQL="/tmp/immich-restore.sql"
+              pg_restore --clean --if-exists --no-owner --no-privileges -f "$TMP_SQL" "$DUMP"
+              sed -i '/transaction_timeout/d' "$TMP_SQL"
+              psql -h "$PGHOST" -p "$PGPORT" -U "$PGUSER" -d "$PGDATABASE" -v ON_ERROR_STOP=1 -f "$TMP_SQL"
           volumeMounts:
             - name: nas
               mountPath: /nas

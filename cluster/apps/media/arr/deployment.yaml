@@ -55,10 +55,6 @@ spec:
           configMap:
             name: arr-stack-gluetun-pf-sync
             defaultMode: 0755
-        - name: nas-migrate
-          hostPath:
-            path: /NAS/Longhorn
-            type: Directory
 
       initContainers:
         - name: sysctl-init
@@ -71,34 +67,6 @@ spec:
             sysctl -w net.ipv4.conf.default.rp_filter=0
             sysctl -w net.ipv4.conf.tun0.rp_filter=0 || true
             EOS]
-        - name: seed-configs
-          image: alpine:3.20
-          command: ["/bin/sh", "-lc"]
-          args:
-            - |
-              set -e
-              apk add --no-cache rsync
-              for d in qbit-config gluetun sonarr-config radarr-config lidarr-config prowlarr-config jellyseerr-config; do
-                src="/nas/arr-stack/${d}"
-                dst="/seed/${d}"
-                if [ ! -d "$src" ]; then
-                  echo "missing source $src"; exit 1
-                fi
-                mkdir -p "$dst"
-                rsync -aHAX --numeric-ids "$src"/ "$dst"/
-              done
-          volumeMounts:
-            - { name: qbit-config,     mountPath: /seed/qbit-config }
-            - { name: gluetun,         mountPath: /seed/gluetun }
-            - { name: sonarr-config,   mountPath: /seed/sonarr-config }
-            - { name: radarr-config,   mountPath: /seed/radarr-config }
-            - { name: lidarr-config,   mountPath: /seed/lidarr-config }
-            - { name: prowlarr-config, mountPath: /seed/prowlarr-config }
-            - { name: jellyseerr-config, mountPath: /seed/jellyseerr-config }
-            - { name: nas-migrate,     mountPath: /nas, readOnly: true }
-          resources:
-            requests: { cpu: "50m", memory: "128Mi" }
-            limits:   { cpu: "500m", memory: "512Mi" }
         - name: fix-perms
           image: busybox:1.36
           securityContext:

@@ -49,13 +49,13 @@ spec:
     nodes:
       - name: melchior-1
         devices:
-          - fullPath: /dev/disk/by-id/nvme-CT2000P310SSD8_252350935F8C
-          - fullPath: /dev/disk/by-id/nvme-CT2000P310SSD8_252350935FBF
+          - name: /dev/disk/by-id/nvme-CT2000P310SSD8_252350935F8C
+          - name: /dev/disk/by-id/nvme-CT2000P310SSD8_252350935FBF
       - name: balthasar-2
         devices:
-          - fullPath: /dev/disk/by-id/nvme-Sabrent_Rocket_Q_23CD0705089800199528
-          - fullPath: /dev/disk/by-id/nvme-ADATA_LEGEND_900_4N42210FA46C
+          - name: /dev/disk/by-id/nvme-Sabrent_Rocket_Q_23CD0705089800199528
+          - name: /dev/disk/by-id/nvme-ADATA_LEGEND_900_4N42210FA46C
       - name: casper-3
         devices:
-          - fullPath: /dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S7KHNJ0Y612649F
-          - fullPath: /dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S73WNJ0W944501L
+          - name: /dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S7KHNJ0Y612649F
+          - name: /dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S73WNJ0W944501L

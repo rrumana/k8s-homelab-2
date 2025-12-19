@@ -23,25 +23,11 @@ spec:
           args:
             - |
               set -e
-              if [ -f /config/.seeded ]; then
-                echo "config already seeded"; exit 0
-              fi
-              if [ -f "/config/Library/Application Support/Plex Media Server/Preferences.xml" ]; then
-                echo "plex prefs found; skipping seed"
-                touch /config/.seeded
-                exit 0
-              fi
-              if [ -d /config ] && [ "$(find /config -mindepth 1 -maxdepth 1 ! -name lost+found -print -quit)" ]; then
-                echo "config not empty; skipping seed"
-                touch /config/.seeded
-                exit 0
-              fi
               if [ ! -d /nas/plex/plex-config ]; then
                 echo "missing source /nas/plex/plex-config"; exit 1
               fi
               apk add --no-cache rsync
               rsync -aHAX --numeric-ids /nas/plex/plex-config/ /config/
-              touch /config/.seeded
           volumeMounts:
             - name: config
               mountPath: /config

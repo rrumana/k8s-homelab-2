@@ -26,7 +26,12 @@ spec:
               if [ -f /config/.seeded ]; then
                 echo "config already seeded"; exit 0
               fi
-              if [ -d /config ] && [ "$(ls -A /config)" ]; then
+              if [ -f "/config/Library/Application Support/Plex Media Server/Preferences.xml" ]; then
+                echo "plex prefs found; skipping seed"
+                touch /config/.seeded
+                exit 0
+              fi
+              if [ -d /config ] && [ "$(find /config -mindepth 1 -maxdepth 1 ! -name lost+found -print -quit)" ]; then
                 echo "config not empty; skipping seed"
                 touch /config/.seeded
                 exit 0

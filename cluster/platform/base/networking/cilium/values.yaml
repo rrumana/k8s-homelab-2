@@ -53,7 +53,7 @@ enableIPv6Masquerade: true
 
 # Cilium operator (IPAM, GC, etc.). Start with 1; bump to 2+ once multiple nodes exist.
 operator:
-  replicas: 2
+  replicas: 3
   tolerations:
     - operator: Exists
   prometheus:

@@ -7,4 +7,3 @@ spec:
   failureDomain: host
   replicated:
     size: 3
-    min_size: 2

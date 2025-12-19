@@ -25,6 +25,30 @@ spec:
       containers:
         - name: rook-ceph-tools
           image: rook/ceph:v1.18.8
-          command: ["/bin/bash", "-c", "sleep infinity"]
+          command:
+            - /bin/bash
+            - -c
+          args:
+            - |
+              set -e
+              cat > /etc/ceph/ceph.client.admin.keyring <<EOF
+              [client.admin]
+                key = ${ROOK_CEPH_SECRET}
+              EOF
+              sleep infinity
+          env:
+            - name: ROOK_CEPH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: rook-ceph-mon
+                  key: admin-secret
           tty: true
           stdin: true
+          volumeMounts:
+            - name: ceph-config
+              mountPath: /etc/ceph/ceph.conf
+              subPath: ceph.conf
+      volumes:
+        - name: ceph-config
+          configMap:
+            name: rook-ceph-config

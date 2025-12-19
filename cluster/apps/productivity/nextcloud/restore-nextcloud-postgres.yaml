@@ -46,8 +46,16 @@ spec:
               done
               pg_isready -h "$PGHOST" -p "$PGPORT" -U "$PGUSER" >/dev/null 2>&1 || {
                 echo "postgres not ready"; exit 1; }
-              psql -v ON_ERROR_STOP=1 -v nc_pass="$NEXTCLOUD_PASSWORD" \
-                -c "DO \\$\\$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'nextcloud') THEN CREATE ROLE nextcloud LOGIN PASSWORD :'nc_pass'; ELSE ALTER ROLE nextcloud WITH PASSWORD :'nc_pass'; END IF; END \\$\\$;"
+              psql -v ON_ERROR_STOP=1 <<SQL
+              DO \$\$
+              BEGIN
+                IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'nextcloud') THEN
+                  CREATE ROLE nextcloud LOGIN PASSWORD '${NEXTCLOUD_PASSWORD}';
+                ELSE
+                  ALTER ROLE nextcloud WITH PASSWORD '${NEXTCLOUD_PASSWORD}';
+                END IF;
+              END\$\$;
+SQL
               psql -v ON_ERROR_STOP=1 -tc "SELECT 1 FROM pg_database WHERE datname='nextcloud'" | grep -q 1 || \
                 psql -v ON_ERROR_STOP=1 -c "CREATE DATABASE nextcloud OWNER nextcloud;"
               pg_restore --no-owner --no-privileges --clean --if-exists -f /tmp/nextcloud-restore.sql "$DUMP_FILE"

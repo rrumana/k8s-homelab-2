@@ -1,0 +1,39 @@
+# platform/gitops/argocd/apps/nextcloud-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nextcloud
+  namespace: argocd
+spec:
+  project: default
+
+  sources:
+    - repoURL: https://nextcloud.github.io/helm/
+      targetRevision: "8.5.0"
+      chart: nextcloud
+      helm:
+        releaseName: nextcloud
+        valueFiles:
+          - $values/cluster/apps/productivity/nextcloud/values.yaml
+    - repoURL: https://github.com/rrumana/k8s-homelab-2.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://github.com/rrumana/k8s-homelab-2.git
+      targetRevision: main
+      path: cluster/apps/productivity/nextcloud
+      kustomize: {}
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: productivity
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        app.kubernetes.io/name: nextcloud
+        app.kubernetes.io/managed-by: argocd

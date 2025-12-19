@@ -1,0 +1,139 @@
+# apps/productivity/nextcloud/values.yaml
+# Chart: nextcloud/nextcloud (official community chart)
+
+nextcloud:
+  host: nextcloud.k8s.rcrumana.xyz
+  trustedDomains:
+    - nextcloud.k8s.rcrumana.xyz
+  existingSecret:
+    enabled: true
+    secretName: nextcloud-admin
+    usernameKey: nextcloud-username
+    passwordKey: nextcloud-password
+
+  phpClientHttpsFix:
+    enabled: true
+    protocol: https
+
+  phpConfigs:
+    zz-uploads.ini: |-
+      upload_max_filesize=10G
+      post_max_size=10G
+      memory_limit=1024M
+      max_execution_time=3600
+
+    99-overrides.config.php: |-
+      <?php
+      $CONFIG = [
+        'overwriteprotocol' => 'https',
+        'trusted_proxies' => ['10.0.0.0/8','172.16.0.0/12','192.168.0.0/16'],
+      ];
+
+replicaCount: 1
+strategy:
+  type: Recreate
+
+dnsPolicy: None
+dnsConfig:
+  nameservers:
+    - 10.43.0.10
+  searches:
+    - productivity.svc.cluster.local
+    - svc.cluster.local
+    - cluster.local
+  options:
+    - name: ndots
+      value: "1"
+
+image:
+  repository: nextcloud
+
+# --- Ingress (managed separately) ---
+ingress:
+  enabled: false
+  className: haproxy-restricted
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    haproxy-ingress.github.io/backend-protocol: "http"
+    haproxy-ingress.github.io/timeout-client: "3600s"
+    haproxy-ingress.github.io/timeout-server: "3600s"
+    haproxy-ingress.github.io/proxy-body-size: "0"
+    haproxy-ingress.github.io/whitelist-source-range: "192.168.0.0/16,172.16.0.0/12,10.0.0.0/8"
+  tls:
+    - hosts: [nextcloud.k8s.rcrumana.xyz]
+      secretName: nextcloud-k8s-rcrumana-xyz-tls
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  existingClaim: nextcloud-appdata
+
+internalDatabase:
+  enabled: false
+  name: nextcloud
+
+externalDatabase:
+  enabled: true
+  type: postgresql
+  host: nextcloud-postgresql
+  port: 5432
+  database: nextcloud
+  user: nextcloud
+  existingSecret:
+    enabled: true
+    secretName: nextcloud-db
+    passwordKey: password
+
+podSecurityContext:
+  fsGroup: 33
+  runAsUser: 33
+  runAsGroup: 33
+containerSecurityContext:
+  runAsUser: 33
+  runAsGroup: 33
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: "4"
+    memory: 4Gi
+
+cronjob:
+  enabled: true
+  schedule: "*/5 * * * *"
+
+postgresql:
+  enabled: true
+  auth:
+    existingSecret: nextcloud-db
+    username: nextcloud
+    database: nextcloud
+    secretKeys:
+      adminPasswordKey: postgres-password
+      userPasswordKey: password
+  primary:
+    persistence:
+      enabled: true
+      existingClaim: nextcloud-postgresql-data
+    initContainers:
+      - name: upgrade
+        image: "pgautoupgrade/pgautoupgrade:17-alpine"
+        env:
+          - name: "PGAUTO_ONESHOT"
+            value: "yes"
+        volumeMounts:
+          - mountPath: "/bitnami/postgresql"
+            name: "data"
+
+redis:
+  enabled: true
+  architecture: standalone
+  auth:
+    existingSecret: nextcloud-redis
+    existingSecretPasswordKey: redis-password
+  master:
+    persistence:
+      enabled: true
+      existingClaim: nextcloud-redis-data

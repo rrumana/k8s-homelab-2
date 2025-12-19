@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: unifi-db
+  labels:
+    app: unifi-db
+spec:
+  type: ClusterIP
+  selector:
+    app: unifi-db
+  ports:
+    - name: mongo
+      port: 27017
+      targetPort: 27017
+      protocol: TCP

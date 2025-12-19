@@ -1,0 +1,46 @@
+# apps/productivity/homarr/values.yaml
+# Chart: homarr-labs/homarr
+
+replicaCount: 1
+strategyType: RollingUpdate
+
+env:
+  TZ: America/Los_Angeles
+  LOG_LEVEL: debug
+  REDIS_IS_EXTERNAL: "true"
+  REDIS_HOST: homarr-redis.productivity.svc.cluster.local
+  REDIS_PORT: "6379"
+  REDIS_DATABASE_INDEX: "0"
+  
+database:
+  type: mysql
+
+envSecrets:
+  dbCredentials:
+    existingSecret: homarr-helm-db
+    dbUrlKey: db-url
+  dbEncryption:
+    existingSecret: homarr-helm-db-encryption
+    key: db-encryption-key
+
+ingress:
+  enabled: false
+  ingressClassName: haproxy-restricted
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: homarr.k8s.rcrumana.xyz
+      paths:
+        - path: /
+  tls:
+    - secretName: homarr-k8s-rcrumana-xyz-tls
+      hosts:
+        - homarr.k8s.rcrumana.xyz
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 256Mi
+  limits:
+    cpu: "1"
+    memory: 2Gi

@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vaultwarden
+  labels:
+    app: vaultwarden
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: vaultwarden
+  template:
+    metadata:
+      labels:
+        app: vaultwarden
+    spec:
+      initContainers:
+        - name: seed-data
+          image: alpine:3.20
+          command: ["/bin/sh", "-lc"]
+          args:
+            - |
+              set -e
+              apk add --no-cache rsync
+              src="/nas/vaultwarden/vaultwarden-data"
+              dst="/data"
+              if [ ! -d "$src" ]; then
+                echo "missing source $src"; exit 1
+              fi
+              mkdir -p "$dst"
+              rsync -aHAX --numeric-ids "$src"/ "$dst"/
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: nas-migrate
+              mountPath: /nas
+              readOnly: true
+          resources:
+            requests: { cpu: "50m", memory: "128Mi" }
+            limits:   { cpu: "500m", memory: "512Mi" }
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+      - name: vaultwarden
+        image: vaultwarden/server:latest
+        ports:
+        - containerPort: 80
+          name: http
+        env:
+        - name: DOMAIN
+          value: "https://vault.k8s.rcrumana.xyz"
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+            - ALL
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: vaultwarden-data
+      - name: nas-migrate
+        hostPath:
+          path: /NAS/Longhorn
+          type: Directory

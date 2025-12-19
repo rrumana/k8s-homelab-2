@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unifi-db
+  labels:
+    app: unifi-db
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: unifi-db
+  template:
+    metadata:
+      labels:
+        app: unifi-db
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:6.0.11
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: unifi-db-credentials
+                  key: MONGO_PASS
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    set -e
+                    for i in $(seq 1 60); do
+                      mongosh --host localhost --eval 'db.adminCommand({ ping: 1 })' >/dev/null 2>&1 && break
+                      sleep 2
+                    done
+                    mongosh --host localhost --eval '
+                      const pwd = (process.env.MONGO_PASS || "").toString();
+                      const dbUnifi = db.getSiblingDB("unifi");
+                      const existing = dbUnifi.getUser("unifi");
+                      if (!existing) {
+                        dbUnifi.createUser({
+                          user: "unifi",
+                          pwd: pwd,
+                          roles: [
+                            { role: "dbOwner", db: "unifi" },
+                            { role: "dbOwner", db: "unifi_stat" }
+                          ]
+                        });
+                        print("Created user unifi");
+                      } else {
+                        print("User unifi already exists, skipping");
+                      }'
+          ports:
+            - containerPort: 27017
+              name: mongo
+          volumeMounts:
+            - name: db-data
+              mountPath: /data/db
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+      volumes:
+        - name: db-data
+          persistentVolumeClaim:
+            claimName: unifi-db

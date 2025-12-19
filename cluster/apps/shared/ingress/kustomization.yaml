@@ -3,6 +3,9 @@ kind: Kustomization
 
 resources:
   - argocd.yaml
+  - collabora.yaml
+  - homarr.yaml
+  - nextcloud.yaml
   - jellyfin.yaml
   - jellyseerr.yaml
   - immich.yaml
@@ -14,6 +17,10 @@ resources:
   - qbit-lts2.yaml
   - radarr.yaml
   - sonarr.yaml
+  - unifi.yaml
+  - uptime-kuma.yaml
+  - vaultwarden.yaml
+  - whiteboard.yaml
   - portfolio.yaml
   - portfolio-staging.yaml
   - opnsense.yaml

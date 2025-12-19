@@ -28,6 +28,7 @@ resources:
   - immich-app.yaml
   - nextcloud-app.yaml
   - plex-app.yaml
+  - headscale-app.yaml
   - truenas-app.yaml
   - unifi-controller-app.yaml
   - uptime-kuma-app.yaml

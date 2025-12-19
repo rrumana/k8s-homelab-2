@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: headscale-ui
+  labels:
+    app: headscale
+    component: ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: headscale
+      component: ui
+  template:
+    metadata:
+      labels:
+        app: headscale
+        component: ui
+    spec:
+      containers:
+        - name: headscale-ui
+          image: ghcr.io/gurucomputing/headscale-ui:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: HEADSCALE_URL
+              value: https://headscale.rcrumana.xyz
+          volumeMounts:
+            - name: ui-data
+              mountPath: /data
+            - name: ui-home
+              mountPath: /home/appuser/.local
+            - name: ui-config
+              mountPath: /home/appuser/.config
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+      volumes:
+        - name: ui-data
+          emptyDir: {}
+        - name: ui-home
+          emptyDir: {}
+        - name: ui-config
+          emptyDir: {}

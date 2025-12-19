@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - argocd.yaml
   - collabora.yaml
+  - headscale.yaml
   - homarr.yaml
   - nextcloud.yaml
   - jellyfin.yaml

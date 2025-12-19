@@ -1,0 +1,128 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: headscale
+  labels:
+    app: headscale
+    component: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: headscale
+      component: api
+  template:
+    metadata:
+      labels:
+        app: headscale
+        component: api
+    spec:
+      initContainers:
+        - name: seed-data
+          image: alpine:3.20
+          command: ["/bin/sh", "-lc"]
+          args:
+            - |
+              set -e
+              if [ ! -d /nas/headscale/headscale-data ]; then
+                echo "missing source /nas/headscale/headscale-data"; exit 1
+              fi
+              apk add --no-cache rsync
+              rsync -aHAX --numeric-ids /nas/headscale/headscale-data/ /var/lib/headscale/
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/headscale
+            - name: nas-migrate
+              mountPath: /nas
+              readOnly: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+      containers:
+        - name: headscale
+          image: headscale/headscale:0.27.1
+          imagePullPolicy: IfNotPresent
+          command: ["headscale"]
+          args: ["serve", "--config", "/etc/headscale/config.yaml"]
+          env:
+            - name: HEADSCALE_DATABASE_TYPE
+              value: postgres
+            - name: HEADSCALE_DATABASE_POSTGRES_HOST
+              value: headscale-postgres
+            - name: HEADSCALE_DATABASE_POSTGRES_PORT
+              value: "5432"
+            - name: HEADSCALE_DATABASE_POSTGRES_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: headscale-postgres
+                  key: database
+            - name: HEADSCALE_DATABASE_POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: headscale-postgres
+                  key: username
+            - name: HEADSCALE_DATABASE_POSTGRES_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: headscale-postgres
+                  key: password
+            - name: HEADSCALE_DATABASE_POSTGRES_SSL
+              value: "false"
+          ports:
+            - containerPort: 8080
+              name: http
+            - containerPort: 50443
+              name: grpc
+            - containerPort: 9090
+              name: metrics
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: config
+              mountPath: /etc/headscale/config.yaml
+              subPath: config.yaml
+            - name: config
+              mountPath: /etc/headscale/policy.hujson
+              subPath: policy.hujson
+            - name: data
+              mountPath: /var/lib/headscale
+            - name: run
+              mountPath: /var/run/headscale
+      volumes:
+        - name: config
+          configMap:
+            name: headscale-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: headscale-data
+        - name: run
+          emptyDir: {}
+        - name: nas-migrate
+          hostPath:
+            path: /NAS/Longhorn
+            type: Directory

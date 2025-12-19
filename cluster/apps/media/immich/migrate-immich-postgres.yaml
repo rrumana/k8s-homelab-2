@@ -58,6 +58,16 @@ spec:
                 sleep 2
               done
 
+              echo "Recreating database $PGDATABASE"
+              psql -h "$PGHOST" -p "$PGPORT" -U "$PGUSER" -d postgres -v ON_ERROR_STOP=1 \
+                -v dbname="$PGDATABASE" -v dbuser="$PGUSER" <<'SQL'
+              SELECT pg_terminate_backend(pid)
+              FROM pg_stat_activity
+              WHERE datname = :'dbname' AND pid <> pg_backend_pid();
+              DROP DATABASE IF EXISTS :"dbname";
+              CREATE DATABASE :"dbname" OWNER :"dbuser";
+              SQL
+
               echo "Restoring $DUMP into $PGDATABASE"
               TMP_SQL="/tmp/immich-restore.sql"
               pg_restore --clean --if-exists --no-owner --no-privileges -f "$TMP_SQL" "$DUMP"

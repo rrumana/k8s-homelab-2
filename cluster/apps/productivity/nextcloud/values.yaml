@@ -138,7 +138,14 @@ postgresql:
           - -c
           - |
             set -eux
-            chown -R 1001:1001 /bitnami/postgresql
+            if [ -d /bitnami/postgresql/data ]; then
+              chown -R 1001:1001 /bitnami/postgresql/data
+            else
+              chown -R 1001:1001 /bitnami/postgresql
+            fi
+        volumeMounts:
+          - mountPath: "/bitnami/postgresql"
+            name: "data"
       - name: upgrade
         image: "pgautoupgrade/pgautoupgrade:17-alpine"
         env:

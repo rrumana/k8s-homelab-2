@@ -9,10 +9,10 @@ spec:
   cephVersion:
     image: quay.io/ceph/ceph:v18.2.2
 
-  # Use the dedicated 2.5Gb Ceph subnet for all Ceph traffic.
+  # Use the LAN for client traffic and the storage network for replication.
   network:
     provider: host
-    publicNetwork: "172.16.100.0/24"
+    publicNetwork: "192.168.1.0/24"
     clusterNetwork: "172.16.100.0/24"
 
   mon:
@@ -39,6 +39,8 @@ spec:
   # Conservative recovery/backfill settings for 2.5Gb links.
   cephConfig:
     global:
+      public_network: "192.168.1.0/24"
+      cluster_network: "172.16.100.0/24"
       osd_max_backfills: "1"
       osd_recovery_max_active: "1"
       osd_recovery_sleep: "0.1"

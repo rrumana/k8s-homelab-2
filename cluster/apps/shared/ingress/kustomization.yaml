@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - argocd.yaml
+  - plex.yaml
   - portfolio.yaml
   - portfolio-staging.yaml
   - opnsense.yaml

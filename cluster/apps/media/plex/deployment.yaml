@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+  labels:
+    app: plex
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: plex
+  template:
+    metadata:
+      labels:
+        app: plex
+    spec:
+      dnsPolicy: ClusterFirstWithHostNet
+      initContainers:
+        - name: seed-config
+          image: alpine:3.20
+          command: ["/bin/sh", "-lc"]
+          args:
+            - |
+              set -e
+              if [ -f /config/.seeded ]; then
+                echo "config already seeded"; exit 0
+              fi
+              if [ -d /config ] && [ "$(ls -A /config)" ]; then
+                echo "config not empty; skipping seed"
+                touch /config/.seeded
+                exit 0
+              fi
+              if [ ! -d /nas/plex/plex-config ]; then
+                echo "missing source /nas/plex/plex-config"; exit 1
+              fi
+              apk add --no-cache rsync
+              rsync -aHAX --numeric-ids /nas/plex/plex-config/ /config/
+              touch /config/.seeded
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: nas-migrate
+              mountPath: /nas
+              readOnly: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+      containers:
+        - name: plex
+          image: lscr.io/linuxserver/plex:latest
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "America/Los_Angeles"
+            - name: VERSION
+              value: "latest"
+            - name: ADVERTISE_IP
+              value: "http://plex.k8s.rcrumana.xyz:32400/"
+          ports:
+            - name: web
+              containerPort: 32400
+              protocol: TCP
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: tv
+              mountPath: /tv
+            - name: movies
+              mountPath: /movies
+            - name: music
+              mountPath: /music
+            - name: dri
+              mountPath: /dev/dri
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "8Gi"
+              cpu: "24"
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: plex-config
+        - name: nas-migrate
+          hostPath:
+            path: /NAS/Longhorn
+            type: Directory
+        - name: tv
+          hostPath:
+            path: /NAS/Torrent/Shows
+            type: Directory
+        - name: movies
+          hostPath:
+            path: /NAS/Torrent/Movies
+            type: Directory
+        - name: music
+          hostPath:
+            path: /NAS/Torrent/Music
+            type: Directory
+        - name: dri
+          hostPath:
+            path: /dev/dri
+            type: Directory

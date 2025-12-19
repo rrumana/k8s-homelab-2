@@ -21,6 +21,49 @@ spec:
       securityContext:
         runAsUser: 999
         runAsGroup: 999
+      initContainers:
+        - name: initdb
+          image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
+          command: ["/bin/sh", "-lc"]
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: immich-secret
+                  key: DB_PASSWORD
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: immich-config
+                  key: DB_USERNAME
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: immich-config
+                  key: DB_DATABASE_NAME
+            - name: POSTGRES_INITDB_ARGS
+              value: "--data-checksums"
+          args:
+            - |
+              set -eu
+
+              PGDATA="/var/lib/postgresql/data"
+              if [ -s "$PGDATA/PG_VERSION" ]; then
+                echo "PGDATA already initialized"
+                exit 0
+              fi
+
+              PWFILE="$(mktemp)"
+              printf "%s" "$POSTGRES_PASSWORD" > "$PWFILE"
+              initdb $POSTGRES_INITDB_ARGS -D "$PGDATA" --username="$POSTGRES_USER" --pwfile="$PWFILE"
+              rm -f "$PWFILE"
+
+              pg_ctl -D "$PGDATA" -o "-c listen_addresses=''" -w start
+              createdb -U "$POSTGRES_USER" "$POSTGRES_DB"
+              pg_ctl -D "$PGDATA" -m fast -w stop
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
       containers:
         - name: postgres
           image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0

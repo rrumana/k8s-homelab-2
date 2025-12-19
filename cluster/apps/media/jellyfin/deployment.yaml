@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+  labels:
+    app: jellyfin
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: jellyfin
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+    spec:
+      dnsPolicy: ClusterFirstWithHostNet
+      securityContext:
+        supplementalGroups:
+          - 989
+          - 985
+      initContainers:
+        - name: seed-config
+          image: alpine:3.20
+          command: ["/bin/sh", "-lc"]
+          args:
+            - |
+              set -e
+              if [ ! -d /nas/jellyfin/jellyfin-config ]; then
+                echo "missing source /nas/jellyfin/jellyfin-config"; exit 1
+              fi
+              apk add --no-cache rsync
+              rsync -aHAX --numeric-ids /nas/jellyfin/jellyfin-config/ /config/
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: nas-migrate
+              mountPath: /nas
+              readOnly: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+      containers:
+        - name: jellyfin
+          image: lscr.io/linuxserver/jellyfin:latest
+          securityContext:
+            privileged: true
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "America/Los_Angeles"
+            - name: JELLYFIN_PublishedServerUrl
+              value: "https://jellyfin.k8s.rcrumana.xyz"
+            - name: LIBVA_DRIVER_NAME
+              value: radeonsi
+          ports:
+            - name: http
+              containerPort: 8096
+              protocol: TCP
+            - name: https
+              containerPort: 8920
+              protocol: TCP
+            - name: discovery
+              containerPort: 7359
+              protocol: UDP
+            - name: dlna
+              containerPort: 1900
+              protocol: UDP
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: cache
+              mountPath: /cache
+            - name: tv
+              mountPath: /tv
+            - name: movies
+              mountPath: /movies
+            - name: music
+              mountPath: /music
+            - name: dri
+              mountPath: /dev/dri
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "8Gi"
+              cpu: "24"
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: jellyfin-config
+        - name: cache
+          emptyDir: {}
+        - name: nas-migrate
+          hostPath:
+            path: /NAS/Longhorn
+            type: Directory
+        - name: tv
+          hostPath:
+            path: /NAS/Torrent/Shows
+            type: Directory
+        - name: movies
+          hostPath:
+            path: /NAS/Torrent/Movies
+            type: Directory
+        - name: music
+          hostPath:
+            path: /NAS/Torrent/Music
+            type: Directory
+        - name: dri
+          hostPath:
+            path: /dev/dri
+            type: Directory

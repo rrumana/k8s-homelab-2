@@ -14,7 +14,7 @@ resources:
 
 cmdOptions:
   v: 3
-  dry-run: true
+  dry-run: false
 
 tolerations:
   - key: node-role.kubernetes.io/control-plane
@@ -35,10 +35,6 @@ deschedulerPolicy:
         - name: DefaultEvictor
           args:
             nodeFit: true
-            podProtections:
-              extraEnabled:
-                - PodsWithPVC
-                - PodsWithoutPDB
         - name: RemoveDuplicates
           args:
             namespaces:
@@ -104,12 +100,26 @@ deschedulerPolicy:
                 - databases
                 - scheduling
                 - service-mesh
+        - name: LowNodeUtilization
+          args:
+            thresholds:
+              cpu: 7
+              memory: 15
+              pods: 20
+            targetThresholds:
+              cpu: 15
+              memory: 25
+              pods: 60
+            namespaces:
+              include:
+                - media
+                - productivity
       plugins:
         balance:
           enabled:
             - RemoveDuplicates
+            - LowNodeUtilization
         deschedule:
           enabled:
             - RemovePodsViolatingNodeTaints
             - RemovePodsViolatingNodeAffinity
-

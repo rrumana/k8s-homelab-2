@@ -35,9 +35,7 @@ deschedulerPolicy:
         - name: DefaultEvictor
           args:
             nodeFit: true
-        - name: RemoveDuplicates
-          args:
-            namespaces:
+            evictableNamespaces:
               exclude:
                 - kube-system
                 - kube-public
@@ -56,50 +54,12 @@ deschedulerPolicy:
                 - databases
                 - scheduling
                 - service-mesh
+        - name: RemoveDuplicates
         - name: RemovePodsViolatingNodeAffinity
           args:
             nodeAffinityType:
               - requiredDuringSchedulingIgnoredDuringExecution
-            namespaces:
-              exclude:
-                - kube-system
-                - kube-public
-                - kube-node-lease
-                - default
-                - argocd
-                - cert-manager
-                - metallb-system
-                - ingress-haproxy
-                - rook-ceph
-                - monitoring
-                - security
-                - networking
-                - ingress
-                - backup
-                - databases
-                - scheduling
-                - service-mesh
         - name: RemovePodsViolatingNodeTaints
-          args:
-            namespaces:
-              exclude:
-                - kube-system
-                - kube-public
-                - kube-node-lease
-                - default
-                - argocd
-                - cert-manager
-                - metallb-system
-                - ingress-haproxy
-                - rook-ceph
-                - monitoring
-                - security
-                - networking
-                - ingress
-                - backup
-                - databases
-                - scheduling
-                - service-mesh
         - name: LowNodeUtilization
           args:
             thresholds:
@@ -108,10 +68,6 @@ deschedulerPolicy:
             targetThresholds:
               cpu: 15
               memory: 25
-            namespaces:
-              include:
-                - media
-                - productivity
       plugins:
         balance:
           enabled:

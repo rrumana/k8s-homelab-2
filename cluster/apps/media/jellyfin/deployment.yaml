@@ -17,6 +17,13 @@ spec:
         app: jellyfin
     spec:
       dnsPolicy: ClusterFirstWithHostNet
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: plex
+              topologyKey: kubernetes.io/hostname
       securityContext:
         supplementalGroups:
           - 989

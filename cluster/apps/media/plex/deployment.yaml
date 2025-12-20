@@ -16,6 +16,13 @@ spec:
         app: plex
     spec:
       dnsPolicy: ClusterFirstWithHostNet
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: jellyfin
+              topologyKey: kubernetes.io/hostname
       containers:
         - name: plex
           image: lscr.io/linuxserver/plex:latest

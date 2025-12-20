@@ -105,11 +105,9 @@ deschedulerPolicy:
             thresholds:
               cpu: 7
               memory: 15
-              pods: 20
             targetThresholds:
               cpu: 15
               memory: 25
-              pods: 60
             namespaces:
               include:
                 - media

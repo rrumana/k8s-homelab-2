@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: egress-qos-config
+  namespace: kube-system
+data:
+  setup.sh: |
+    #!/bin/sh
+    set -euo pipefail
+
+    : "${WAN_IFACE:=}"                   # optional fixed iface; otherwise auto-detect
+    : "${WAN_IFACE_LABEL:=egress-qos/wan-iface}" # node label to override iface
+    : "${LINK_CEIL:=1000mbit}"
+    : "${BULK_RATE:=500mbit}"
+    : "${BULK_CEIL:=${LINK_CEIL}}"
+    : "${SYNC_INTERVAL:=5}"
+    : "${LABEL_SELECTOR:=traffic-tier=bulk-seed}"
+    : "${IPSET_NAME:=bulkseed-pods}"
+    : "${FW_MARK:=1}"
+    : "${KUBECTL_VERSION:=v1.30.2}"
+
+    install_tools() {
+      apk add --no-cache iproute2 iptables ipset jq curl >/dev/null
+      if ! command -v kubectl >/dev/null 2>&1; then
+        echo "Fetching kubectl ${KUBECTL_VERSION}"
+        curl -fsSL -o /usr/local/bin/kubectl "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+        chmod +x /usr/local/bin/kubectl
+      fi
+    }
+
+    detect_iface() {
+      IFACE="${WAN_IFACE:-}"
+      # Try node label if not set
+      if [ -z "$IFACE" ] && [ -n "${MY_NODE_NAME:-}" ]; then
+        IFACE=$(kubectl get node "$MY_NODE_NAME" -o "jsonpath={.metadata.labels['${WAN_IFACE_LABEL}']}" 2>/dev/null || true)
+      fi
+      # Fallback to default route device
+      if [ -z "$IFACE" ]; then
+        IFACE=$(ip route get 1.1.1.1 2>/dev/null | awk '/ dev / {for (i=1;i<=NF;i++) if ($i=="dev") {print $(i+1); exit}}')
+      fi
+      if [ -z "$IFACE" ]; then
+        echo "Unable to detect WAN interface; set WAN_IFACE or node label ${WAN_IFACE_LABEL}" >&2
+        exit 1
+      fi
+      WAN_IFACE="$IFACE"
+    }
+
+    ensure_ipset() {
+      ipset list "${IPSET_NAME}" >/dev/null 2>&1 || ipset create "${IPSET_NAME}" hash:ip family inet
+    }
+
+    refresh_ipset() {
+      TMP="$(mktemp)"
+      kubectl get pods --all-namespaces -l "${LABEL_SELECTOR}" -o json \
+        | jq -r '.items[].status.podIP' \
+        | grep -E '^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$' > "$TMP" || true
+
+      ipset flush "${IPSET_NAME}"
+      while IFS= read -r ip; do
+        [ -n "$ip" ] && ipset add "${IPSET_NAME}" "$ip" -exist
+      done < "$TMP"
+      rm -f "$TMP"
+    }
+
+    ensure_fwmark_rule() {
+      if ! iptables -t mangle -C PREROUTING -m set --match-set "${IPSET_NAME}" src -j MARK --set-mark "${FW_MARK}" >/dev/null 2>&1; then
+        iptables -t mangle -A PREROUTING -m set --match-set "${IPSET_NAME}" src -j MARK --set-mark "${FW_MARK}"
+      fi
+    }
+
+    configure_tc() {
+      tc qdisc del dev "${WAN_IFACE}" root 2>/dev/null || true
+      tc qdisc replace dev "${WAN_IFACE}" root handle 1: htb default 10
+
+      tc class replace dev "${WAN_IFACE}" parent 1: classid 1:1 htb rate "${LINK_CEIL}" ceil "${LINK_CEIL}"
+      tc class replace dev "${WAN_IFACE}" parent 1:1 classid 1:10 htb rate "${LINK_CEIL}" ceil "${LINK_CEIL}"
+      tc class replace dev "${WAN_IFACE}" parent 1:1 classid 1:20 htb rate "${BULK_RATE}" ceil "${BULK_CEIL}"
+
+      tc qdisc replace dev "${WAN_IFACE}" parent 1:10 handle 10: fq_codel
+      tc qdisc replace dev "${WAN_IFACE}" parent 1:20 handle 20: fq_codel
+
+      tc filter replace dev "${WAN_IFACE}" parent 1: protocol ip handle "${FW_MARK}" fw flowid 1:20
+    }
+
+    install_tools
+    detect_iface
+    load_modules() {
+      for mod in sch_htb sch_fq_codel cls_fw; do
+        modprobe "$mod" 2>/dev/null || true
+      done
+    }
+    load_modules
+    ensure_ipset
+    configure_tc
+    ensure_fwmark_rule
+
+    echo "egress-qos: shaping ${WAN_IFACE}, default class=link, bulk=${BULK_RATE} ceil ${BULK_CEIL}, label selector ${LABEL_SELECTOR}"
+
+    while true; do
+      refresh_ipset
+      sleep "${SYNC_INTERVAL}"
+    done

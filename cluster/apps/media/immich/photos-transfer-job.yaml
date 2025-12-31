@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: immich-photos-transfer
+spec:
+  backoffLimit: 1
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: rsync
+          image: alpine/rsync:3.2.7
+          args:
+            - /bin/sh
+            - -c
+            - |
+              set -euo pipefail
+              rsync -aHAX --numeric-ids --info=progress2 --human-readable --partial \
+                /source/ /dest/
+          volumeMounts:
+            - name: immich-photos-source
+              mountPath: /source
+              readOnly: true
+            - name: immich-photos-dest
+              mountPath: /dest
+      volumes:
+        - name: immich-photos-source
+          hostPath:
+            path: /NAS/Cloud/Immich
+            type: Directory
+        - name: immich-photos-dest
+          persistentVolumeClaim:
+            claimName: immich-photos

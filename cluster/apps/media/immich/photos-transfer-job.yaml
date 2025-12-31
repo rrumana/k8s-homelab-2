@@ -9,7 +9,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: rsync
-          image: alpine/rsync:latest
+          image: bitnami/rsync:latest
           args:
             - /bin/sh
             - -c

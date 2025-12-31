@@ -9,12 +9,12 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: rsync
-          image: bitnami/rsync:latest
+          image: alpine:3.20
+          command: ["/bin/sh", "-lc"]
           args:
-            - /bin/sh
-            - -c
             - |
               set -euo pipefail
+              apk add --no-cache rsync
               rsync -aHAX --numeric-ids --info=progress2 --human-readable --partial \
                 /source/ /dest/
           volumeMounts:

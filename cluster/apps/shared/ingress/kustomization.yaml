@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - argocd.yaml
+  - ceph-dashboard.yaml
   - collabora.yaml
   - headscale.yaml
   - homarr.yaml

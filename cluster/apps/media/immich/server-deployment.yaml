@@ -61,9 +61,8 @@ spec:
             periodSeconds: 10
       volumes:
         - name: upload
-          hostPath:
-            path: /NAS/Cloud/Immich
-            type: DirectoryOrCreate
+          persistentVolumeClaim:
+            claimName: immich-photos
         - name: localtime
           hostPath:
             path: /etc/localtime

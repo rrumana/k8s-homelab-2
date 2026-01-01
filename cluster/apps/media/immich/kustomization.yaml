@@ -11,7 +11,7 @@ resources:
   - services.yaml
   - configmap.yaml
   - pvc.yaml
-  - photos-transfer-job.yaml
+  - photos-pvc.yaml
 
 commonLabels:
   app.kubernetes.io/name: immich

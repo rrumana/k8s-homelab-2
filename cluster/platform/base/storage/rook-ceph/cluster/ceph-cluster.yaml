@@ -22,6 +22,9 @@ spec:
   mgr:
     count: 2
     allowMultiplePerNode: false
+    modules:
+      - name: nfs
+        enabled: false
 
   dashboard:
     enabled: true

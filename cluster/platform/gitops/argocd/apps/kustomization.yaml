@@ -5,6 +5,9 @@ resources:
   - namespaces-app.yaml
   - cert-manager-app.yaml
   - cert-manager-extras-app.yaml
+  - vault-app.yaml
+  - external-secrets-app.yaml
+  - external-secrets-extras-app.yaml
   - egress-qos-app.yaml
   - metallb-app.yaml
   - metallb-config-app.yaml

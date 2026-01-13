@@ -1,0 +1,59 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vault
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "8"
+spec:
+  project: default
+  source:
+    repoURL: https://helm.releases.hashicorp.com
+    chart: vault
+    targetRevision: "0.28.0"
+    helm:
+      values: |
+        global:
+          enabled: true
+          tlsDisable: true
+
+        server:
+          image:
+            repository: hashicorp/vault
+            tag: "1.16.2"
+          ha:
+            enabled: true
+            raft:
+              enabled: true
+              setNodeId: true
+              config: |
+                ui = true
+                listener "tcp" {
+                  address = "0.0.0.0:8200"
+                  cluster_address = "0.0.0.0:8201"
+                  tls_disable = 1
+                }
+                storage "raft" {
+                  path = "/vault/data"
+                }
+                service_registration "kubernetes" {}
+          dataStorage:
+            enabled: true
+            size: 10Gi
+            storageClass: ceph-block
+
+        ui:
+          enabled: true
+          serviceType: ClusterIP
+
+        injector:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: security
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

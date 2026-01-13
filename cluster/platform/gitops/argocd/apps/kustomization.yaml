@@ -26,9 +26,11 @@ resources:
   - elasticsearch-app.yaml
   - homarr-app.yaml
   - jellyfin-app.yaml
+  - librechat-app.yaml
   - immich-app.yaml
   - nextcloud-app.yaml
   - plex-app.yaml
+  - vllm-general-app.yaml
   - headscale-app.yaml
   - truenas-app.yaml
   - unifi-controller-app.yaml
@@ -37,6 +39,14 @@ resources:
   - whiteboard-app.yaml
   - rook-ceph-operator-app.yaml
   - rook-ceph-cluster-app.yaml
+  - snapshot-controller-app.yaml
+  - volsync-app.yaml
+  - postgres-operator-app.yaml
+  - pg-platform-app.yaml
+  - pg-media-app.yaml
+  - pg-ai-app.yaml
+  - pg-productivity-app.yaml
+  - pg-other-app.yaml
 
 commonLabels:
   app.kubernetes.io/managed-by: argocd

@@ -8,4 +8,5 @@ resources:
   - ceph-block-pool.yaml
   - rook-config-override.yaml
   - storage-class.yaml
+  - volume-snapshot-class.yaml
   - toolbox.yaml

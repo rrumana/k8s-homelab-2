@@ -1,0 +1,50 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: pg-media
+  labels:
+    app.kubernetes.io/name: pg-media
+    app.kubernetes.io/part-of: postgres
+spec:
+  description: "Shared PostgreSQL cluster for media apps."
+
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.1
+  instances: 3
+  primaryUpdateStrategy: unsupervised
+
+  storage:
+    storageClass: ceph-block
+    size: 100Gi
+  walStorage:
+    storageClass: ceph-block
+    size: 20Gi
+
+  enableSuperuserAccess: true
+
+  postgresql:
+    parameters:
+      max_connections: "200"
+      log_min_duration_statement: "500ms"
+    synchronous:
+      method: any
+      number: 1
+      dataDurability: preferred
+
+  backup:
+    retentionPolicy: "30d"
+    barmanObjectStore:
+      destinationPath: "s3://truenas-backups/pg-media"
+      endpointURL: "http://192.168.1.10:9000"
+      s3Credentials:
+        accessKeyId:
+          name: cnpg-backup-s3-creds
+          key: AWS_ACCESS_KEY_ID
+        secretAccessKey:
+          name: cnpg-backup-s3-creds
+          key: AWS_SECRET_ACCESS_KEY
+      wal:
+        compression: gzip
+        maxParallel: 4
+      data:
+        compression: gzip
+        jobs: 2

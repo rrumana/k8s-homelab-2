@@ -1,0 +1,33 @@
+# platform/gitops/argocd/apps/snapshot-controller-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: snapshot-controller
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  project: default
+
+  sources:
+    - repoURL: https://kubernetes-csi.github.io/external-snapshotter
+      targetRevision: "v8.2.0"
+      chart: snapshot-controller
+      helm:
+        releaseName: snapshot-controller
+        valueFiles:
+          - $values/cluster/platform/base/backup/snapshot-controller/values.yaml
+    - repoURL: https://github.com/rrumana/k8s-homelab-2.git
+      targetRevision: main
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: backup
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

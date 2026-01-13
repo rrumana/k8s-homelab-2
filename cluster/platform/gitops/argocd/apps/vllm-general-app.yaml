@@ -1,0 +1,24 @@
+# platform/gitops/argocd/apps/vllm-general-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vllm-general
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/rrumana/k8s-homelab-2.git
+    targetRevision: main
+    path: cluster/apps/ai/vllm-general
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ai
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,10 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: pg-media-daily
+spec:
+  schedule: "0 15 3 * * *"
+  backupOwnerReference: cluster
+  cluster:
+    name: pg-media
+  immediate: true

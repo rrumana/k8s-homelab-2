@@ -1,0 +1,33 @@
+# platform/gitops/argocd/apps/volsync-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: volsync
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  project: default
+
+  sources:
+    - repoURL: https://backube.github.io/helm-charts/
+      targetRevision: "0.11.0"
+      chart: volsync
+      helm:
+        releaseName: volsync
+        valueFiles:
+          - $values/cluster/platform/base/backup/volsync/values.yaml
+    - repoURL: https://github.com/rrumana/k8s-homelab-2.git
+      targetRevision: main
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: backup
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

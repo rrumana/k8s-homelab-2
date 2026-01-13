@@ -1,12 +1,12 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: pg-ai
+  name: pg-productivity
   labels:
-    app.kubernetes.io/name: pg-ai
+    app.kubernetes.io/name: pg-productivity
     app.kubernetes.io/part-of: postgres
 spec:
-  description: "Shared PostgreSQL cluster for AI workloads."
+  description: "Shared PostgreSQL cluster for productivity apps."
 
   imageName: ghcr.io/cloudnative-pg/postgresql:18.1
   instances: 3
@@ -33,7 +33,7 @@ spec:
   backup:
     retentionPolicy: "30d"
     barmanObjectStore:
-      destinationPath: "s3://truenas-backups/pg-ai"
+      destinationPath: "s3://truenas-backups/pg-productivity"
       endpointURL: "http://192.168.1.10:9000"
       s3Credentials:
         accessKeyId:

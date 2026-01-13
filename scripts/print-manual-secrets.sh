@@ -3,12 +3,61 @@ set -euo pipefail
 
 # Extremely insecure: prints secret values to stdout.
 # Usage:
-#   scripts/print-manual-secrets.sh         # filtered (likely manual) secrets only
-#   scripts/print-manual-secrets.sh --all   # print all non-service-account secrets
+#   scripts/print-manual-secrets.sh
+#     - filtered (likely manual) secrets
+#     - defaults to app namespaces from cluster/platform/base/namespaces/application.yaml
+#   scripts/print-manual-secrets.sh --all
+#     - print all non-service-account secrets (still respects namespace filter)
+#   scripts/print-manual-secrets.sh --all-namespaces
+#     - disable namespace filtering
+#   scripts/print-manual-secrets.sh --namespaces media,productivity
+#     - override namespace filter explicitly
+
+usage() {
+  cat <<'USAGE'
+Usage: scripts/print-manual-secrets.sh [--all] [--all-namespaces] [--namespaces ns1,ns2]
+USAGE
+}
 
 all_mode=0
-if [[ "${1:-}" == "--all" ]]; then
-  all_mode=1
+no_ns_filter=0
+namespace_filter=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --all)
+      all_mode=1
+      ;;
+    --all-namespaces)
+      no_ns_filter=1
+      ;;
+    --namespaces)
+      namespace_filter="${2:-}"
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "ERROR: unknown argument: $1" >&2
+      usage >&2
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(cd "$script_dir/.." && pwd)"
+
+if [[ -z "$namespace_filter" && "$no_ns_filter" -eq 0 ]]; then
+  ns_file="$repo_root/cluster/platform/base/namespaces/application.yaml"
+  if [[ -f "$ns_file" ]]; then
+    namespace_filter="$(awk '/^[[:space:]]*name:[[:space:]]*/{print $2}' "$ns_file" | paste -sd, -)"
+  else
+    namespace_filter="media,productivity,ai,web,other"
+  fi
 fi
 
 tmp="$(mktemp)"
@@ -27,6 +76,9 @@ fi
 if [[ "$all_mode" -eq 1 ]]; then
   export PRINT_SECRETS_ALL=1
 fi
+if [[ -n "$namespace_filter" ]]; then
+  export PRINT_SECRETS_NAMESPACES="$namespace_filter"
+fi
 
 python3 - "$tmp" <<'PY'
 import base64
@@ -36,6 +88,8 @@ import sys
 
 path = sys.argv[1]
 use_all = os.environ.get("PRINT_SECRETS_ALL") == "1"
+ns_filter_raw = os.environ.get("PRINT_SECRETS_NAMESPACES", "")
+ns_filter = {ns.strip() for ns in ns_filter_raw.split(",") if ns.strip()}
 
 with open(path, "r", encoding="utf-8") as f:
     data = json.load(f)
@@ -46,9 +100,11 @@ skip_annot_prefixes = ("external-secrets.io/", "cert-manager.io/")
 
 for s in items:
     meta = s.get("metadata", {})
+    if s.get("type") == "kubernetes.io/service-account-token":
+        continue
+    if ns_filter and meta.get("namespace") not in ns_filter:
+        continue
     if not use_all:
-        if s.get("type") == "kubernetes.io/service-account-token":
-            continue
         if meta.get("ownerReferences"):
             continue
         labels = meta.get("labels") or {}

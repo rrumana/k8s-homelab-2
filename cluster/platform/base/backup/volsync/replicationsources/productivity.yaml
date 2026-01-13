@@ -1,0 +1,170 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: data-homarr-helm-mysql-0-backup
+  namespace: productivity
+spec:
+  sourcePVC: data-homarr-helm-mysql-0
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: data-homarr-redis-0-backup
+  namespace: productivity
+spec:
+  sourcePVC: data-homarr-redis-0
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: elasticsearch-data-backup
+  namespace: productivity
+spec:
+  sourcePVC: elasticsearch-data
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: nextcloud-appdata-backup
+  namespace: productivity
+spec:
+  sourcePVC: nextcloud-appdata
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: nextcloud-postgresql-data-backup
+  namespace: productivity
+spec:
+  sourcePVC: nextcloud-postgresql-data
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: nextcloud-redis-data-backup
+  namespace: productivity
+spec:
+  sourcePVC: nextcloud-redis-data
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: unifi-config-backup
+  namespace: productivity
+spec:
+  sourcePVC: unifi-config
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: unifi-db-backup
+  namespace: productivity
+spec:
+  sourcePVC: unifi-db
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: uptime-kuma-data-backup
+  namespace: productivity
+spec:
+  sourcePVC: uptime-kuma-data
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: vaultwarden-data-backup
+  namespace: productivity
+spec:
+  sourcePVC: vaultwarden-data
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+

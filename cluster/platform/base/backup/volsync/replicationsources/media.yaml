@@ -1,0 +1,272 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: arr-lts-gluetun-backup
+  namespace: media
+spec:
+  sourcePVC: arr-lts-gluetun
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: arr-lts-qbit-config-backup
+  namespace: media
+spec:
+  sourcePVC: arr-lts-qbit-config
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: arr-lts2-gluetun-backup
+  namespace: media
+spec:
+  sourcePVC: arr-lts2-gluetun
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: arr-lts2-qbit-config-backup
+  namespace: media
+spec:
+  sourcePVC: arr-lts2-qbit-config
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: arr-stack-gluetun-backup
+  namespace: media
+spec:
+  sourcePVC: arr-stack-gluetun
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: arr-stack-jellyseerr-config-backup
+  namespace: media
+spec:
+  sourcePVC: arr-stack-jellyseerr-config
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: arr-stack-lidarr-config-backup
+  namespace: media
+spec:
+  sourcePVC: arr-stack-lidarr-config
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: arr-stack-prowlarr-config-backup
+  namespace: media
+spec:
+  sourcePVC: arr-stack-prowlarr-config
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: arr-stack-qbit-config-backup
+  namespace: media
+spec:
+  sourcePVC: arr-stack-qbit-config
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: arr-stack-radarr-config-backup
+  namespace: media
+spec:
+  sourcePVC: arr-stack-radarr-config
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: arr-stack-sonarr-config-backup
+  namespace: media
+spec:
+  sourcePVC: arr-stack-sonarr-config
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: immich-ml-cache-backup
+  namespace: media
+spec:
+  sourcePVC: immich-ml-cache
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: immich-photos-backup
+  namespace: media
+spec:
+  sourcePVC: immich-photos
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: immich-postgres-data-backup
+  namespace: media
+spec:
+  sourcePVC: immich-postgres-data
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: jellyfin-config-backup
+  namespace: media
+spec:
+  sourcePVC: jellyfin-config
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: plex-config-backup
+  namespace: media
+spec:
+  sourcePVC: plex-config
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: librechat
+  labels:
+    app: librechat
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: librechat
+  template:
+    metadata:
+      labels:
+        app: librechat
+    spec:
+      containers:
+        - name: librechat
+          image: ghcr.io/danny-avila/librechat:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3080
+              name: http
+          envFrom:
+            - configMapRef:
+                name: librechat-config
+            - secretRef:
+                name: librechat-secret
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "512Mi"
+            limits:
+              cpu: "2"
+              memory: "2Gi"
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20

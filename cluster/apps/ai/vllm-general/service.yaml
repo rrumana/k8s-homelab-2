@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: librechat
+  name: vllm-general
 spec:
   type: ClusterIP
   selector:
-    app: librechat
+    app: vllm-general
   ports:
     - name: http
-      port: 80
-      targetPort: 3080
+      port: 8000
+      targetPort: 8000

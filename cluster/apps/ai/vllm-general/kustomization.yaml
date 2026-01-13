@@ -4,12 +4,11 @@ kind: Kustomization
 namespace: ai
 
 resources:
+  - pvc.yaml
   - configmap.yaml
   - deployment.yaml
-  - hpa.yaml
-  - pdb.yaml
   - service.yaml
 
 commonLabels:
-  app.kubernetes.io/name: librechat
+  app.kubernetes.io/name: vllm-general
   app.kubernetes.io/managed-by: argocd

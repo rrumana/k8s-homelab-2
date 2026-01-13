@@ -41,6 +41,7 @@ resources:
   - rook-ceph-cluster-app.yaml
   - snapshot-controller-app.yaml
   - volsync-app.yaml
+  - volsync-replicationsources-app.yaml
   - postgres-operator-app.yaml
   - pg-platform-app.yaml
   - pg-media-app.yaml

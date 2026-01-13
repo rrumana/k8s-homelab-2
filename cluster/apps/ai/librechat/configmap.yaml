@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: librechat-config
+data:
+  HOST: "0.0.0.0"
+  PORT: "3080"
+  APP_TITLE: "LibreChat"
+  DOMAIN: "https://librechat.rcrumana.xyz"
+  OPENAI_API_BASE: "http://vllm-general:8000/v1"

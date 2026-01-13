@@ -1,0 +1,34 @@
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: headscale-data-backup
+  namespace: other
+spec:
+  sourcePVC: headscale-data
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+---
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: headscale-postgres-data-backup
+  namespace: other
+spec:
+  sourcePVC: headscale-postgres-data
+  trigger:
+    schedule: "0 2 * * *"
+  restic:
+    copyMethod: Snapshot
+    volumeSnapshotClassName: ceph-block-snap
+    repository: volsync-minio
+    pruneIntervalDays: 1
+    retain:
+      daily: 7
+

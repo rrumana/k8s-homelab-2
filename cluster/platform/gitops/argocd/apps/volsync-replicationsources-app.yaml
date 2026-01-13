@@ -1,0 +1,26 @@
+# platform/gitops/argocd/apps/volsync-replicationsources-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: volsync-replicationsources
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/rrumana/k8s-homelab-2.git
+    targetRevision: main
+    path: cluster/platform/base/backup/volsync/replicationsources
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: backup
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

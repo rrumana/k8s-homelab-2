@@ -7,6 +7,7 @@ resources:
   - collabora.yaml
   - headscale.yaml
   - homarr.yaml
+  - librechat.yaml
   - nextcloud.yaml
   - jellyfin.yaml
   - jellyseerr.yaml

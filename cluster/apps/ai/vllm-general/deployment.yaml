@@ -1,11 +1,12 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: vllm-general
   labels:
     app: vllm-general
 spec:
   replicas: 3
+  serviceName: vllm-general-headless
   selector:
     matchLabels:
       app: vllm-general
@@ -94,7 +95,12 @@ spec:
           labelSelector:
             matchLabels:
               app: vllm-general
-      volumes:
-        - name: model-cache
-          persistentVolumeClaim:
-            claimName: vllm-general-model-cache
+  volumeClaimTemplates:
+    - metadata:
+        name: model-cache
+      spec:
+        storageClassName: ceph-block
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 100Gi

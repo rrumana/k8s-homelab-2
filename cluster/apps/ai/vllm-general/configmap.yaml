@@ -3,8 +3,8 @@ kind: ConfigMap
 metadata:
   name: vllm-general-config
 data:
-  VLLM_MODEL: "mistralai/Mistral-7B-Instruct-v0.2"
-  VLLM_SERVED_MODEL_NAME: "general-7b"
+  VLLM_MODEL: "Qwen/Qwen3-30B-A3B"
+  VLLM_SERVED_MODEL_NAME: "qwen3-30b-a3b"
   VLLM_DOWNLOAD_DIR: "/models"
   VLLM_GPU_MEMORY_UTILIZATION: "0.90"
   VLLM_MAX_MODEL_LEN: "8192"

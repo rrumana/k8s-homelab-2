@@ -4,9 +4,9 @@ kind: Kustomization
 namespace: ai
 
 resources:
-  - pvc.yaml
   - configmap.yaml
   - deployment.yaml
+  - service-headless.yaml
   - service.yaml
 
 commonLabels:

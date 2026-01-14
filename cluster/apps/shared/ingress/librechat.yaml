@@ -14,10 +14,10 @@ spec:
   ingressClassName: haproxy-restricted
   tls:
     - hosts:
-        - librechat.rcrumana.xyz
-      secretName: librechat-rcrumana-xyz-tls
+        - chat.rcrumana.xyz
+      secretName: chat-rcrumana-xyz-tls
   rules:
-    - host: librechat.rcrumana.xyz
+    - host: chat.rcrumana.xyz
       http:
         paths:
           - path: /

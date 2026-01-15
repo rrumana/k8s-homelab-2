@@ -36,11 +36,11 @@ spec:
             - name: WAN_IFACE_LABEL
               value: "egress-qos/wan-iface"  # node label override
             - name: LINK_CEIL
-              value: "1000mbit"        # total link rate
+              value: "2500mbit"        # total link rate
             - name: BULK_RATE
-              value: "500mbit"         # guaranteed rate for bulk
+              value: "700mbit"         # guaranteed rate for bulk
             - name: BULK_CEIL
-              value: "1000mbit"        # bulk can borrow up to this
+              value: "2500mbit"        # bulk can borrow up to this
             - name: SYNC_INTERVAL
               value: "5"              # seconds between ipset refresh
             - name: LABEL_SELECTOR

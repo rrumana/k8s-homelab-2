@@ -10,8 +10,8 @@ data:
 
     : "${WAN_IFACE:=}"                   # optional fixed iface; otherwise auto-detect
     : "${WAN_IFACE_LABEL:=egress-qos/wan-iface}" # node label to override iface
-    : "${LINK_CEIL:=1000mbit}"
-    : "${BULK_RATE:=500mbit}"
+    : "${LINK_CEIL:=2500mbit}"
+    : "${BULK_RATE:=700mbit}"
     : "${BULK_CEIL:=${LINK_CEIL}}"
     : "${SYNC_INTERVAL:=5}"
     : "${LABEL_SELECTOR:=traffic-tier=bulk-seed}"

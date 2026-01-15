@@ -72,9 +72,9 @@ data:
       tc qdisc del dev "${WAN_IFACE}" root 2>/dev/null || true
       tc qdisc replace dev "${WAN_IFACE}" root handle 1: htb default 10
 
-      tc class replace dev "${WAN_IFACE}" parent 1: classid 1:1 htb rate "${LINK_CEIL}" ceil "${LINK_CEIL}"
-      tc class replace dev "${WAN_IFACE}" parent 1:1 classid 1:10 htb rate "${LINK_CEIL}" ceil "${LINK_CEIL}"
-      tc class replace dev "${WAN_IFACE}" parent 1:1 classid 1:20 htb rate "${BULK_RATE}" ceil "${BULK_CEIL}"
+      tc class replace dev "${WAN_IFACE}" parent 1: classid 1:1 htb rate "${LINK_CEIL}" ceil "${LINK_CEIL}" burst 1m cburst 1m
+      tc class replace dev "${WAN_IFACE}" parent 1:1 classid 1:10 htb rate "${LINK_CEIL}" ceil "${LINK_CEIL}" burst 1m cburst 1m
+      tc class replace dev "${WAN_IFACE}" parent 1:1 classid 1:20 htb rate "${BULK_RATE}" ceil "${BULK_CEIL}" burst 1m cburst 1m
 
       tc qdisc replace dev "${WAN_IFACE}" parent 1:10 handle 10: fq_codel
       tc qdisc replace dev "${WAN_IFACE}" parent 1:20 handle 20: fq_codel

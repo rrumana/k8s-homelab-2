@@ -7,6 +7,7 @@ resources:
   - pvc.yaml
   - db-service.yaml
   - db-deployment.yaml
+  - externalsecret.yaml
   - unifi-deployment.yaml
   - unifi-service-tcp.yaml
   - unifi-service-udp.yaml

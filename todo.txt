@@ -1,0 +1,9 @@
+Add minio.rcrumana.xyz ingress pointed at https://192.168.1.10:9000 (NAS Minio)
+Add ceph.rcrumana.xyz ingress pointed at Ceph service from Rook/Ceph Cluster
+remove longhorn.rcrumana.xyz ingress & cert if not already done
+remove n8n.rcrumana.xyz ingress and cert if not already done
+
+Add Minio to dashboard
+Add Ceph dashboard
+Remove Longhorn from dashboard
+Remove N8N from dashboard

@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: web
 
 resources:
+  - externalsecret.yaml
   - deployment.yaml
   - service.yaml
 

@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: other
 
 resources:
+  - externalsecret.yaml
   - configmap.yaml
   - pvc.yaml
   - postgres-pvc.yaml

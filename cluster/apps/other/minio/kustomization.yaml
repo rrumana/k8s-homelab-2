@@ -1,15 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: media
+namespace: other
 
 resources:
-  - externalsecret.yaml
-  - pvc.yaml
-  - pf-sync-configmap.yaml
-  - deployment.yaml
   - service.yaml
+  - endpoints.yaml
 
 commonLabels:
-  app.kubernetes.io/name: arr-lts2
+  app.kubernetes.io/name: minio
   app.kubernetes.io/managed-by: argocd

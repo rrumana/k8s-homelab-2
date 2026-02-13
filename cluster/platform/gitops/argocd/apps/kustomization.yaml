@@ -22,6 +22,7 @@ resources:
   - portfolio-app.yaml
   - portfolio-staging-app.yaml
   - opnsense-app.yaml
+  - minio-app.yaml
   - arr-app.yaml
   - arr-lts-app.yaml
   - arr-lts2-app.yaml

@@ -27,4 +27,5 @@ resources:
   - portfolio.yaml
   - portfolio-staging.yaml
   - opnsense.yaml
+  - minio.yaml
   - truenas.yaml

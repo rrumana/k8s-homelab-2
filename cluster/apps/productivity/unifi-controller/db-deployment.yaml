@@ -40,21 +40,26 @@ spec:
                     done
                     mongosh --host localhost --eval '
                       const pwd = (process.env.MONGO_PASS || "").toString();
-                      const dbUnifi = db.getSiblingDB("unifi");
-                      const existing = dbUnifi.getUser("unifi");
+                      const roles = [
+                        { role: "dbOwner", db: "unifi" },
+                        { role: "dbOwner", db: "unifi_stat" },
+                        { role: "dbOwner", db: "unifi_audit" }
+                      ];
+                      const dbAdmin = db.getSiblingDB("admin");
+                      const existing = dbAdmin.getUser("unifi");
                       if (!existing) {
-                        dbUnifi.createUser({
+                        dbAdmin.createUser({
                           user: "unifi",
                           pwd: pwd,
-                          roles: [
-                            { role: "dbOwner", db: "unifi" },
-                            { role: "dbOwner", db: "unifi_stat" },
-                            { role: "dbOwner", db: "unifi_audit" }
-                          ]
+                          roles: roles
                         });
-                        print("Created user unifi");
+                        print("Created user unifi in admin auth DB");
                       } else {
-                        print("User unifi already exists, skipping");
+                        dbAdmin.updateUser("unifi", {
+                          pwd: pwd,
+                          roles: roles
+                        });
+                        print("Updated user unifi in admin auth DB");
                       }'
           ports:
             - containerPort: 27017

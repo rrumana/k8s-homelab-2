@@ -8,7 +8,7 @@ spec:
   project: default
 
   sources:
-    - repoURL: https://homarr-labs.github.io/charts/
+    - repoURL: https://homarr-labs.github.io/charts/charts
       chart: homarr
       targetRevision: "8.12.0"
       helm:

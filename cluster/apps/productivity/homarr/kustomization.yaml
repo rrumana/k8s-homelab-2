@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: productivity
 
 resources:
+  - externalsecret.yaml
   - mysql-service.yaml
   - mysql-statefulset.yaml
   - redis-service.yaml

@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: productivity
 
 resources:
+  - externalsecret.yaml
   - pvc.yaml
   - restore-nextcloud-postgres.yaml
 

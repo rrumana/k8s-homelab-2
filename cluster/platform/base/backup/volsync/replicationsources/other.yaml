@@ -1,3 +1,36 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: volsync-minio
+  namespace: other
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: volsync-minio
+    creationPolicy: Owner
+  data:
+    - secretKey: RESTIC_REPOSITORY
+      remoteRef:
+        key: apps/other/volsync-minio
+        property: RESTIC_REPOSITORY
+    - secretKey: RESTIC_PASSWORD
+      remoteRef:
+        key: apps/other/volsync-minio
+        property: RESTIC_PASSWORD
+    - secretKey: AWS_ACCESS_KEY_ID
+      remoteRef:
+        key: apps/other/volsync-minio
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: AWS_SECRET_ACCESS_KEY
+      remoteRef:
+        key: apps/other/volsync-minio
+        property: AWS_SECRET_ACCESS_KEY
+---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
@@ -6,7 +39,7 @@ metadata:
 spec:
   sourcePVC: headscale-data
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "30 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -14,6 +47,8 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
+      weekly: 4
+      monthly: 3
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -23,7 +58,7 @@ metadata:
 spec:
   sourcePVC: headscale-postgres-data
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "30 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -31,4 +66,5 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
-
+      weekly: 4
+      monthly: 3

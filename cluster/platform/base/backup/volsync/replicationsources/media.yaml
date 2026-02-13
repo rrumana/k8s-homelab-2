@@ -1,3 +1,36 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: volsync-minio
+  namespace: media
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: volsync-minio
+    creationPolicy: Owner
+  data:
+    - secretKey: RESTIC_REPOSITORY
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_REPOSITORY
+    - secretKey: RESTIC_PASSWORD
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_PASSWORD
+    - secretKey: AWS_ACCESS_KEY_ID
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: AWS_SECRET_ACCESS_KEY
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_SECRET_ACCESS_KEY
+---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
@@ -6,7 +39,7 @@ metadata:
 spec:
   sourcePVC: arr-lts-gluetun
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "15 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -14,6 +47,8 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
+      weekly: 4
+      monthly: 3
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -23,7 +58,7 @@ metadata:
 spec:
   sourcePVC: arr-lts-qbit-config
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "15 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -31,6 +66,8 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
+      weekly: 4
+      monthly: 3
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -40,7 +77,7 @@ metadata:
 spec:
   sourcePVC: arr-lts2-gluetun
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "15 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -48,6 +85,8 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
+      weekly: 4
+      monthly: 3
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -57,7 +96,7 @@ metadata:
 spec:
   sourcePVC: arr-lts2-qbit-config
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "15 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -65,6 +104,8 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
+      weekly: 4
+      monthly: 3
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -74,7 +115,7 @@ metadata:
 spec:
   sourcePVC: arr-stack-gluetun
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "15 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -82,6 +123,8 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
+      weekly: 4
+      monthly: 3
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -91,7 +134,7 @@ metadata:
 spec:
   sourcePVC: arr-stack-jellyseerr-config
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "15 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -99,6 +142,8 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
+      weekly: 4
+      monthly: 3
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -108,7 +153,7 @@ metadata:
 spec:
   sourcePVC: arr-stack-lidarr-config
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "15 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -116,6 +161,8 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
+      weekly: 4
+      monthly: 3
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -125,7 +172,7 @@ metadata:
 spec:
   sourcePVC: arr-stack-prowlarr-config
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "15 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -133,6 +180,8 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
+      weekly: 4
+      monthly: 3
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -142,7 +191,7 @@ metadata:
 spec:
   sourcePVC: arr-stack-qbit-config
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "15 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -150,6 +199,8 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
+      weekly: 4
+      monthly: 3
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -159,7 +210,7 @@ metadata:
 spec:
   sourcePVC: arr-stack-radarr-config
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "15 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -167,6 +218,8 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
+      weekly: 4
+      monthly: 3
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -176,7 +229,7 @@ metadata:
 spec:
   sourcePVC: arr-stack-sonarr-config
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "15 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -184,6 +237,8 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
+      weekly: 4
+      monthly: 3
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -193,7 +248,7 @@ metadata:
 spec:
   sourcePVC: immich-ml-cache
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "15 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -201,6 +256,8 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
+      weekly: 4
+      monthly: 3
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -210,7 +267,7 @@ metadata:
 spec:
   sourcePVC: immich-photos
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "15 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -218,6 +275,8 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
+      weekly: 4
+      monthly: 3
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -227,7 +286,7 @@ metadata:
 spec:
   sourcePVC: immich-postgres-data
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "15 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -235,6 +294,8 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
+      weekly: 4
+      monthly: 3
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -244,7 +305,7 @@ metadata:
 spec:
   sourcePVC: jellyfin-config
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "15 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -252,6 +313,8 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
+      weekly: 4
+      monthly: 3
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -261,7 +324,7 @@ metadata:
 spec:
   sourcePVC: plex-config
   trigger:
-    schedule: "0 2 * * *"
+    schedule: "15 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
@@ -269,4 +332,5 @@ spec:
     pruneIntervalDays: 1
     retain:
       daily: 7
-
+      weekly: 4
+      monthly: 3

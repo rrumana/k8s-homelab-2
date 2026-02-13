@@ -8,9 +8,9 @@ spec:
   project: default
 
   sources:
-    - repoURL: https://homarr-labs.github.io/charts/charts/
-      chart: homarr
+    - repoURL: oci://ghcr.io/homarr-labs/charts/homarr
       targetRevision: "8.12.0"
+      path: .
       helm:
         releaseName: homarr-helm
         valueFiles:

@@ -39,12 +39,16 @@ metadata:
 spec:
   sourcePVC: headscale-data
   trigger:
-    schedule: "30 2 * * *"
+    schedule: "5 4 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -58,12 +62,16 @@ metadata:
 spec:
   sourcePVC: headscale-postgres-data
   trigger:
-    schedule: "30 2 * * *"
+    schedule: "20 4 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4

@@ -39,12 +39,16 @@ metadata:
 spec:
   sourcePVC: arr-lts-gluetun
   trigger:
-    schedule: "15 2 * * *"
+    schedule: "5 0 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -58,12 +62,16 @@ metadata:
 spec:
   sourcePVC: arr-lts-qbit-config
   trigger:
-    schedule: "15 2 * * *"
+    schedule: "20 0 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -77,12 +85,16 @@ metadata:
 spec:
   sourcePVC: arr-lts2-gluetun
   trigger:
-    schedule: "15 2 * * *"
+    schedule: "35 0 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -96,12 +108,16 @@ metadata:
 spec:
   sourcePVC: arr-lts2-qbit-config
   trigger:
-    schedule: "15 2 * * *"
+    schedule: "50 0 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -115,12 +131,16 @@ metadata:
 spec:
   sourcePVC: arr-stack-gluetun
   trigger:
-    schedule: "15 2 * * *"
+    schedule: "5 1 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -134,12 +154,16 @@ metadata:
 spec:
   sourcePVC: arr-stack-jellyseerr-config
   trigger:
-    schedule: "15 2 * * *"
+    schedule: "20 1 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -153,12 +177,16 @@ metadata:
 spec:
   sourcePVC: arr-stack-lidarr-config
   trigger:
-    schedule: "15 2 * * *"
+    schedule: "35 1 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -172,12 +200,16 @@ metadata:
 spec:
   sourcePVC: arr-stack-prowlarr-config
   trigger:
-    schedule: "15 2 * * *"
+    schedule: "50 1 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -191,12 +223,16 @@ metadata:
 spec:
   sourcePVC: arr-stack-qbit-config
   trigger:
-    schedule: "15 2 * * *"
+    schedule: "5 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -210,12 +246,16 @@ metadata:
 spec:
   sourcePVC: arr-stack-radarr-config
   trigger:
-    schedule: "15 2 * * *"
+    schedule: "20 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -229,12 +269,16 @@ metadata:
 spec:
   sourcePVC: arr-stack-sonarr-config
   trigger:
-    schedule: "15 2 * * *"
+    schedule: "35 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -248,12 +292,16 @@ metadata:
 spec:
   sourcePVC: immich-ml-cache
   trigger:
-    schedule: "15 2 * * *"
+    schedule: "50 2 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -267,12 +315,16 @@ metadata:
 spec:
   sourcePVC: immich-photos
   trigger:
-    schedule: "15 2 * * *"
+    schedule: "5 3 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -286,12 +338,16 @@ metadata:
 spec:
   sourcePVC: immich-postgres-data
   trigger:
-    schedule: "15 2 * * *"
+    schedule: "20 3 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -305,12 +361,16 @@ metadata:
 spec:
   sourcePVC: jellyfin-config
   trigger:
-    schedule: "15 2 * * *"
+    schedule: "35 3 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -324,12 +384,16 @@ metadata:
 spec:
   sourcePVC: plex-config
   trigger:
-    schedule: "15 2 * * *"
+    schedule: "50 3 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4

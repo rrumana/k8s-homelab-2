@@ -39,12 +39,16 @@ metadata:
 spec:
   sourcePVC: data-homarr-helm-mysql-0
   trigger:
-    schedule: "45 2 * * *"
+    schedule: "35 4 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -58,12 +62,16 @@ metadata:
 spec:
   sourcePVC: data-homarr-redis-0
   trigger:
-    schedule: "45 2 * * *"
+    schedule: "50 4 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -77,12 +85,16 @@ metadata:
 spec:
   sourcePVC: elasticsearch-data
   trigger:
-    schedule: "45 2 * * *"
+    schedule: "5 5 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -96,12 +108,16 @@ metadata:
 spec:
   sourcePVC: nextcloud-appdata
   trigger:
-    schedule: "45 2 * * *"
+    schedule: "20 5 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -115,12 +131,16 @@ metadata:
 spec:
   sourcePVC: nextcloud-postgresql-data
   trigger:
-    schedule: "45 2 * * *"
+    schedule: "35 5 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -134,12 +154,16 @@ metadata:
 spec:
   sourcePVC: nextcloud-redis-data
   trigger:
-    schedule: "45 2 * * *"
+    schedule: "50 5 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -153,12 +177,16 @@ metadata:
 spec:
   sourcePVC: unifi-config
   trigger:
-    schedule: "45 2 * * *"
+    schedule: "5 6 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -172,12 +200,16 @@ metadata:
 spec:
   sourcePVC: unifi-db
   trigger:
-    schedule: "45 2 * * *"
+    schedule: "20 6 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -191,12 +223,16 @@ metadata:
 spec:
   sourcePVC: uptime-kuma-data
   trigger:
-    schedule: "45 2 * * *"
+    schedule: "35 6 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4
@@ -210,12 +246,16 @@ metadata:
 spec:
   sourcePVC: vaultwarden-data
   trigger:
-    schedule: "45 2 * * *"
+    schedule: "50 6 * * *"
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 1
+    pruneIntervalDays: 14
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
     retain:
       daily: 7
       weekly: 4

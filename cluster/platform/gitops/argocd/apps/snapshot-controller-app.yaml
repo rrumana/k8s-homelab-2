@@ -10,16 +10,12 @@ spec:
   project: default
 
   sources:
-    - repoURL: https://kubernetes-csi.github.io/external-snapshotter
-      targetRevision: "v8.2.0"
-      chart: snapshot-controller
-      helm:
-        releaseName: snapshot-controller
-        valueFiles:
-          - $values/cluster/platform/base/backup/snapshot-controller/values.yaml
-    - repoURL: https://github.com/rrumana/k8s-homelab-2.git
-      targetRevision: main
-      ref: values
+    - repoURL: https://github.com/kubernetes-csi/external-snapshotter.git
+      targetRevision: v8.2.0
+      path: client/config/crd
+    - repoURL: https://github.com/kubernetes-csi/external-snapshotter.git
+      targetRevision: v8.2.0
+      path: deploy/kubernetes/snapshot-controller
 
   destination:
     server: https://kubernetes.default.svc

@@ -21,7 +21,7 @@ spec:
 
   backup:
     barmanObjectStore:
-      destinationPath: s3://cluster-backups/pg-ai
+      destinationPath: s3://cluster-backups/cnpg/pg-ai
       endpointURL: http://minio-api.other.svc.cluster.local:9000
       s3Credentials:
         accessKeyId:

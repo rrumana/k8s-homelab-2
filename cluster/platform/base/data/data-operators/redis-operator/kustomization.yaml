@@ -3,3 +3,29 @@ kind: Kustomization
 
 resources:
   - https://raw.githubusercontent.com/RedisLabs/redis-enterprise-k8s-docs/8.0.10-21/bundle.yaml
+
+patches:
+  - target:
+      group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: redisenterpriseactiveactivedatabases.app.redislabs.com
+    patch: |-
+      - op: add
+        path: /spec/preserveUnknownFields
+        value: false
+  - target:
+      group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: redisenterpriseclusters.app.redislabs.com
+    patch: |-
+      - op: add
+        path: /spec/preserveUnknownFields
+        value: false
+  - target:
+      group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      name: redisenterprisedatabases.app.redislabs.com
+    patch: |-
+      - op: add
+        path: /spec/preserveUnknownFields
+        value: false

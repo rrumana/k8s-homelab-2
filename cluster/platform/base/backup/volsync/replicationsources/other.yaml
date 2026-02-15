@@ -67,7 +67,7 @@ spec:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
     repository: volsync-minio
-    pruneIntervalDays: 14
+    pruneIntervalDays: 3650
     moverSecurityContext:
       runAsUser: 0
       runAsGroup: 0

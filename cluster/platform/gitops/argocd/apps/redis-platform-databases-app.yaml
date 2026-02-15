@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis-platform-databases
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "22"
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/rrumana/k8s-homelab-2.git
+    targetRevision: main
+    path: cluster/platform/base/data/data-definitions/redis/redb-platform
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: databases
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

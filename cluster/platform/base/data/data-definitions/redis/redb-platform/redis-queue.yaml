@@ -1,0 +1,16 @@
+apiVersion: app.redislabs.com/v1alpha1
+kind: RedisEnterpriseDatabase
+metadata:
+  name: redis-queue
+  labels:
+    app.kubernetes.io/name: redis-queue
+    app.kubernetes.io/part-of: redis
+spec:
+  redisEnterpriseCluster:
+    name: rec-platform
+  memorySize: 2GB
+  shardCount: 1
+  replication: true
+  persistence: aofEverySecond
+  evictionPolicy: noeviction
+  type: redis

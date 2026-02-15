@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis-enterprise-operator
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "20"
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/rrumana/k8s-homelab-2.git
+    targetRevision: main
+    path: cluster/platform/base/data/data-operators/redis-operator
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: redis-enterprise
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

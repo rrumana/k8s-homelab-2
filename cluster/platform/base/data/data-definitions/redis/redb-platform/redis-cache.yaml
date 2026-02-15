@@ -1,0 +1,16 @@
+apiVersion: app.redislabs.com/v1alpha1
+kind: RedisEnterpriseDatabase
+metadata:
+  name: redis-cache
+  labels:
+    app.kubernetes.io/name: redis-cache
+    app.kubernetes.io/part-of: redis
+spec:
+  redisEnterpriseCluster:
+    name: rec-platform
+  memorySize: 1GB
+  shardCount: 1
+  replication: true
+  persistence: disabled
+  evictionPolicy: allkeys-lru
+  type: redis

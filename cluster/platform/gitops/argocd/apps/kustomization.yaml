@@ -47,6 +47,9 @@ resources:
   - volsync-app.yaml
   - volsync-replicationsources-app.yaml
   - postgres-operator-app.yaml
+  - redis-enterprise-operator-app.yaml
+  - redis-platform-app.yaml
+  - redis-platform-databases-app.yaml
   - pg-platform-app.yaml
   - pg-media-app.yaml
   - pg-ai-app.yaml

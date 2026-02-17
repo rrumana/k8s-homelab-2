@@ -13,12 +13,27 @@ data:
           model: openai/general-chat
           api_base: http://vllm-general.ai.svc.cluster.local:8000/v1
           api_key: local
+      - model_name: openai/general-chat
+        litellm_params:
+          model: openai/general-chat
+          api_base: http://vllm-general.ai.svc.cluster.local:8000/v1
+          api_key: local
       - model_name: code-chat
         litellm_params:
           model: openai/code-chat
           api_base: http://vllm-code.ai.svc.cluster.local:8000/v1
           api_key: local
+      - model_name: openai/code-chat
+        litellm_params:
+          model: openai/code-chat
+          api_base: http://vllm-code.ai.svc.cluster.local:8000/v1
+          api_key: local
       - model_name: reasoning-chat
+        litellm_params:
+          model: openai/reasoning-chat
+          api_base: http://vllm-reasoning.ai.svc.cluster.local:8000/v1
+          api_key: local
+      - model_name: openai/reasoning-chat
         litellm_params:
           model: openai/reasoning-chat
           api_base: http://vllm-reasoning.ai.svc.cluster.local:8000/v1

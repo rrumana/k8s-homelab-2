@@ -15,9 +15,7 @@ data:
           models:
             default:
               - "general-chat"
-              - "code-chat"
-              - "reasoning-chat"
-            fetch: true
+            fetch: false
           titleConvo: true
           titleModel: "general-chat"
           modelDisplayLabel: "vLLM"

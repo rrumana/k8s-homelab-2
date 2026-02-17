@@ -20,6 +20,7 @@ spec:
         app.kubernetes.io/part-of: vllm-workers
     spec:
       terminationGracePeriodSeconds: 120
+      enableServiceLinks: false
       tolerations:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
@@ -47,6 +48,21 @@ spec:
           labelSelector:
             matchLabels:
               app.kubernetes.io/part-of: vllm-workers
+      initContainers:
+        - name: install-transformers-nightly
+          image: rocm/vllm-dev:nightly
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - >
+              python3 -m pip install --no-cache-dir --upgrade --no-deps
+              --target /opt/pydeps
+              git+https://github.com/huggingface/transformers.git
+          volumeMounts:
+            - name: pydeps
+              mountPath: /opt/pydeps
       containers:
         - name: vllm
           image: rocm/vllm-dev:nightly
@@ -69,22 +85,24 @@ spec:
                   optional: true
             - name: HF_HOME
               value: /models
+            - name: PYTHONPATH
+              value: /opt/pydeps
           args:
-            - $(VLLM_MODEL)
-            - --tokenizer=$(VLLM_TOKENIZER)
+            - $(MODEL_ID)
+            - --tokenizer=$(TOKENIZER_ID)
             - --quantization=awq
             - --dtype=float16
             - --tokenizer-mode=auto
             - --enable-auto-tool-choice
             - --tool-call-parser=glm47
             - --reasoning-parser=glm45
-            - --served-model-name=$(VLLM_SERVED_MODEL_NAME)
-            - --download-dir=$(VLLM_DOWNLOAD_DIR)
+            - --served-model-name=$(SERVED_MODEL_NAME)
+            - --download-dir=$(DOWNLOAD_DIR)
             - --host=0.0.0.0
-            - --port=$(VLLM_PORT)
-            - --gpu-memory-utilization=$(VLLM_GPU_MEMORY_UTILIZATION)
-            - --max-model-len=$(VLLM_MAX_MODEL_LEN)
-            - --max-num-seqs=$(VLLM_MAX_NUM_SEQS)
+            - --port=$(PORT)
+            - --gpu-memory-utilization=$(GPU_MEMORY_UTILIZATION)
+            - --max-model-len=$(MAX_MODEL_LEN)
+            - --max-num-seqs=$(MAX_NUM_SEQS)
             - --tensor-parallel-size=1
             - --enable-prefix-caching
             - --enable-chunked-prefill
@@ -92,6 +110,8 @@ spec:
           volumeMounts:
             - name: model-cache
               mountPath: /models
+            - name: pydeps
+              mountPath: /opt/pydeps
           resources:
             requests:
               cpu: "4"
@@ -123,3 +143,5 @@ spec:
         - name: model-cache
           persistentVolumeClaim:
             claimName: vllm-general-cache
+        - name: pydeps
+          emptyDir: {}

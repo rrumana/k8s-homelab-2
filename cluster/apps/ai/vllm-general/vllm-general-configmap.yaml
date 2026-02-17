@@ -3,11 +3,11 @@ kind: ConfigMap
 metadata:
   name: vllm-general-config
 data:
-  VLLM_MODEL: "cyankiwi/GLM-4.7-Flash-AWQ-4bit"
-  VLLM_TOKENIZER: "cyankiwi/GLM-4.7-Flash-AWQ-4bit"
-  VLLM_SERVED_MODEL_NAME: "general-chat"
-  VLLM_DOWNLOAD_DIR: "/models"
-  VLLM_GPU_MEMORY_UTILIZATION: "0.88"
-  VLLM_MAX_MODEL_LEN: "8192"
-  VLLM_MAX_NUM_SEQS: "16"
-  VLLM_PORT: "8000"
+  MODEL_ID: "cyankiwi/GLM-4.7-Flash-AWQ-4bit"
+  TOKENIZER_ID: "cyankiwi/GLM-4.7-Flash-AWQ-4bit"
+  SERVED_MODEL_NAME: "general-chat"
+  DOWNLOAD_DIR: "/models"
+  GPU_MEMORY_UTILIZATION: "0.88"
+  MAX_MODEL_LEN: "8192"
+  MAX_NUM_SEQS: "16"
+  PORT: "8000"

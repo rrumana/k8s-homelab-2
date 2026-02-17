@@ -15,7 +15,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: redis-enterprise
+    namespace: databases
 
   ignoreDifferences:
     - group: apiextensions.k8s.io

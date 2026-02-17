@@ -93,10 +93,6 @@ spec:
               value: /models
             - name: PYTHONPATH
               value: /opt/pydeps
-            - name: VLLM_USE_V1
-              value: "0"
-            - name: VLLM_USE_TRITON_FLASH_ATTN
-              value: "0"
             - name: VLLM_ROCM_USE_AITER
               value: "1"
             - name: VLLM_ROCM_USE_AITER_MHA
@@ -106,6 +102,7 @@ spec:
             - --tokenizer=$(TOKENIZER_ID)
             - --dtype=float16
             - --tokenizer-mode=auto
+            - --attention-backend=ROCM_AITER_TRITON_MLA
             - --enable-auto-tool-choice
             - --tool-call-parser=glm47
             - --reasoning-parser=glm45

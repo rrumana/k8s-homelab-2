@@ -29,8 +29,23 @@ spec:
               value: "8000"
             - name: RAG_PORT
               value: "8000"
+            - name: RAG_VECTOR_STORE
+              value: pgvector
             - name: RAG_OPENAI_BASEURL
               value: http://llm-gateway.ai.svc.cluster.local:4000/v1
+            - name: DB_HOST
+              value: pg-ai-rw.databases.svc.cluster.local
+            - name: DB_PORT
+              value: "5432"
+            - name: POSTGRES_DB
+              value: librechat_rag
+            - name: POSTGRES_USER
+              value: librechat_rag
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: librechat-secret
+                  key: PGVECTOR_PASSWORD
             - name: RAG_OPENAI_API_KEY
               valueFrom:
                 secretKeyRef:

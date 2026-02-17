@@ -57,8 +57,9 @@ spec:
             - -c
           args:
             - >
-              python3 -m pip install --no-cache-dir --upgrade --no-deps
+              python3 -m pip install --no-cache-dir --upgrade
               --target /opt/pydeps
+              "huggingface_hub<1.0"
               git+https://github.com/huggingface/transformers.git
           volumeMounts:
             - name: pydeps

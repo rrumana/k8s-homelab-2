@@ -51,11 +51,9 @@ spec:
                 requests:
                   cpu: "4"
                   memory: "12Gi"
-                  ephemeral-storage: "40Gi"
                 limits:
                   cpu: "8"
                   memory: "24Gi"
-                  ephemeral-storage: "80Gi"
               volumeMounts:
                 - name: scripts
                   mountPath: /scripts
@@ -70,8 +68,8 @@ spec:
                 name: vllm-image-builder-scripts
                 defaultMode: 0555
             - name: workspace
-              emptyDir:
-                sizeLimit: 25Gi
+              persistentVolumeClaim:
+                claimName: vllm-image-builder-cache
             - name: containers-storage
-              emptyDir:
-                sizeLimit: 80Gi
+              persistentVolumeClaim:
+                claimName: vllm-image-builder-cache

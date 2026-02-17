@@ -94,7 +94,6 @@ spec:
           args:
             - $(MODEL_ID)
             - --tokenizer=$(TOKENIZER_ID)
-            - --quantization=awq
             - --tokenizer-mode=auto
             - --enable-auto-tool-choice
             - --tool-call-parser=glm47

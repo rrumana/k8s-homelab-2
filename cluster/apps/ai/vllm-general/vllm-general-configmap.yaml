@@ -3,7 +3,9 @@ kind: ConfigMap
 metadata:
   name: vllm-general-config
 data:
-  VLLM_MODEL: "unsloth/GLM-4.7-Flash-REAP-23B-A3B-GGUF:Q4_K_M"
+  VLLM_MODEL_REPO: "unsloth/GLM-4.7-Flash-REAP-23B-A3B-GGUF"
+  VLLM_GGUF_QUANT: "Q4_K_M"
+  VLLM_MODEL_PATH: "/models/weights/model.gguf"
   VLLM_TOKENIZER: "zai-org/GLM-4.7-Flash"
   VLLM_HF_CONFIG_PATH: "zai-org/GLM-4.7-Flash"
   VLLM_SERVED_MODEL_NAME: "general-chat"

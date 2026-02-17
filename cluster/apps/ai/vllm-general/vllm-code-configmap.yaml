@@ -3,7 +3,9 @@ kind: ConfigMap
 metadata:
   name: vllm-code-config
 data:
-  VLLM_MODEL: "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF:Q4_K_XL"
+  VLLM_MODEL_REPO: "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+  VLLM_GGUF_QUANT: "Q4_K_XL"
+  VLLM_MODEL_PATH: "/models/weights/model.gguf"
   VLLM_TOKENIZER: "Qwen/Qwen3-Coder-30B-A3B-Instruct"
   VLLM_HF_CONFIG_PATH: "Qwen/Qwen3-Coder-30B-A3B-Instruct"
   VLLM_SERVED_MODEL_NAME: "code-chat"

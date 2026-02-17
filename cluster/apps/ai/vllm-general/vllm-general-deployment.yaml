@@ -47,60 +47,6 @@ spec:
           labelSelector:
             matchLabels:
               app.kubernetes.io/part-of: vllm-workers
-      initContainers:
-        - name: fetch-gguf
-          image: vllm/vllm-openai-rocm:latest
-          imagePullPolicy: IfNotPresent
-          command:
-            - /bin/sh
-            - -c
-          args:
-            - |
-              set -eu
-              python3 - <<'PY'
-              import os
-              import pathlib
-              from huggingface_hub import hf_hub_download, list_repo_files
-
-              repo = os.environ["VLLM_MODEL_REPO"]
-              quant = os.environ["VLLM_GGUF_QUANT"].lower()
-              token = os.getenv("HUGGING_FACE_HUB_TOKEN")
-
-              files = list_repo_files(repo, token=token)
-              candidates = [f for f in files if f.lower().endswith(".gguf") and quant in f.lower()]
-              if not candidates:
-                  raise RuntimeError(f"No GGUF file matching quant '{quant}' in repo '{repo}'")
-
-              chosen = sorted(candidates, key=lambda f: (len(f), f.lower()))[0]
-              source = hf_hub_download(
-                  repo_id=repo,
-                  filename=chosen,
-                  token=token,
-                  cache_dir="/models/hf-cache",
-              )
-
-              target_dir = pathlib.Path("/models/weights")
-              target_dir.mkdir(parents=True, exist_ok=True)
-              target = target_dir / "model.gguf"
-              if target.exists() or target.is_symlink():
-                  target.unlink()
-              target.symlink_to(pathlib.Path(source))
-              print(f"Using GGUF: {repo}/{chosen}")
-              print(f"Linked model path: {target} -> {source}")
-              PY
-          envFrom:
-            - configMapRef:
-                name: vllm-general-config
-          env:
-            - name: HUGGING_FACE_HUB_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: vllm-shared-secret
-                  key: HUGGING_FACE_HUB_TOKEN
-                  optional: true
-          volumeMounts:
-            - name: model-cache
-              mountPath: /models
       containers:
         - name: vllm
           image: vllm/vllm-openai-rocm:latest
@@ -121,10 +67,12 @@ spec:
             - name: HF_HOME
               value: /models
           args:
-            - $(VLLM_MODEL_PATH)
-            - --load-format=gguf
+            - $(VLLM_MODEL)
             - --tokenizer=$(VLLM_TOKENIZER)
-            - --hf-config-path=$(VLLM_HF_CONFIG_PATH)
+            - --quantization=awq
+            - --dtype=float16
+            - --trust-remote-code
+            - --tokenizer-mode=auto
             - --served-model-name=$(VLLM_SERVED_MODEL_NAME)
             - --download-dir=$(VLLM_DOWNLOAD_DIR)
             - --host=0.0.0.0

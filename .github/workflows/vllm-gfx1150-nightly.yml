@@ -1,0 +1,81 @@
+name: Build vLLM gfx1150 Image
+
+on:
+  schedule:
+    - cron: "20 5 * * *"
+  workflow_dispatch:
+    inputs:
+      force_build:
+        description: "Force a build even if upstream nightly digest is unchanged"
+        required: false
+        default: "false"
+      update_manifest:
+        description: "Update vllm-general deployment image tag in this repo"
+        required: false
+        default: "true"
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Install skopeo
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y skopeo
+
+      - name: Set script permissions
+        run: chmod +x scripts/vllm/*.sh
+
+      - name: Resolve run flags
+        run: |
+          echo "FORCE_BUILD=0" >> "$GITHUB_ENV"
+          echo "UPDATE_MANIFEST=1" >> "$GITHUB_ENV"
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            if [[ "${{ github.event.inputs.force_build }}" == "true" ]]; then
+              echo "FORCE_BUILD=1" >> "$GITHUB_ENV"
+            fi
+            if [[ "${{ github.event.inputs.update_manifest }}" == "false" ]]; then
+              echo "UPDATE_MANIFEST=0" >> "$GITHUB_ENV"
+            fi
+          fi
+
+      - name: Build and push gfx1150 image
+        env:
+          GHCR_USER: ${{ github.repository_owner }}
+          GHCR_TOKEN: ${{ secrets.GHCR_PAT || secrets.GITHUB_TOKEN }}
+          IMAGE_NAME: vllm-openai-rocm-gfx1150
+          ROCM_ARCH: gfx1150
+          FORCE_BUILD: ${{ env.FORCE_BUILD }}
+          UPDATE_MANIFEST: ${{ env.UPDATE_MANIFEST }}
+        run: scripts/vllm/check-and-build-vllm-nightly.sh
+
+      - name: Check for manifest changes
+        id: manifest_changes
+        run: |
+          if git diff --quiet -- cluster/apps/ai/vllm-general/vllm-general-deployment.yaml; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create PR for manifest update
+        if: steps.manifest_changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore(ai): bump vllm-general image to latest gfx1150 nightly build"
+          title: "chore(ai): bump vllm-general vLLM image"
+          body: |
+            Automated update from `scripts/vllm/check-and-build-vllm-nightly.sh`.
+            This updates `vllm-general` to a freshly built gfx1150-targeted image.
+          branch: chore/vllm-gfx1150-image-bump

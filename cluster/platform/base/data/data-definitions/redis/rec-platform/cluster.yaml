@@ -11,9 +11,12 @@ spec:
     enabled: true
     storageClassName: ceph-block
     volumeSize: 20Gi
+  securityContext:
+    resourceLimits:
+      allowAutoAdjustment: true
   redisEnterpriseNodeResources:
     requests:
-      cpu: "2000m"
+      cpu: "2"
       memory: 4Gi
     limits:
       cpu: "2000m"

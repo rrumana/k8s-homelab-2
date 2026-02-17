@@ -47,6 +47,21 @@ spec:
           labelSelector:
             matchLabels:
               app.kubernetes.io/part-of: vllm-workers
+      initContainers:
+        - name: install-transformers-nightly
+          image: vllm/vllm-openai-rocm:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - >
+              python3 -m pip install --no-cache-dir --upgrade
+              --target /opt/pydeps
+              git+https://github.com/huggingface/transformers.git
+          volumeMounts:
+            - name: pydeps
+              mountPath: /opt/pydeps
       containers:
         - name: vllm
           image: vllm/vllm-openai-rocm:latest
@@ -66,13 +81,17 @@ spec:
                   optional: true
             - name: HF_HOME
               value: /models
+            - name: PYTHONPATH
+              value: /opt/pydeps
           args:
             - $(VLLM_MODEL)
             - --tokenizer=$(VLLM_TOKENIZER)
             - --quantization=awq
             - --dtype=float16
-            - --trust-remote-code
             - --tokenizer-mode=auto
+            - --tool-call-parser glm47 \
+            - --reasoning-parser glm45 \
+            - --enable-auto-tool-choice \
             - --served-model-name=$(VLLM_SERVED_MODEL_NAME)
             - --download-dir=$(VLLM_DOWNLOAD_DIR)
             - --host=0.0.0.0
@@ -87,6 +106,8 @@ spec:
           volumeMounts:
             - name: model-cache
               mountPath: /models
+            - name: pydeps
+              mountPath: /opt/pydeps
           resources:
             requests:
               cpu: "4"
@@ -118,3 +139,5 @@ spec:
         - name: model-cache
           persistentVolumeClaim:
             claimName: vllm-general-cache
+        - name: pydeps
+          emptyDir: {}

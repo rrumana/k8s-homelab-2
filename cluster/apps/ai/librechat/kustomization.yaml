@@ -6,6 +6,7 @@ namespace: ai
 resources:
   - externalsecret.yaml
   - configmap.yaml
+  - librechat-yaml-configmap.yaml
   - librechat-pvc.yaml
   - mongodb-pvc.yaml
   - mongodb-service.yaml

@@ -30,6 +30,10 @@ spec:
           volumeMounts:
             - name: librechat-data
               mountPath: /app/uploads
+            - name: librechat-yaml
+              mountPath: /app/librechat.yaml
+              subPath: librechat.yaml
+              readOnly: true
           resources:
             requests:
               cpu: "500m"
@@ -58,3 +62,6 @@ spec:
         - name: librechat-data
           persistentVolumeClaim:
             claimName: librechat-data
+        - name: librechat-yaml
+          configMap:
+            name: librechat-yaml

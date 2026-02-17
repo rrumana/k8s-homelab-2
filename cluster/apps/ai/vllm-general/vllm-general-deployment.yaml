@@ -93,12 +93,17 @@ spec:
               value: /models
             - name: PYTHONPATH
               value: /opt/pydeps
+            - name: VLLM_ROCM_USE_AITER
+              value: "1"
+            - name: VLLM_V1_USE_PREFILL_DECODE_ATTENTION
+              value: "1"
+            - name: VLLM_ROCM_USE_AITER_MHA
+              value: "0"
           args:
             - $(MODEL_ID)
             - --tokenizer=$(TOKENIZER_ID)
             - --dtype=float16
             - --tokenizer-mode=auto
-            - --attention-backend=$(ATTENTION_BACKEND)
             - --enable-auto-tool-choice
             - --tool-call-parser=glm47
             - --reasoning-parser=glm45

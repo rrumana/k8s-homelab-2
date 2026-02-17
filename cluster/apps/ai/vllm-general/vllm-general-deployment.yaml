@@ -93,9 +93,11 @@ spec:
               value: /models
             - name: PYTHONPATH
               value: /opt/pydeps
+            - name: VLLM_USE_V1
+              value: "0"
+            - name: VLLM_USE_TRITON_FLASH_ATTN
+              value: "0"
             - name: VLLM_ROCM_USE_AITER
-              value: "1"
-            - name: VLLM_V1_USE_PREFILL_DECODE_ATTENTION
               value: "1"
             - name: VLLM_ROCM_USE_AITER_MHA
               value: "0"
@@ -116,6 +118,7 @@ spec:
             - --max-num-seqs=$(MAX_NUM_SEQS)
             - --tensor-parallel-size=1
             - --enable-prefix-caching
+            - --enforce-eager
             - --disable-log-requests
           volumeMounts:
             - name: model-cache

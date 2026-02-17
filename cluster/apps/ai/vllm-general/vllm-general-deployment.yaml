@@ -87,6 +87,8 @@ spec:
                   name: vllm-shared-secret
                   key: HUGGING_FACE_HUB_TOKEN
                   optional: true
+            - name: HSA_OVERRIDE_GFX_VERSION
+              value: "11.5.1"
             - name: HF_HOME
               value: /models
             - name: PYTHONPATH

@@ -95,7 +95,6 @@ spec:
             - $(MODEL_ID)
             - --tokenizer=$(TOKENIZER_ID)
             - --quantization=awq
-            - --dtype=float16
             - --tokenizer-mode=auto
             - --enable-auto-tool-choice
             - --tool-call-parser=glm47

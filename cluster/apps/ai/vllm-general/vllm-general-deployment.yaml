@@ -67,8 +67,9 @@ spec:
             - name: HF_HOME
               value: /models
           args:
-            - --model=$(VLLM_MODEL)
+            - $(VLLM_MODEL)
             - --tokenizer=$(VLLM_TOKENIZER)
+            - --hf-config-path=$(VLLM_HF_CONFIG_PATH)
             - --served-model-name=$(VLLM_SERVED_MODEL_NAME)
             - --download-dir=$(VLLM_DOWNLOAD_DIR)
             - --host=0.0.0.0

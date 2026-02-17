@@ -5,6 +5,7 @@ metadata:
 data:
   VLLM_MODEL: "unsloth/GLM-4.7-Flash-REAP-23B-A3B-GGUF:Q4_K_M"
   VLLM_TOKENIZER: "zai-org/GLM-4.7-Flash"
+  VLLM_HF_CONFIG_PATH: "zai-org/GLM-4.7-Flash"
   VLLM_SERVED_MODEL_NAME: "general-chat"
   VLLM_DOWNLOAD_DIR: "/models"
   VLLM_GPU_MEMORY_UTILIZATION: "0.88"

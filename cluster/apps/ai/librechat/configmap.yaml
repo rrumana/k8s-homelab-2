@@ -7,6 +7,7 @@ data:
   PORT: "3080"
   APP_TITLE: "LibreChat"
   DOMAIN: "https://chat.rcrumana.xyz"
+  ENDPOINTS: "custom,agents"
   OPENAI_API_BASE: "http://llm-gateway.ai.svc.cluster.local:4000/v1"
   SEARCH: "true"
   ALLOW_REGISTRATION: "true"

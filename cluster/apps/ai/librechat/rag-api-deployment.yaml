@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: rag-api
-          image: ghcr.io/danny-avila/rag_api:latest
+          image: ghcr.io/danny-avila/librechat-rag-api-dev-lite:latest
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

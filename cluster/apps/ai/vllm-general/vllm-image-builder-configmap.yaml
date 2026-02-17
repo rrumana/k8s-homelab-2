@@ -58,7 +58,7 @@ data:
     TRACK_TAG="${TRACK_TAG:-nightly-gfx1150}"
     VLLM_REF="${VLLM_REF:-main}"
     ROCM_ARCH="${ROCM_ARCH:-gfx1150}"
-    STORAGE_DRIVER="${STORAGE_DRIVER:-vfs}"
+    STORAGE_DRIVER="${STORAGE_DRIVER:-overlay}"
 
     upstream_digest="$(skopeo inspect --format '{{.Digest}}' "${UPSTREAM_IMAGE}")"
     current_digest="$(skopeo inspect --format '{{ index .Labels "io.rrumana.vllm.upstream.digest" }}' "docker://${TARGET_REPO}:${TRACK_TAG}" 2>/dev/null || true)"
@@ -73,6 +73,12 @@ data:
 
     log "Upstream digest changed to ${upstream_digest}"
     log "Building ${TARGET_REPO}:${version_tag}"
+
+    log "Disk usage before cleanup:"
+    df -h /var/lib/containers || true
+    buildah prune -af --storage-driver "${STORAGE_DRIVER}" || true
+    log "Disk usage after pre-build prune:"
+    df -h /var/lib/containers || true
 
     rm -rf /workspace/vllm
     git clone --depth 1 --branch "${VLLM_REF}" https://github.com/vllm-project/vllm.git /workspace/vllm
@@ -94,5 +100,10 @@ data:
 
     buildah push --storage-driver "${STORAGE_DRIVER}" "${TARGET_REPO}:${version_tag}"
     buildah push --storage-driver "${STORAGE_DRIVER}" "${TARGET_REPO}:${TRACK_TAG}"
+
+    buildah rmi --storage-driver "${STORAGE_DRIVER}" "${TARGET_REPO}:${version_tag}" "${TARGET_REPO}:${TRACK_TAG}" || true
+    buildah prune -af --storage-driver "${STORAGE_DRIVER}" || true
+    log "Disk usage after build cleanup:"
+    df -h /var/lib/containers || true
 
     log "Build and push complete: ${TARGET_REPO}:${version_tag} and :${TRACK_TAG}"

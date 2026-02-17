@@ -42,7 +42,7 @@ spec:
                 - name: VLLM_REF
                   value: main
                 - name: STORAGE_DRIVER
-                  value: vfs
+                  value: overlay
                 - name: BUILDAH_ISOLATION
                   value: chroot
               securityContext:

@@ -43,6 +43,8 @@ spec:
                   value: main
                 - name: STORAGE_DRIVER
                   value: overlay
+                - name: HARD_RESET_STORAGE_ON_START
+                  value: "1"
                 - name: BUILDAH_ISOLATION
                   value: chroot
               securityContext:

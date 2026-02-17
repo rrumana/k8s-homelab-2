@@ -59,6 +59,15 @@ data:
     VLLM_REF="${VLLM_REF:-main}"
     ROCM_ARCH="${ROCM_ARCH:-gfx1150}"
     STORAGE_DRIVER="${STORAGE_DRIVER:-overlay}"
+    HARD_RESET_STORAGE_ON_START="${HARD_RESET_STORAGE_ON_START:-1}"
+
+    hard_reset_storage() {
+      log "Hard-resetting Buildah storage directory"
+      buildah rm --all --storage-driver "${STORAGE_DRIVER}" >/dev/null 2>&1 || true
+      buildah rmi --all --storage-driver "${STORAGE_DRIVER}" >/dev/null 2>&1 || true
+      buildah prune -af --storage-driver "${STORAGE_DRIVER}" >/dev/null 2>&1 || true
+      rm -rf /var/lib/containers/storage/* /var/lib/containers/cache/* /var/lib/containers/tmp/* >/dev/null 2>&1 || true
+    }
 
     upstream_digest="$(skopeo inspect --format '{{.Digest}}' "${UPSTREAM_IMAGE}")"
     current_digest="$(skopeo inspect --format '{{ index .Labels "io.rrumana.vllm.upstream.digest" }}' "docker://${TARGET_REPO}:${TRACK_TAG}" 2>/dev/null || true)"
@@ -76,6 +85,9 @@ data:
 
     log "Disk usage before cleanup:"
     df -h /var/lib/containers || true
+    if [ "${HARD_RESET_STORAGE_ON_START}" = "1" ]; then
+      hard_reset_storage
+    fi
     buildah prune -af --storage-driver "${STORAGE_DRIVER}" || true
     log "Disk usage after pre-build prune:"
     df -h /var/lib/containers || true

@@ -4,11 +4,24 @@ kind: Kustomization
 namespace: ai
 
 resources:
+  - externalsecret.yaml
   - configmap.yaml
+  - librechat-pvc.yaml
+  - mongodb-pvc.yaml
+  - mongodb-service.yaml
+  - mongodb-statefulset.yaml
+  - redis-pvc.yaml
+  - redis-service.yaml
+  - redis-statefulset.yaml
+  - meilisearch-pvc.yaml
+  - meilisearch-service.yaml
+  - meilisearch-statefulset.yaml
+  - rag-api-service.yaml
+  - rag-api-deployment.yaml
+  - service.yaml
   - deployment.yaml
   - hpa.yaml
   - pdb.yaml
-  - service.yaml
 
 commonLabels:
   app.kubernetes.io/name: librechat

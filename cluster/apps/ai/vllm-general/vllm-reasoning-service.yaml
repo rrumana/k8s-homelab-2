@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: vllm-general-headless
+  name: vllm-reasoning
 spec:
-  clusterIP: None
+  type: ClusterIP
   selector:
-    app: vllm-general
+    app: vllm-reasoning
   ports:
     - name: http
       port: 8000
-      targetPort: 8000
+      targetPort: http

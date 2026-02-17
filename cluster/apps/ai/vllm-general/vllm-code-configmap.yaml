@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vllm-code-config
+data:
+  VLLM_MODEL: "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF:Q4_K_XL"
+  VLLM_TOKENIZER: "Qwen/Qwen3-Coder-30B-A3B-Instruct"
+  VLLM_SERVED_MODEL_NAME: "code-chat"
+  VLLM_DOWNLOAD_DIR: "/models"
+  VLLM_GPU_MEMORY_UTILIZATION: "0.88"
+  VLLM_MAX_MODEL_LEN: "8192"
+  VLLM_MAX_NUM_SEQS: "12"
+  VLLM_PORT: "8000"

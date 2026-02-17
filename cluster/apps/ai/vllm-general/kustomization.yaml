@@ -4,10 +4,23 @@ kind: Kustomization
 namespace: ai
 
 resources:
-  - configmap.yaml
-  - deployment.yaml
-  - service-headless.yaml
-  - service.yaml
+  - externalsecret.yaml
+  - pvc-vllm-general-cache.yaml
+  - pvc-vllm-code-cache.yaml
+  - pvc-vllm-reasoning-cache.yaml
+  - vllm-general-configmap.yaml
+  - vllm-general-deployment.yaml
+  - vllm-general-service.yaml
+  - vllm-code-configmap.yaml
+  - vllm-code-deployment.yaml
+  - vllm-code-service.yaml
+  - vllm-reasoning-configmap.yaml
+  - vllm-reasoning-deployment.yaml
+  - vllm-reasoning-service.yaml
+  - litellm-configmap.yaml
+  - litellm-deployment.yaml
+  - litellm-service.yaml
+  - litellm-pdb.yaml
 
 commonLabels:
   app.kubernetes.io/name: vllm-general

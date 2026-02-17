@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llm-gateway-config
+data:
+  config.yaml: |
+    general_settings:
+      master_key: os.environ/LITELLM_MASTER_KEY
+
+    model_list:
+      - model_name: general-chat
+        litellm_params:
+          model: openai/general-chat
+          api_base: http://vllm-general.ai.svc.cluster.local:8000/v1
+          api_key: local
+      - model_name: code-chat
+        litellm_params:
+          model: openai/code-chat
+          api_base: http://vllm-code.ai.svc.cluster.local:8000/v1
+          api_key: local
+      - model_name: reasoning-chat
+        litellm_params:
+          model: openai/reasoning-chat
+          api_base: http://vllm-reasoning.ai.svc.cluster.local:8000/v1
+          api_key: local

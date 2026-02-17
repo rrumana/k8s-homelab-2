@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vllm-reasoning-config
+data:
+  VLLM_MODEL: "TeichAI/GLM-4.7-Flash-Claude-Opus-4.5-High-Reasoning-Distill-GGUF:Q4_K_M"
+  VLLM_TOKENIZER: "zai-org/GLM-4.7-Flash"
+  VLLM_SERVED_MODEL_NAME: "reasoning-chat"
+  VLLM_DOWNLOAD_DIR: "/models"
+  VLLM_GPU_MEMORY_UTILIZATION: "0.90"
+  VLLM_MAX_MODEL_LEN: "8192"
+  VLLM_MAX_NUM_SEQS: "12"
+  VLLM_PORT: "8000"

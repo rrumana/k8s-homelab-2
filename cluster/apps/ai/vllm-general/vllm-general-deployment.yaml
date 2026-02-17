@@ -89,6 +89,7 @@ spec:
             - --quantization=awq
             - --dtype=float16
             - --tokenizer-mode=auto
+            - --tool-call-parser glm47
             - --enable-auto-tool-choice
             - --served-model-name=$(VLLM_SERVED_MODEL_NAME)
             - --download-dir=$(VLLM_DOWNLOAD_DIR)

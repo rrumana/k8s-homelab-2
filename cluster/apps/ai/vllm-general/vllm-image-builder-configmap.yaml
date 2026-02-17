@@ -53,7 +53,7 @@ data:
     : "${GHCR_USER:?GHCR_USER is required}"
     : "${GHCR_TOKEN:?GHCR_TOKEN is required}"
 
-    UPSTREAM_IMAGE="${UPSTREAM_IMAGE:-docker://rocm/vllm-dev:nightly}"
+    UPSTREAM_IMAGE="${UPSTREAM_IMAGE:-docker://docker.io/rocm/vllm-dev:nightly}"
     TARGET_REPO="${TARGET_REPO:-ghcr.io/${GHCR_USER}/vllm-openai-rocm-gfx1150}"
     TRACK_TAG="${TRACK_TAG:-nightly-gfx1150}"
     VLLM_REF="${VLLM_REF:-main}"
@@ -82,9 +82,9 @@ data:
     buildah bud \
       --storage-driver "${STORAGE_DRIVER}" \
       --build-arg "ARG_PYTORCH_ROCM_ARCH=${ROCM_ARCH}" \
-      --build-arg "BASE_IMAGE=rocm/vllm-dev:nightly" \
+      --build-arg "BASE_IMAGE=docker.io/rocm/vllm-dev:nightly" \
       --label "io.rrumana.vllm.rocm.arch=${ROCM_ARCH}" \
-      --label "io.rrumana.vllm.upstream.base=rocm/vllm-dev:nightly" \
+      --label "io.rrumana.vllm.upstream.base=docker.io/rocm/vllm-dev:nightly" \
       --label "io.rrumana.vllm.upstream.digest=${upstream_digest}" \
       -f /workspace/vllm/docker/Dockerfile.rocm \
       -t "${TARGET_REPO}:${version_tag}" \

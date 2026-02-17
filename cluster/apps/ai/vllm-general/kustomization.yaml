@@ -8,6 +8,8 @@ resources:
   - pvc-vllm-general-cache.yaml
   - pvc-vllm-code-cache.yaml
   - pvc-vllm-reasoning-cache.yaml
+  - vllm-image-builder-configmap.yaml
+  - vllm-image-builder-cronjob.yaml
   - vllm-general-configmap.yaml
   - vllm-general-deployment.yaml
   - vllm-general-service.yaml

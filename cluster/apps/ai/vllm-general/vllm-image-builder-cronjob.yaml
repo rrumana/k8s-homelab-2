@@ -1,0 +1,77 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vllm-image-builder
+spec:
+  schedule: "25 5 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      ttlSecondsAfterFinished: 86400
+      template:
+        spec:
+          restartPolicy: Never
+          enableServiceLinks: false
+          containers:
+            - name: build
+              image: quay.io/buildah/stable:v1.39
+              imagePullPolicy: IfNotPresent
+              command:
+                - /bin/sh
+                - /scripts/build-nightly.sh
+              env:
+                - name: GHCR_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: vllm-shared-secret
+                      key: GHCR_USER
+                - name: GHCR_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: vllm-shared-secret
+                      key: GHCR_TOKEN
+                - name: TARGET_REPO
+                  value: ghcr.io/rrumana/vllm-openai-rocm-gfx1150
+                - name: TRACK_TAG
+                  value: nightly-gfx1150
+                - name: ROCM_ARCH
+                  value: gfx1150
+                - name: VLLM_REF
+                  value: main
+                - name: STORAGE_DRIVER
+                  value: vfs
+                - name: BUILDAH_ISOLATION
+                  value: chroot
+              securityContext:
+                privileged: true
+              resources:
+                requests:
+                  cpu: "4"
+                  memory: "12Gi"
+                  ephemeral-storage: "40Gi"
+                limits:
+                  cpu: "8"
+                  memory: "24Gi"
+                  ephemeral-storage: "80Gi"
+              volumeMounts:
+                - name: scripts
+                  mountPath: /scripts
+                  readOnly: true
+                - name: workspace
+                  mountPath: /workspace
+                - name: containers-storage
+                  mountPath: /var/lib/containers
+          volumes:
+            - name: scripts
+              configMap:
+                name: vllm-image-builder-scripts
+                defaultMode: 0555
+            - name: workspace
+              emptyDir:
+                sizeLimit: 25Gi
+            - name: containers-storage
+              emptyDir:
+                sizeLimit: 80Gi

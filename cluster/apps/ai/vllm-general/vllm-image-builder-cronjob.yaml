@@ -40,7 +40,7 @@ spec:
                 - name: ROCM_ARCH
                   value: gfx1150
                 - name: VLLM_REF
-                  value: main
+                  value: g3b30e6150
                 - name: STORAGE_DRIVER
                   value: overlay
                 - name: IMAGE_FORMAT
@@ -50,7 +50,7 @@ spec:
                 - name: FORCE_BUILD
                   value: "0"
                 - name: BUILDER_REVISION
-                  value: "2026-02-19-4"
+                  value: "2026-02-19-5"
                 - name: BUILDAH_ISOLATION
                   value: chroot
               securityContext:

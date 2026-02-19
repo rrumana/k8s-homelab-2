@@ -64,7 +64,7 @@ data:
     IMAGE_FORMAT="${IMAGE_FORMAT:-docker}"
     HARD_RESET_STORAGE_ON_START="${HARD_RESET_STORAGE_ON_START:-1}"
     FORCE_BUILD="${FORCE_BUILD:-0}"
-    BUILDER_REVISION="${BUILDER_REVISION:-2026-02-19-4}"
+    BUILDER_REVISION="${BUILDER_REVISION:-2026-02-19-5}"
 
     hard_reset_storage() {
       log "Hard-resetting Buildah storage directory"
@@ -135,21 +135,16 @@ data:
     upstream_digest="$(skopeo inspect --format '{{.Digest}}' "${UPSTREAM_IMAGE}")"
     current_digest="$(skopeo inspect --format '{{ index .Labels "io.rrumana.vllm.upstream.digest" }}' "docker://${TARGET_REPO}:${TRACK_TAG}" 2>/dev/null || true)"
     current_builder_revision="$(skopeo inspect --format '{{ index .Labels "io.rrumana.vllm.builder.revision" }}' "docker://${TARGET_REPO}:${TRACK_TAG}" 2>/dev/null || true)"
+    current_source_ref="$(skopeo inspect --format '{{ index .Labels "io.rrumana.vllm.source.ref" }}' "docker://${TARGET_REPO}:${TRACK_TAG}" 2>/dev/null || true)"
 
     if [ "${FORCE_BUILD}" = "1" ]; then
       log "FORCE_BUILD=1 set. Ignoring digest short-circuit."
-    elif [ -n "${current_digest}" ] && [ "${current_digest}" = "${upstream_digest}" ] && [ "${current_builder_revision}" = "${BUILDER_REVISION}" ]; then
+    elif [ -n "${current_digest}" ] && [ "${current_digest}" = "${upstream_digest}" ] && [ "${current_builder_revision}" = "${BUILDER_REVISION}" ] && [ "${current_source_ref}" = "${VLLM_REF}" ]; then
       log "No upstream digest change (${upstream_digest}). Skipping build."
       exit 0
     elif [ -n "${current_digest}" ] && [ "${current_digest}" = "${upstream_digest}" ]; then
-      log "Upstream digest unchanged but builder revision differs (${current_builder_revision} -> ${BUILDER_REVISION}); rebuilding."
+      log "Upstream digest unchanged but build inputs differ (builder ${current_builder_revision} -> ${BUILDER_REVISION}, ref ${current_source_ref} -> ${VLLM_REF}); rebuilding."
     fi
-
-    digest_short="$(printf '%s' "${upstream_digest#sha256:}" | cut -c1-12)"
-    version_tag="${TRACK_TAG}-${digest_short}"
-
-    log "Upstream digest changed to ${upstream_digest}"
-    log "Building ${TARGET_REPO}:${version_tag}"
 
     log "Disk usage before cleanup:"
     df -h /var/lib/containers || true
@@ -170,7 +165,21 @@ data:
     require_cmd git
 
     rm -rf /workspace/vllm
-    git clone --depth 1 --branch "${VLLM_REF}" https://github.com/vllm-project/vllm.git /workspace/vllm
+    git clone --depth 1 https://github.com/vllm-project/vllm.git /workspace/vllm
+    if [ "${VLLM_REF}" != "main" ]; then
+      if git -C /workspace/vllm fetch --depth 1 origin "${VLLM_REF}" >/dev/null 2>&1; then
+        git -C /workspace/vllm checkout -q FETCH_HEAD
+      else
+        git -C /workspace/vllm fetch --depth 1 --tags origin >/dev/null 2>&1 || true
+        git -C /workspace/vllm checkout -q "${VLLM_REF}"
+      fi
+    fi
+    vllm_commit="$(git -C /workspace/vllm rev-parse --short=12 HEAD)"
+    digest_short="$(printf '%s' "${upstream_digest#sha256:}" | cut -c1-12)"
+    version_tag="${TRACK_TAG}-${digest_short}-${vllm_commit}"
+    log "Using vLLM ref ${VLLM_REF} at commit ${vllm_commit}"
+    log "Upstream digest: ${upstream_digest}"
+    log "Building ${TARGET_REPO}:${version_tag}"
     ensure_rocm_requirements_compat
     patch_dockerfile_rocm_requirements
     log "Compatibility requirement files:"
@@ -186,6 +195,7 @@ data:
       --label "io.rrumana.vllm.rocm.arch=${ROCM_ARCH}" \
       --label "io.rrumana.vllm.upstream.base=docker.io/rocm/vllm-dev:nightly" \
       --label "io.rrumana.vllm.upstream.digest=${upstream_digest}" \
+      --label "io.rrumana.vllm.source.ref=${VLLM_REF}" \
       --label "io.rrumana.vllm.builder.revision=${BUILDER_REVISION}" \
       -f /workspace/vllm/docker/Dockerfile.rocm \
       -t "${TARGET_REPO}:${version_tag}" \

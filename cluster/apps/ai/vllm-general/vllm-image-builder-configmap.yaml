@@ -61,9 +61,10 @@ data:
     VLLM_REF="${VLLM_REF:-main}"
     ROCM_ARCH="${ROCM_ARCH:-gfx1150}"
     STORAGE_DRIVER="${STORAGE_DRIVER:-overlay}"
+    IMAGE_FORMAT="${IMAGE_FORMAT:-docker}"
     HARD_RESET_STORAGE_ON_START="${HARD_RESET_STORAGE_ON_START:-1}"
     FORCE_BUILD="${FORCE_BUILD:-0}"
-    BUILDER_REVISION="${BUILDER_REVISION:-2026-02-19-1}"
+    BUILDER_REVISION="${BUILDER_REVISION:-2026-02-19-4}"
 
     hard_reset_storage() {
       log "Hard-resetting Buildah storage directory"
@@ -179,6 +180,7 @@ data:
 
     buildah bud \
       --storage-driver "${STORAGE_DRIVER}" \
+      --format "${IMAGE_FORMAT}" \
       --build-arg "ARG_PYTORCH_ROCM_ARCH=${ROCM_ARCH}" \
       --build-arg "BASE_IMAGE=docker.io/rocm/vllm-dev:nightly" \
       --label "io.rrumana.vllm.rocm.arch=${ROCM_ARCH}" \

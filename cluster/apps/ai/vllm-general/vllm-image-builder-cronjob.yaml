@@ -45,6 +45,10 @@ spec:
                   value: overlay
                 - name: HARD_RESET_STORAGE_ON_START
                   value: "1"
+                - name: FORCE_BUILD
+                  value: "1"
+                - name: BUILDER_REVISION
+                  value: "2026-02-19-1"
                 - name: BUILDAH_ISOLATION
                   value: chroot
               securityContext:

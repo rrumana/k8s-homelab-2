@@ -8,21 +8,24 @@ data:
     set -eu
 
     install_deps_if_possible() {
+      if [ "$#" -eq 0 ]; then
+        return 0
+      fi
       if command -v microdnf >/dev/null 2>&1; then
-        microdnf install -y git skopeo >/dev/null
+        microdnf install -y "$@" >/dev/null
         return 0
       fi
       if command -v dnf >/dev/null 2>&1; then
-        dnf install -y git skopeo >/dev/null
+        dnf install -y "$@" >/dev/null
         return 0
       fi
       if command -v apk >/dev/null 2>&1; then
-        apk add --no-cache git skopeo >/dev/null
+        apk add --no-cache "$@" >/dev/null
         return 0
       fi
       if command -v apt-get >/dev/null 2>&1; then
         apt-get update >/dev/null
-        apt-get install -y git skopeo >/dev/null
+        apt-get install -y "$@" >/dev/null
         return 0
       fi
       return 1
@@ -40,15 +43,14 @@ data:
     }
 
     require_cmd buildah
-    if ! command -v skopeo >/dev/null 2>&1 || ! command -v git >/dev/null 2>&1; then
-      log "Installing missing runtime dependencies (git/skopeo)"
-      install_deps_if_possible || {
-        log "Could not install dependencies automatically; ensure image contains git and skopeo"
+    if ! command -v skopeo >/dev/null 2>&1; then
+      log "Installing missing runtime dependency (skopeo)"
+      install_deps_if_possible skopeo || {
+        log "Could not install skopeo automatically; ensure image contains skopeo"
         exit 1
       }
     fi
     require_cmd skopeo
-    require_cmd git
 
     : "${GHCR_USER:?GHCR_USER is required}"
     : "${GHCR_TOKEN:?GHCR_TOKEN is required}"
@@ -60,6 +62,8 @@ data:
     ROCM_ARCH="${ROCM_ARCH:-gfx1150}"
     STORAGE_DRIVER="${STORAGE_DRIVER:-overlay}"
     HARD_RESET_STORAGE_ON_START="${HARD_RESET_STORAGE_ON_START:-1}"
+    FORCE_BUILD="${FORCE_BUILD:-0}"
+    BUILDER_REVISION="${BUILDER_REVISION:-2026-02-19-1}"
 
     hard_reset_storage() {
       log "Hard-resetting Buildah storage directory"
@@ -100,10 +104,15 @@ data:
 
     upstream_digest="$(skopeo inspect --format '{{.Digest}}' "${UPSTREAM_IMAGE}")"
     current_digest="$(skopeo inspect --format '{{ index .Labels "io.rrumana.vllm.upstream.digest" }}' "docker://${TARGET_REPO}:${TRACK_TAG}" 2>/dev/null || true)"
+    current_builder_revision="$(skopeo inspect --format '{{ index .Labels "io.rrumana.vllm.builder.revision" }}' "docker://${TARGET_REPO}:${TRACK_TAG}" 2>/dev/null || true)"
 
-    if [ -n "${current_digest}" ] && [ "${current_digest}" = "${upstream_digest}" ]; then
+    if [ "${FORCE_BUILD}" = "1" ]; then
+      log "FORCE_BUILD=1 set. Ignoring digest short-circuit."
+    elif [ -n "${current_digest}" ] && [ "${current_digest}" = "${upstream_digest}" ] && [ "${current_builder_revision}" = "${BUILDER_REVISION}" ]; then
       log "No upstream digest change (${upstream_digest}). Skipping build."
       exit 0
+    elif [ -n "${current_digest}" ] && [ "${current_digest}" = "${upstream_digest}" ]; then
+      log "Upstream digest unchanged but builder revision differs (${current_builder_revision} -> ${BUILDER_REVISION}); rebuilding."
     fi
 
     digest_short="$(printf '%s' "${upstream_digest#sha256:}" | cut -c1-12)"
@@ -121,6 +130,15 @@ data:
     log "Disk usage after pre-build prune:"
     df -h /var/lib/containers || true
 
+    if ! command -v git >/dev/null 2>&1; then
+      log "Installing missing runtime dependency (git)"
+      install_deps_if_possible git || {
+        log "Could not install git automatically; ensure image contains git"
+        exit 1
+      }
+    fi
+    require_cmd git
+
     rm -rf /workspace/vllm
     git clone --depth 1 --branch "${VLLM_REF}" https://github.com/vllm-project/vllm.git /workspace/vllm
     ensure_rocm_requirements_compat
@@ -134,6 +152,7 @@ data:
       --label "io.rrumana.vllm.rocm.arch=${ROCM_ARCH}" \
       --label "io.rrumana.vllm.upstream.base=docker.io/rocm/vllm-dev:nightly" \
       --label "io.rrumana.vllm.upstream.digest=${upstream_digest}" \
+      --label "io.rrumana.vllm.builder.revision=${BUILDER_REVISION}" \
       -f /workspace/vllm/docker/Dockerfile.rocm \
       -t "${TARGET_REPO}:${version_tag}" \
       /workspace/vllm

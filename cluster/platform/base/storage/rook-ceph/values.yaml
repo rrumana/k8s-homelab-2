@@ -17,8 +17,8 @@ csi:
 
   enableRbdDriver: true
 
-  # Start with RBD only; enable CephFS later if/when you need it.
-  enableCephfsDriver: false
+  # Enable CephFS CSI so RWX StorageClasses (e.g. ceph-filesystem) can provision.
+  enableCephfsDriver: true
 
 # This cluster schedules workloads on control-plane nodes today; tolerate all taints.
 tolerations:

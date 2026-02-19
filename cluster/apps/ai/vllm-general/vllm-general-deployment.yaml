@@ -179,6 +179,8 @@ spec:
               value: /models
             - name: PYTHONPATH
               value: /opt/pydeps
+            - name: VLLM_DISABLED_KERNELS
+              value: ExllamaLinearKernel
           args:
             - $(MODEL_ID)
             - --tokenizer=$(TOKENIZER_ID)

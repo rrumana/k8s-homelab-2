@@ -97,7 +97,7 @@ patch_dockerfile_rocm_requirements() {
 
   echo "Patching Dockerfile.rocm to support fallback requirements paths"
   sed -i \
-    "s|python3 -m pip install -r requirements/rocm.txt|python3 -m pip install -r requirements/rocm.txt || python3 -m pip install -r requirements/build.txt || python3 -m pip install -r requirements/common.txt || python3 -m pip install -r vllm/requirements/rocm.txt || python3 -m pip install -r vllm/requirements/build.txt || python3 -m pip install -r vllm/requirements/common.txt|g" \
+    "s#python3 -m pip install -r requirements/rocm.txt#python3 -m pip install -r requirements/rocm.txt || python3 -m pip install -r requirements/build.txt || python3 -m pip install -r requirements/common.txt || python3 -m pip install -r vllm/requirements/rocm.txt || python3 -m pip install -r vllm/requirements/build.txt || python3 -m pip install -r vllm/requirements/common.txt#g" \
     "$dockerfile"
   grep -n "python3 -m pip install -r" "$dockerfile" | head -n 5 || true
 }

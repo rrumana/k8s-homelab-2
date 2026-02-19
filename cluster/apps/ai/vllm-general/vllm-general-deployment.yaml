@@ -174,13 +174,11 @@ spec:
                   key: HUGGING_FACE_HUB_TOKEN
                   optional: true
             - name: HSA_OVERRIDE_GFX_VERSION
-              value: "11.5.1"
+              value: "11.5.0"
             - name: HF_HOME
               value: /models
             - name: PYTHONPATH
               value: /opt/pydeps
-            - name: VLLM_DISABLED_KERNELS
-              value: ExllamaLinearKernel
           args:
             - $(MODEL_ID)
             - --tokenizer=$(TOKENIZER_ID)

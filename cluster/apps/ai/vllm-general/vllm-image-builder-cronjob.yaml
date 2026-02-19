@@ -40,7 +40,7 @@ spec:
                 - name: ROCM_ARCH
                   value: gfx1150
                 - name: VLLM_REF
-                  value: g3b30e6150
+                  value: main
                 - name: STORAGE_DRIVER
                   value: overlay
                 - name: IMAGE_FORMAT

@@ -49,6 +49,92 @@ spec:
             matchLabels:
               app.kubernetes.io/part-of: vllm-workers
       initContainers:
+        - name: prepare-patched-model
+          image: ghcr.io/rrumana/vllm-openai-rocm-gfx1150:nightly-gfx1150-63f1fe04d873
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: vllm-general-config
+          env:
+            - name: HUGGING_FACE_HUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: vllm-shared-secret
+                  key: HUGGING_FACE_HUB_TOKEN
+                  optional: true
+          command:
+            - /bin/sh
+            - -ec
+          args:
+            - |
+              python3 - <<'PY'
+              import json
+              import os
+              import subprocess
+              import sys
+
+              source_model = os.environ["SOURCE_MODEL_ID"]
+              local_dir = os.environ["MODEL_ID"]
+              token = os.getenv("HUGGING_FACE_HUB_TOKEN")
+
+              try:
+                  from huggingface_hub import snapshot_download
+              except Exception:
+                  subprocess.check_call(
+                      [sys.executable, "-m", "pip", "install", "--no-cache-dir", "huggingface_hub"]
+                  )
+                  from huggingface_hub import snapshot_download
+
+              try:
+                  snapshot_download(
+                      repo_id=source_model,
+                      local_dir=local_dir,
+                      token=token,
+                      local_dir_use_symlinks=False,
+                      resume_download=True,
+                  )
+              except TypeError:
+                  snapshot_download(
+                      repo_id=source_model,
+                      local_dir=local_dir,
+                      token=token,
+                  )
+
+              cfg_path = os.path.join(local_dir, "config.json")
+              with open(cfg_path, "r", encoding="utf-8") as f:
+                  cfg = json.load(f)
+
+              qcfg = cfg.get("quantization_config") or {}
+              groups = qcfg.get("config_groups") or {}
+              injected = [
+                  "re:.*fused_qkv_a_proj$",
+                  "re:.*fused_qkv_b_proj$",
+                  "re:.*fused_kv_a_proj_with_mqa$",
+                  "re:.*fused_kv_b_proj$",
+                  "re:.*fused_qkv.*",
+                  "re:.*fused_kv.*",
+              ]
+
+              changed = False
+              for _, group in groups.items():
+                  targets = group.get("targets") or []
+                  for target in injected:
+                      if target not in targets:
+                          targets.append(target)
+                          changed = True
+                  group["targets"] = targets
+
+              if changed:
+                  with open(cfg_path, "w", encoding="utf-8") as f:
+                      json.dump(cfg, f, ensure_ascii=True, indent=2)
+                      f.write("\n")
+                  print("Patched quantization targets in", cfg_path)
+              else:
+                  print("Quantization targets already patched in", cfg_path)
+              PY
+          volumeMounts:
+            - name: model-cache
+              mountPath: /models
         - name: install-transformers-nightly
           image: ghcr.io/rrumana/vllm-openai-rocm-gfx1150:nightly-gfx1150-63f1fe04d873
           imagePullPolicy: IfNotPresent

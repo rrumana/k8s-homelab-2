@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: vllm-code
+  name: llama-static-b
 spec:
   type: ClusterIP
   selector:
-    app: vllm-code
+    app: llama-static-b
   ports:
     - name: http
       port: 8000

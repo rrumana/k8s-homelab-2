@@ -31,10 +31,10 @@ resources:
   - homarr-app.yaml
   - jellyfin-app.yaml
   - librechat-app.yaml
+  - llama-backend-app.yaml
   - immich-app.yaml
   - nextcloud-app.yaml
   - plex-app.yaml
-  - vllm-general-app.yaml
   - headscale-app.yaml
   - truenas-app.yaml
   - unifi-controller-app.yaml

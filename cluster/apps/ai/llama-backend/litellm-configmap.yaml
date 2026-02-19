@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llm-gateway-config
+data:
+  config.yaml: |
+    general_settings:
+      master_key: os.environ/LITELLM_MASTER_KEY
+
+    model_list:
+      - model_name: GLM-4.7-Flash
+        litellm_params:
+          model: GLM-4.7-Flash
+          api_base: http://llama-static-a.ai.svc.cluster.local:8000/v1
+          api_key: local
+      - model_name: Qwen3-Coder-30B-A3B-Instruct
+        litellm_params:
+          model: Qwen3-Coder-30B-A3B-Instruct
+          api_base: http://llama-static-b.ai.svc.cluster.local:8000/v1
+          api_key: local
+      - model_name: gpt-oss-20b
+        litellm_params:
+          model: gpt-oss-20b
+          api_base: http://llama-swap.ai.svc.cluster.local:8000/v1
+          api_key: local
+      - model_name: gemma-3-12b-it
+        litellm_params:
+          model: gemma-3-12b-it
+          api_base: http://llama-swap.ai.svc.cluster.local:8000/v1
+          api_key: local
+      - model_name: Qwen3-Coder-Next
+        litellm_params:
+          model: Qwen3-Coder-Next
+          api_base: http://llama-swap.ai.svc.cluster.local:8000/v1
+          api_key: local

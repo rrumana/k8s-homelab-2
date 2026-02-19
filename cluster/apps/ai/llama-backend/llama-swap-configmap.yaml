@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llama-swap-config
+data:
+  SWAP_PORT: "8000"
+  config.yaml: |
+    healthCheckTimeout: 3600
+    models:
+      gpt-oss-20b:
+        cmd: >
+          /app/llama-server
+          -hf unsloth/gpt-oss-20b-GGUF:Q4_K_M
+          --ctx-size 262144
+          --n-gpu-layers 999
+          --parallel 4
+          --threads 8
+          --jinja
+          --host 0.0.0.0
+          --port ${PORT}
+        ttl: 1800
+      gemma-3-12b-it:
+        cmd: >
+          /app/llama-server
+          -hf unsloth/gemma-3-12b-it-GGUF:Q4_K_M
+          --ctx-size 131072
+          --n-gpu-layers 999
+          --parallel 4
+          --threads 8
+          --jinja
+          --host 0.0.0.0
+          --port ${PORT}
+        ttl: 1800
+      Qwen3-Coder-Next:
+        cmd: >
+          /app/llama-server
+          -hf unsloth/Qwen3-Coder-Next-GGUF:Q3_K_M
+          --ctx-size 131072
+          --n-gpu-layers 999
+          --parallel 4
+          --threads 8
+          --jinja
+          --host 0.0.0.0
+          --port ${PORT}
+        ttl: 1800

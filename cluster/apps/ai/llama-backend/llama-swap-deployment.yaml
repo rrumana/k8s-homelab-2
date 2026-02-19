@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llama-swap
+  labels:
+    app: llama-swap
+    app.kubernetes.io/component: model-worker
+    app.kubernetes.io/part-of: llama-backend
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: llama-swap
+  template:
+    metadata:
+      labels:
+        app: llama-swap
+        app.kubernetes.io/component: model-worker
+        app.kubernetes.io/part-of: llama-backend
+    spec:
+      terminationGracePeriodSeconds: 120
+      enableServiceLinks: false
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/component
+                    operator: In
+                    values:
+                      - model-worker
+                  - key: app.kubernetes.io/part-of
+                    operator: In
+                    values:
+                      - llama-backend
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: llama-swap
+          image: ghcr.io/mostlygeek/llama-swap:vulkan
+          imagePullPolicy: IfNotPresent
+          command:
+            - /app/llama-swap
+          args:
+            - --config
+            - /config/config.yaml
+            - --listen
+            - :$(SWAP_PORT)
+            - --watch-config
+          ports:
+            - containerPort: 8000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: llama-swap-config
+          env:
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: vllm-shared-secret
+                  key: HUGGING_FACE_HUB_TOKEN
+                  optional: true
+            - name: HF_HOME
+              value: /models/hf-cache/swap
+          volumeMounts:
+            - name: swap-config
+              mountPath: /config/config.yaml
+              subPath: config.yaml
+            - name: model-cache
+              mountPath: /models
+          resources:
+            requests:
+              cpu: "4"
+              memory: "16Gi"
+              amd.com/gpu: "1"
+            limits:
+              cpu: "10"
+              memory: "40Gi"
+              amd.com/gpu: "1"
+          startupProbe:
+            tcpSocket:
+              port: http
+            failureThreshold: 180
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+      volumes:
+        - name: swap-config
+          configMap:
+            name: llama-swap-config
+        - name: model-cache
+          persistentVolumeClaim:
+            claimName: llama-models-cache

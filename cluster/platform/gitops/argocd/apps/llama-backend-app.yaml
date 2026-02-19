@@ -1,8 +1,8 @@
-# platform/gitops/argocd/apps/vllm-general-app.yaml
+# platform/gitops/argocd/apps/llama-backend-app.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: vllm-general
+  name: llama-backend
   namespace: argocd
 spec:
   project: default
@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/rrumana/k8s-homelab-2.git
     targetRevision: main
-    path: cluster/apps/ai/vllm-general
+    path: cluster/apps/ai/llama-backend
 
   destination:
     server: https://kubernetes.default.svc

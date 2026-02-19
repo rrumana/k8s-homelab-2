@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llama-static-b-config
+data:
+  MODEL_NAME: "Qwen3-Coder-30B-A3B-Instruct"
+  MODEL_REPO: "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF"
+  MODEL_QUANT: "Q4_K_M"
+  MODEL_FILENAME: ""
+  MODEL_PATH: "/models/static-b/model.gguf"
+  PORT: "8000"
+  N_CTX: "262144"
+  N_PARALLEL: "4"
+  N_THREADS: "8"
+  N_GPU_LAYERS: "999"

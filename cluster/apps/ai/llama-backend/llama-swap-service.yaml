@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: vllm-reasoning
+  name: llama-swap
 spec:
   type: ClusterIP
   selector:
-    app: vllm-reasoning
+    app: llama-swap
   ports:
     - name: http
       port: 8000

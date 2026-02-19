@@ -14,8 +14,12 @@ data:
           directEndpoint: true
           models:
             default:
-              - "general-chat"
+              - "GLM-4.7-Flash"
+              - "Qwen3-Coder-30B-A3B-Instruct"
+              - "gpt-oss-20b"
+              - "gemma-3-12b-it"
+              - "Qwen3-Coder-Next"
             fetch: false
           titleConvo: true
-          titleModel: "general-chat"
-          modelDisplayLabel: "vLLM"
+          titleModel: "GLM-4.7-Flash"
+          modelDisplayLabel: "llama.cpp"

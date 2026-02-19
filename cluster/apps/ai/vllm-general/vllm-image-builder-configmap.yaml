@@ -69,6 +69,35 @@ data:
       rm -rf /var/lib/containers/storage/* /var/lib/containers/cache/* /var/lib/containers/tmp/* >/dev/null 2>&1 || true
     }
 
+    ensure_rocm_requirements_compat() {
+      req_dir="/workspace/vllm/requirements"
+      rocm_req="${req_dir}/rocm.txt"
+
+      if [ -f "${rocm_req}" ]; then
+        return 0
+      fi
+
+      log "requirements/rocm.txt not found; creating compatibility shim"
+      mkdir -p "${req_dir}"
+      for candidate in \
+        "${req_dir}/rocm-dev.txt" \
+        "${req_dir}/rocm_dev.txt" \
+        "${req_dir}/rocm-requirements.txt" \
+        "${req_dir}/build.txt" \
+        "${req_dir}/common.txt" \
+        "${req_dir}/cuda.txt"
+      do
+        if [ -f "${candidate}" ]; then
+          cp "${candidate}" "${rocm_req}"
+          log "Created requirements/rocm.txt from $(basename "${candidate}")"
+          return 0
+        fi
+      done
+
+      : > "${rocm_req}"
+      log "No compatible requirements file found; created empty requirements/rocm.txt"
+    }
+
     upstream_digest="$(skopeo inspect --format '{{.Digest}}' "${UPSTREAM_IMAGE}")"
     current_digest="$(skopeo inspect --format '{{ index .Labels "io.rrumana.vllm.upstream.digest" }}' "docker://${TARGET_REPO}:${TRACK_TAG}" 2>/dev/null || true)"
 
@@ -94,6 +123,7 @@ data:
 
     rm -rf /workspace/vllm
     git clone --depth 1 --branch "${VLLM_REF}" https://github.com/vllm-project/vllm.git /workspace/vllm
+    ensure_rocm_requirements_compat
 
     printf '%s' "${GHCR_TOKEN}" | buildah login --username "${GHCR_USER}" --password-stdin ghcr.io
 

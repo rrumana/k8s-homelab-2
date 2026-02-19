@@ -47,31 +47,59 @@ cleanup() {
 trap cleanup EXIT
 
 ensure_rocm_requirements_compat() {
-  local req_dir="$1/requirements"
-  local rocm_req="${req_dir}/rocm.txt"
+  local root_req_dir="$1/requirements"
+  local pkg_req_dir="$1/vllm/requirements"
+  local root_rocm_req="${root_req_dir}/rocm.txt"
+  local pkg_rocm_req="${pkg_req_dir}/rocm.txt"
 
-  if [[ -f "$rocm_req" ]]; then
+  if [[ -f "$root_rocm_req" || -f "$pkg_rocm_req" ]]; then
+    mkdir -p "$root_req_dir" "$pkg_req_dir"
+    [[ -f "$root_rocm_req" ]] || cp "$pkg_rocm_req" "$root_rocm_req" || true
+    [[ -f "$pkg_rocm_req" ]] || cp "$root_rocm_req" "$pkg_rocm_req" || true
+    echo "requirements/rocm.txt already present in repository layout"
     return 0
   fi
 
-  echo "requirements/rocm.txt not found; creating compatibility shim"
-  mkdir -p "$req_dir"
+  echo "requirements/rocm.txt not found; creating compatibility shims"
+  mkdir -p "$root_req_dir" "$pkg_req_dir"
   for candidate in \
-    "${req_dir}/rocm-dev.txt" \
-    "${req_dir}/rocm_dev.txt" \
-    "${req_dir}/rocm-requirements.txt" \
-    "${req_dir}/build.txt" \
-    "${req_dir}/common.txt" \
-    "${req_dir}/cuda.txt"; do
+    "${root_req_dir}/rocm-dev.txt" \
+    "${root_req_dir}/rocm_dev.txt" \
+    "${root_req_dir}/rocm-requirements.txt" \
+    "${root_req_dir}/build.txt" \
+    "${root_req_dir}/common.txt" \
+    "${root_req_dir}/cuda.txt" \
+    "${pkg_req_dir}/rocm-dev.txt" \
+    "${pkg_req_dir}/rocm_dev.txt" \
+    "${pkg_req_dir}/rocm-requirements.txt" \
+    "${pkg_req_dir}/build.txt" \
+    "${pkg_req_dir}/common.txt" \
+    "${pkg_req_dir}/cuda.txt"; do
     if [[ -f "$candidate" ]]; then
-      cp "$candidate" "$rocm_req"
-      echo "Created requirements/rocm.txt from $(basename "$candidate")"
+      cp "$candidate" "$root_rocm_req"
+      cp "$candidate" "$pkg_rocm_req"
+      echo "Created compatibility rocm.txt from $(basename "$candidate")"
       return 0
     fi
   done
 
-  : > "$rocm_req"
-  echo "No compatible requirements file found; created empty requirements/rocm.txt"
+  : > "$root_rocm_req"
+  cp "$root_rocm_req" "$pkg_rocm_req"
+  echo "No compatible requirements file found; created empty rocm.txt shims"
+}
+
+patch_dockerfile_rocm_requirements() {
+  local dockerfile="$1/docker/Dockerfile.rocm"
+  if [[ ! -f "$dockerfile" ]]; then
+    echo "Dockerfile not found at $dockerfile" >&2
+    exit 1
+  fi
+
+  echo "Patching Dockerfile.rocm to support fallback requirements paths"
+  sed -i \
+    "s|python3 -m pip install -r requirements/rocm.txt|python3 -m pip install -r requirements/rocm.txt || python3 -m pip install -r requirements/build.txt || python3 -m pip install -r requirements/common.txt || python3 -m pip install -r vllm/requirements/rocm.txt || python3 -m pip install -r vllm/requirements/build.txt || python3 -m pip install -r vllm/requirements/common.txt|g" \
+    "$dockerfile"
+  grep -n "python3 -m pip install -r" "$dockerfile" | head -n 5 || true
 }
 
 echo "Cloning vLLM source (${VLLM_REF}) into ${WORK_ROOT}"
@@ -81,6 +109,8 @@ if [[ "$VLLM_REF" != "main" ]]; then
   git -C "$WORK_ROOT/vllm" checkout "$VLLM_REF"
 fi
 ensure_rocm_requirements_compat "$WORK_ROOT/vllm"
+patch_dockerfile_rocm_requirements "$WORK_ROOT/vllm"
+find "$WORK_ROOT/vllm" -type f -path '*/requirements/rocm.txt' -print || true
 
 if [[ "$PUSH" == "1" ]]; then
   echo "$GHCR_TOKEN" | docker login "$IMAGE_REGISTRY" -u "$GHCR_USER" --password-stdin

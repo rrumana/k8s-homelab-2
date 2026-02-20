@@ -14,3 +14,4 @@ data:
   ALLOW_SHARED_LINKS: "true"
   RAG_API_URL: "http://librechat-rag-api.ai.svc.cluster.local:8000"
   MEILI_HOST: "http://librechat-meilisearch.ai.svc.cluster.local:7700"
+  USE_REDIS: "true"

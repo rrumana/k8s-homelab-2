@@ -9,7 +9,7 @@ data:
   MODEL_FILENAME: ""
   MODEL_PATH: "/models/static-a/model.gguf"
   PORT: "8000"
-  N_CTX: "262144"
+  N_CTX: "131072"
   N_PARALLEL: "4"
   N_THREADS: "8"
   N_GPU_LAYERS: "999"

@@ -10,7 +10,7 @@ data:
       custom:
         - name: "Local Gateway"
           apiKey: "${OPENAI_API_KEY}"
-          baseURL: "http://llm-gateway.ai.svc.cluster.local:4000/v1"
+          baseURL: "http://llm-gateway.ai.svc.cluster.local:4000/v1/chat/completions"
           directEndpoint: true
           models:
             default:

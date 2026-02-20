@@ -56,11 +56,13 @@ spec:
                 secretKeyRef:
                   name: librechat-secret
                   key: PGVECTOR_DB_URL
-            - name: REDIS_URL
+            - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: librechat-secret
-                  key: REDIS_URI
+                  key: REDIS_PASSWORD
+            - name: REDIS_URL
+              value: redis://:$(REDIS_PASSWORD)@redis-cache.databases.svc.cluster.local:15976
           resources:
             requests:
               cpu: "300m"

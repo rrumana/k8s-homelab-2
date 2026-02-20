@@ -27,6 +27,14 @@ spec:
                 name: librechat-config
             - secretRef:
                 name: librechat-secret
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: librechat-secret
+                  key: REDIS_PASSWORD
+            - name: REDIS_URI
+              value: redis://:$(REDIS_PASSWORD)@redis-cache.databases.svc.cluster.local:15976
           volumeMounts:
             - name: librechat-data
               mountPath: /app/uploads

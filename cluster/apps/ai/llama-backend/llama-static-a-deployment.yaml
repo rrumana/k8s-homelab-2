@@ -104,7 +104,7 @@ spec:
               mountPath: /models
       containers:
         - name: llama-server
-          image: rocm/llama.cpp:llama.cpp-b6652.amd0_rocm7.0.0_ubuntu24.04_server
+          image: ghcr.io/mostlygeek/llama-swap:vulkan
           imagePullPolicy: IfNotPresent
           command:
             - /app/llama-server

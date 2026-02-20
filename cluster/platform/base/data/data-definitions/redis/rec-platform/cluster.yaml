@@ -22,6 +22,6 @@ spec:
       cpu: "2"
       memory: 4Gi
     limits:
-      cpu: "2000m"
+      cpu: "2"
       memory: 4Gi
   uiServiceType: ClusterIP

@@ -14,12 +14,13 @@ data:
           directEndpoint: true
           models:
             default:
+              - "Qwen3-Next-80B-A3B-Instruct"
+              - "Qwen3-Next-80B-A3B-Thinking"
               - "GLM-4.7-Flash"
-              - "Qwen3-Coder-30B-A3B-Instruct"
               - "gpt-oss-20b"
               - "gemma-3-12b-it"
               - "Qwen3-Coder-Next"
             fetch: false
           titleConvo: true
-          titleModel: "GLM-4.7-Flash"
+          titleModel: "Qwen3-Next-80B-A3B-Instruct"
           modelDisplayLabel: "llama.cpp"

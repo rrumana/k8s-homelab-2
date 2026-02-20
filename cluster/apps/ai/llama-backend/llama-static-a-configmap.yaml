@@ -3,9 +3,9 @@ kind: ConfigMap
 metadata:
   name: llama-static-a-config
 data:
-  MODEL_NAME: "GLM-4.7-Flash"
-  MODEL_REPO: "unsloth/GLM-4.7-Flash-GGUF"
-  MODEL_QUANT: "Q4_K_M"
+  MODEL_NAME: "Qwen3-Next-80B-A3B-Instruct"
+  MODEL_REPO: "unsloth/Qwen3-Next-80B-A3B-Instruct-GGUF"
+  MODEL_QUANT: "Q3_K_M"
   MODEL_FILENAME: ""
   MODEL_PATH: "/models/static-a/model.gguf"
   PORT: "8000"

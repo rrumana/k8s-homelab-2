@@ -32,9 +32,6 @@ spec:
           volumeMounts:
             - name: model-cache
               mountPath: /cache
-            - name: nas-migrate
-              mountPath: /nas
-              readOnly: true
           resources:
             requests:
               cpu: 50m
@@ -64,7 +61,3 @@ spec:
         - name: model-cache
           persistentVolumeClaim:
             claimName: immich-ml-cache
-        - name: nas-migrate
-          hostPath:
-            path: /NAS/Longhorn
-            type: Directory

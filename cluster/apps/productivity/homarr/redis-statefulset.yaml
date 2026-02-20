@@ -96,11 +96,6 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
-      volumes:
-        - name: nas-migrate
-          hostPath:
-            path: /NAS/Longhorn
-            type: Directory
   volumeClaimTemplates:
     - metadata:
         name: data

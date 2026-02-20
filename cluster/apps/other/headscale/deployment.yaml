@@ -32,9 +32,6 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /var/lib/headscale
-            - name: nas-migrate
-              mountPath: /nas
-              readOnly: true
           resources:
             requests:
               cpu: 50m
@@ -122,7 +119,3 @@ spec:
             claimName: headscale-data
         - name: run
           emptyDir: {}
-        - name: nas-migrate
-          hostPath:
-            path: /NAS/Longhorn
-            type: Directory

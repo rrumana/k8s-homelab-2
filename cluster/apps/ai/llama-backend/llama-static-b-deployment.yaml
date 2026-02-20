@@ -107,7 +107,7 @@ spec:
           image: rocm/llama.cpp:llama.cpp-b6652.amd0_rocm7.0.0_ubuntu24.04_server
           imagePullPolicy: IfNotPresent
           command:
-            - llama-server
+            - /app/llama-server
           ports:
             - containerPort: 8000
               name: http

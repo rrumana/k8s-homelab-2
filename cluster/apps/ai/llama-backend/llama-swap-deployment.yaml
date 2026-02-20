@@ -39,6 +39,87 @@ spec:
                     values:
                       - llama-backend
               topologyKey: kubernetes.io/hostname
+      initContainers:
+        - name: seed-swap-models
+          image: python:3.12-slim
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: llama-swap-config
+          env:
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: vllm-shared-secret
+                  key: HUGGING_FACE_HUB_TOKEN
+                  optional: true
+            - name: HF_HOME
+              value: /models/hf-cache/swap
+          command:
+            - /bin/sh
+            - -ec
+          args:
+            - |
+              python3 -m pip install --no-cache-dir huggingface_hub
+              python3 - <<'PY'
+              import os
+              import pathlib
+              from huggingface_hub import hf_hub_download, list_repo_files
+
+              specs = os.environ.get("SWAP_MODELS", "")
+              token = os.getenv("HF_TOKEN")
+
+              def iter_specs(raw: str):
+                  for line in raw.splitlines():
+                      line = line.strip()
+                      if not line or line.startswith("#"):
+                          continue
+                      parts = [p.strip() for p in line.split("|")]
+                      if len(parts) != 3:
+                          raise RuntimeError(
+                              f"Invalid SWAP_MODELS entry '{line}'. Expected 'name|repo|quant'."
+                          )
+                      yield parts
+
+              for model_name, repo, quant in iter_specs(specs):
+                  target = pathlib.Path("/models/swap") / model_name / "model.gguf"
+
+                  if target.is_symlink():
+                      try:
+                          _ = target.resolve(strict=True)
+                          print(f"Model already seeded: {model_name} -> {target}")
+                          continue
+                      except FileNotFoundError:
+                          target.unlink(missing_ok=True)
+                  elif target.exists():
+                      print(f"Model already seeded: {model_name} -> {target}")
+                      continue
+
+                  files = list_repo_files(repo_id=repo, token=token)
+                  candidates = [
+                      f for f in files
+                      if f.lower().endswith(".gguf") and quant.lower() in f.lower()
+                  ]
+                  if not candidates:
+                      raise RuntimeError(
+                          f"No GGUF file found for repo '{repo}' with quant '{quant}'."
+                      )
+
+                  chosen = sorted(candidates, key=lambda f: (len(f), f.lower()))[0]
+                  source = hf_hub_download(
+                      repo_id=repo,
+                      filename=chosen,
+                      token=token,
+                      cache_dir="/models/hf-cache/swap",
+                  )
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  target.symlink_to(pathlib.Path(source))
+                  print(f"Seeded {model_name}: {repo}/{chosen}")
+                  print(f"Linked model path: {target} -> {source}")
+              PY
+          volumeMounts:
+            - name: model-cache
+              mountPath: /models
       containers:
         - name: llama-swap
           image: ghcr.io/mostlygeek/llama-swap:vulkan

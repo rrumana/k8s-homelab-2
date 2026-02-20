@@ -14,6 +14,13 @@ Model defaults are defined in:
 - `llama-swap-configmap.yaml`
 - `litellm-configmap.yaml` (single example model mapping by default)
 
+Swap model seeding:
+
+- `llama-swap` uses an init container to pre-seed all models listed in
+  `SWAP_MODELS` (`name|repo|quant`) into `/models/swap/<name>/model.gguf`.
+- If a model is already seeded, it is skipped.
+- Runtime swap commands use local `--model` paths, avoiding first-request HF fetch.
+
 Shared secret dependency:
 
 - `vllm-shared-secret` must exist and include `HUGGING_FACE_HUB_TOKEN`.

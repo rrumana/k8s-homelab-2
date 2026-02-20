@@ -4,13 +4,18 @@ metadata:
   name: llama-swap-config
 data:
   SWAP_PORT: "8000"
+  SWAP_MODELS: |
+    GLM-4.7-Flash|unsloth/GLM-4.7-Flash-GGUF|Q4_K_M
+    gpt-oss-20b|unsloth/gpt-oss-20b-GGUF|Q4_K_M
+    gemma-3-12b-it|unsloth/gemma-3-12b-it-GGUF|Q4_K_M
+    Qwen3-Coder-Next|unsloth/Qwen3-Coder-Next-GGUF|Q3_K_M
   config.yaml: |
     healthCheckTimeout: 3600
     models:
       GLM-4.7-Flash:
         cmd: >
           /app/llama-server
-          -hf unsloth/GLM-4.7-Flash-GGUF:Q4_K_M
+          --model /models/swap/GLM-4.7-Flash/model.gguf
           --ctx-size 262144
           --n-gpu-layers 999
           --parallel 4
@@ -22,7 +27,7 @@ data:
       gpt-oss-20b:
         cmd: >
           /app/llama-server
-          -hf unsloth/gpt-oss-20b-GGUF:Q4_K_M
+          --model /models/swap/gpt-oss-20b/model.gguf
           --ctx-size 262144
           --n-gpu-layers 999
           --parallel 4
@@ -34,7 +39,7 @@ data:
       gemma-3-12b-it:
         cmd: >
           /app/llama-server
-          -hf unsloth/gemma-3-12b-it-GGUF:Q4_K_M
+          --model /models/swap/gemma-3-12b-it/model.gguf
           --ctx-size 131072
           --n-gpu-layers 999
           --parallel 4
@@ -46,7 +51,7 @@ data:
       Qwen3-Coder-Next:
         cmd: >
           /app/llama-server
-          -hf unsloth/Qwen3-Coder-Next-GGUF:Q3_K_M
+          --model /models/swap/Qwen3-Coder-Next/model.gguf
           --ctx-size 131072
           --n-gpu-layers 999
           --parallel 4

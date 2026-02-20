@@ -17,28 +17,6 @@ spec:
         app: immich
         component: machine-learning
     spec:
-      initContainers:
-        - name: seed-ml-cache
-          image: alpine:3.20
-          command: ["/bin/sh", "-lc"]
-          args:
-            - |
-              set -e
-              if [ ! -d /nas/immich/immich-ml-cache ]; then
-                echo "missing source /nas/immich/immich-ml-cache"; exit 1
-              fi
-              apk add --no-cache rsync
-              rsync -aHAX --numeric-ids /nas/immich/immich-ml-cache/ /cache/
-          volumeMounts:
-            - name: model-cache
-              mountPath: /cache
-          resources:
-            requests:
-              cpu: 50m
-              memory: 128Mi
-            limits:
-              cpu: 500m
-              memory: 512Mi
       containers:
         - name: immich-machine-learning
           image: ghcr.io/immich-app/immich-machine-learning:release

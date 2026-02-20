@@ -15,34 +15,6 @@ spec:
       labels:
         app: homarr-redis
     spec:
-      initContainers:
-        - name: seed-redis
-          image: alpine:3.20
-          command: ["/bin/sh", "-lc"]
-          args:
-            - |
-              set -e
-              apk add --no-cache coreutils
-              DUMP_DIR="/nas/homarr-helm/redis-rdb"
-              DUMP_FILE="$(ls -1 ${DUMP_DIR}/homarr-redis-*.rdb 2>/dev/null | sort | tail -n1)"
-              if [ -z "$DUMP_FILE" ]; then
-                echo "no redis rdb found in $DUMP_DIR"; exit 1
-              fi
-              if [ -s /data/dump.rdb ]; then
-                echo "redis dump already present, skipping"
-                exit 0
-              fi
-              cp "$DUMP_FILE" /data/dump.rdb
-              chown -R 1000:1000 /data
-          volumeMounts:
-            - name: data
-              mountPath: /data
-            - name: nas-migrate
-              mountPath: /nas
-              readOnly: true
-          resources:
-            requests: { cpu: "20m", memory: "64Mi" }
-            limits:   { cpu: "200m", memory: "256Mi" }
       containers:
         - name: redis
           image: docker.io/library/redis:7.2

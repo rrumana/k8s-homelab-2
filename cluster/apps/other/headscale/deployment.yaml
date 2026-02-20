@@ -17,28 +17,6 @@ spec:
         app: headscale
         component: api
     spec:
-      initContainers:
-        - name: seed-data
-          image: alpine:3.20
-          command: ["/bin/sh", "-lc"]
-          args:
-            - |
-              set -e
-              if [ ! -d /nas/headscale/headscale-data ]; then
-                echo "missing source /nas/headscale/headscale-data"; exit 1
-              fi
-              apk add --no-cache rsync
-              rsync -aHAX --numeric-ids /nas/headscale/headscale-data/ /var/lib/headscale/
-          volumeMounts:
-            - name: data
-              mountPath: /var/lib/headscale
-          resources:
-            requests:
-              cpu: 50m
-              memory: 128Mi
-            limits:
-              cpu: 500m
-              memory: 512Mi
       containers:
         - name: headscale
           image: headscale/headscale:0.27.1

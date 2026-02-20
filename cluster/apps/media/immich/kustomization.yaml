@@ -7,8 +7,6 @@ resources:
   - externalsecret.yaml
   - server-deployment.yaml
   - ml-deployment.yaml
-  - redis-deployment.yaml
-  - postgres-deployment.yaml
   - services.yaml
   - configmap.yaml
   - pvc.yaml

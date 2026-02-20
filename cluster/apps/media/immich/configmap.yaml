@@ -5,8 +5,13 @@ metadata:
   labels:
     app: immich
 data:
+  DB_HOSTNAME: "pg-media-rw.databases.svc.cluster.local"
+  DB_PORT: "5432"
   DB_USERNAME: "immich"
   DB_DATABASE_NAME: "immich"
+  DB_VECTOR_EXTENSION: "vectorchord"
+  REDIS_HOSTNAME: "redis-cache.databases.svc.cluster.local"
+  REDIS_PORT: "15976"
   NODE_ENV: "production"
   LOG_LEVEL: "log"
   IMMICH_MACHINE_LEARNING_URL: "http://immich-machine-learning:3003"

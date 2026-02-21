@@ -55,6 +55,10 @@ spec:
           configMap:
             name: arr-stack-gluetun-pf-sync
             defaultMode: 0755
+        - name: servarr-postgres-bootstrap
+          configMap:
+            name: arr-servarr-postgres-bootstrap
+            defaultMode: 0555
 
       initContainers:
         - name: sysctl-init
@@ -97,6 +101,24 @@ spec:
             - { name: qbit-config, mountPath: /config }
             - { name: gluetun,     mountPath: /gluetun }
             - { name: temp,        mountPath: /temp }
+        - name: servarr-postgres-bootstrap
+          image: python:3.12-alpine
+          imagePullPolicy: IfNotPresent
+          command: ["python", "/scripts/configure_servarr_postgres.py"]
+          envFrom:
+            - configMapRef: { name: arr-postgres-config }
+            - secretRef:
+                name: arr-postgres-secret
+                optional: true
+          volumeMounts:
+            - { name: servarr-postgres-bootstrap, mountPath: /scripts }
+            - { name: sonarr-config, mountPath: /configs/sonarr }
+            - { name: radarr-config, mountPath: /configs/radarr }
+            - { name: lidarr-config, mountPath: /configs/lidarr }
+            - { name: prowlarr-config, mountPath: /configs/prowlarr }
+          resources:
+            requests: { cpu: "25m", memory: "64Mi" }
+            limits:   { cpu: "250m", memory: "256Mi" }
 
       containers:
         - name: gluetun
@@ -213,6 +235,38 @@ spec:
             - { name: PUID, value: "1000" }
             - { name: PGID, value: "1000" }
             - { name: TZ,   value: "America/Los_Angeles" }
+            - name: DB_TYPE
+              valueFrom:
+                secretKeyRef:
+                  name: arr-postgres-secret
+                  key: JELLYSEERR_DB_TYPE
+                  optional: true
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: arr-postgres-config
+                  key: JELLYSEERR_DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: arr-postgres-config
+                  key: JELLYSEERR_DB_PORT
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: arr-postgres-config
+                  key: JELLYSEERR_DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: arr-postgres-secret
+                  key: JELLYSEERR_DB_PASS
+                  optional: true
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: arr-postgres-config
+                  key: JELLYSEERR_DB_NAME
           ports:
             - { name: http, containerPort: 5055, protocol: TCP }
           volumeMounts:

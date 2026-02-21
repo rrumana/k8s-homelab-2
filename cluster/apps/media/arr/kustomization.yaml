@@ -5,6 +5,8 @@ namespace: media
 
 resources:
   - externalsecret.yaml
+  - postgres-configmap.yaml
+  - servarr-postgres-bootstrap-configmap.yaml
   - pvc.yaml
   - pf-sync-configmap.yaml
   - deployment.yaml

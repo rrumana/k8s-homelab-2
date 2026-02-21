@@ -1,0 +1,101 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: arr-servarr-postgres-bootstrap
+  labels:
+    app: arr-stack
+data:
+  configure_servarr_postgres.py: |
+    #!/usr/bin/env python3
+    import os
+    import shutil
+    import xml.etree.ElementTree as ET
+    from pathlib import Path
+
+    ARR_PG_HOST = os.getenv("ARR_PG_HOST", "").strip()
+    ARR_PG_PORT = os.getenv("ARR_PG_PORT", "5432").strip()
+    SERVARR_PG_ENABLE = os.getenv("SERVARR_PG_ENABLE", "false").strip().lower()
+
+    APPS = [
+      {
+        "name": "sonarr",
+        "config_path": "/configs/sonarr/config.xml",
+        "user_env": "SONARR_PG_USER",
+        "password_env": "SONARR_PG_PASSWORD",
+        "main_db_env": "SONARR_PG_MAIN_DB",
+        "log_db_env": "SONARR_PG_LOG_DB",
+      },
+      {
+        "name": "radarr",
+        "config_path": "/configs/radarr/config.xml",
+        "user_env": "RADARR_PG_USER",
+        "password_env": "RADARR_PG_PASSWORD",
+        "main_db_env": "RADARR_PG_MAIN_DB",
+        "log_db_env": "RADARR_PG_LOG_DB",
+      },
+      {
+        "name": "lidarr",
+        "config_path": "/configs/lidarr/config.xml",
+        "user_env": "LIDARR_PG_USER",
+        "password_env": "LIDARR_PG_PASSWORD",
+        "main_db_env": "LIDARR_PG_MAIN_DB",
+        "log_db_env": "LIDARR_PG_LOG_DB",
+      },
+      {
+        "name": "prowlarr",
+        "config_path": "/configs/prowlarr/config.xml",
+        "user_env": "PROWLARR_PG_USER",
+        "password_env": "PROWLARR_PG_PASSWORD",
+        "main_db_env": "PROWLARR_PG_MAIN_DB",
+        "log_db_env": "PROWLARR_PG_LOG_DB",
+      },
+    ]
+
+
+    def upsert(root: ET.Element, key: str, value: str) -> None:
+      node = root.find(key)
+      if node is None:
+        node = ET.SubElement(root, key)
+      node.text = value
+
+
+    def configure_app(app: dict) -> None:
+      config_path = Path(app["config_path"])
+      app_name = app["name"]
+      if not config_path.exists():
+        print(f"[{app_name}] config file not found at {config_path}; skipping")
+        return
+
+      values = {
+        "PostgresHost": ARR_PG_HOST,
+        "PostgresPort": ARR_PG_PORT,
+        "PostgresUser": os.getenv(app["user_env"], "").strip(),
+        "PostgresPassword": os.getenv(app["password_env"], "").strip(),
+        "PostgresMainDb": os.getenv(app["main_db_env"], "").strip(),
+        "PostgresLogDb": os.getenv(app["log_db_env"], "").strip(),
+      }
+      missing = [k for k, v in values.items() if not v]
+      if missing:
+        print(f"[{app_name}] missing postgres inputs {missing}; leaving existing config")
+        return
+
+      backup_path = config_path.with_name(config_path.name + ".pre-postgres.bak")
+      if not backup_path.exists():
+        shutil.copy2(config_path, backup_path)
+        print(f"[{app_name}] created backup at {backup_path}")
+
+      tree = ET.parse(config_path)
+      root = tree.getroot()
+      for key, value in values.items():
+        upsert(root, key, value)
+      tree.write(config_path, encoding="utf-8", xml_declaration=True)
+      print(f"[{app_name}] wrote postgres settings to {config_path}")
+
+
+    if SERVARR_PG_ENABLE not in ("1", "true", "yes"):
+      print("SERVARR_PG_ENABLE is not true; skipping servarr postgres bootstrap")
+    elif not ARR_PG_HOST:
+      print("ARR_PG_HOST is empty; skipping servarr postgres bootstrap")
+    else:
+      for app in APPS:
+        configure_app(app)

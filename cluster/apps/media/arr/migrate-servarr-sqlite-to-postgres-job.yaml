@@ -51,7 +51,9 @@ spec:
 
                 echo "[${app}] migrating ${sqlite_path} -> ${pg_db}"
                 PGPASSWORD="${pg_password}" pgloader \
-                  --with "data only, truncate, quote identifiers" \
+                  --with "data only" \
+                  --with "truncate" \
+                  --with "quote identifiers" \
                   "sqlite:///${sqlite_path}" \
                   "postgresql://${pg_user}@${ARR_PG_HOST}:${ARR_PG_PORT}/${pg_db}"
               }

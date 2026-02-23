@@ -161,3 +161,8 @@ Many restricted ingresses use source allowlisting, for example:
 Feel free to make pull requests. I'll probably close them immediately, but feel free to do it!
 
 On a more serious note this setup is very personal and unique to my circumstances. I welcome insight on idiomatic Kubernetes, but unless you have a similar platform to test changes against I'd prefer insights to be raised as discussions/issues, not PRs.
+
+## Further Reading
+
+- `docs/vault-operations.md`
+- `docs/apps.md`

@@ -53,6 +53,7 @@ spec:
                 PGPASSWORD="${pg_password}" pgloader \
                   --with "data only" \
                   --with "truncate" \
+                  --with "reset no sequences" \
                   --with "quote identifiers" \
                   "sqlite:///${sqlite_path}" \
                   "postgresql://${pg_user}@${ARR_PG_HOST}:${ARR_PG_PORT}/${pg_db}"

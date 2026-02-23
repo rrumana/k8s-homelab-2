@@ -35,8 +35,10 @@ deschedulerPolicy:
         - name: DefaultEvictor
           args:
             nodeFit: true
-            evictableNamespaces:
-              exclude:
+        - name: RemoveDuplicates
+          args:
+            namespaces:
+              exclude: &infraNamespaces
                 - kube-system
                 - kube-public
                 - kube-node-lease
@@ -54,20 +56,26 @@ deschedulerPolicy:
                 - databases
                 - scheduling
                 - service-mesh
-        - name: RemoveDuplicates
         - name: RemovePodsViolatingNodeAffinity
           args:
             nodeAffinityType:
               - requiredDuringSchedulingIgnoredDuringExecution
+            namespaces:
+              exclude: *infraNamespaces
         - name: RemovePodsViolatingNodeTaints
+          args:
+            namespaces:
+              exclude: *infraNamespaces
         - name: LowNodeUtilization
           args:
             thresholds:
-              cpu: 7
-              memory: 15
+              cpu: 0
+              memory: 0
             targetThresholds:
-              cpu: 15
-              memory: 25
+              cpu: 100
+              memory: 100
+            evictableNamespaces:
+              exclude: *infraNamespaces
       plugins:
         balance:
           enabled:

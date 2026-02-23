@@ -6,27 +6,18 @@ A live, bare-metal Kubernetes homelab run with GitOps and real workloads for fam
 
 This project is for fun and for learning.
 
-It is also live and stores data that matters to me and to people I care about. That is intentional: the fastest way to learn Kubernetes platform engineering is to run real systems with real consequences, then design for safety, recovery, and repeatability.
+It is live and stores data that matters to me and to people I care about. That said it is backed up often and most of this data lives elsewhere.
 
-This repo is the source of truth for that cluster.
 
-## Cluster Snapshot (February 23, 2026)
-
-### Runtime shape
-
-- Kubernetes: `v1.35.1`
-- Topology: 3-node HA control plane, no dedicated worker nodes
-- Container runtime: `containerd://2.2.1`
-- CNI: Cilium (kube-proxy replacement enabled)
-- GitOps: Argo CD app-of-apps
+## Cluster Details
 
 ### Nodes
 
 | Node | Role | Internal IP | OS |
 |---|---|---|---|
+| `melchior-1` | control-plane | `192.168.1.13` | Arch Linux |
 | `balthasar-2` | control-plane | `192.168.1.14` | Arch Linux |
 | `casper-3` | control-plane | `192.168.1.15` | Arch Linux |
-| `melchior-1` | control-plane | `192.168.1.13` | Arch Linux |
 
 ### Hardware (identical per node)
 
@@ -63,22 +54,6 @@ Internet/LAN -> Cloudflare DNS -> MetalLB VIP (HAProxy) -> Ingress -> Services
 Data path:
 Apps -> Ceph PVCs / CNPG / Redis -> Snapshots + VolSync -> MinIO (external bridge)
 ```
-
-## GitOps Flow
-
-The cluster follows a strict app-of-apps pattern:
-
-1. Bootstrap Argo CD from `cluster/bootstrap/argocd/`
-2. Apply root application from `cluster/bootstrap/root-application/root-app.yaml`
-3. Root app points to `cluster/platform/gitops/argocd`
-4. Argo then reconciles platform and workload `Application` resources in `cluster/platform/gitops/argocd/apps/`
-
-Primary repo layout:
-
-- `cluster/bootstrap/`: day-0 bootstrap (kubeadm config, Argo bootstrap, root app)
-- `cluster/platform/`: shared platform components (networking, storage, security, data, mesh, scheduling)
-- `cluster/apps/`: domain workloads (`ai`, `media`, `productivity`, `other`, `web`)
-- `docs/`: operational runbooks and architecture notes
 
 ## Platform Foundation
 
@@ -181,38 +156,8 @@ Many restricted ingresses use source allowlisting, for example:
 | `media/immich-server` | `192.168.1.234` |
 | `productivity/unifi-tcp` + `productivity/unifi-udp` | `192.168.1.235` |
 
-## Operational Notes
+## Contributing
 
-### Important design choice: Cilium is day-0
+Feel free to make pull requests. I'll probably close them immediately, but feel free to do it!
 
-Cilium is intentionally treated as bootstrap critical infrastructure and is run with a break-glass runbook rather than fully trusting in-cluster self-heal for CNI recovery.
-
-See `cluster/bootstrap/cilium/README.md`.
-
-### Cluster runbooks
-
-- `docs/apps.md`: complete app/platform guide and routing maps
-- `docs/cluster-bootstrap-runbook.md`: 0->1 cluster bootstrap flow
-- `docs/ingress-dns-troubleshooting-bundle.md`: ingress and DNS troubleshooting
-- `docs/opnsense-unbound-dns01-split-dns.md`: DNS-01 split DNS details
-- `docs/arr-jellyseerr-postgres-migration-runbook.md`: media DB migration notes
-- `docs/cloudflare-origin-cert.md`: Cloudflare origin certificate workflow
-
-### Snapshot caveats (February 23, 2026)
-
-- Main workloads are running and nodes are healthy.
-- Descheduler jobs are currently producing repeated `Error` pods in `scheduling`.
-- A `pg-ext-check` pod in `default` is in `Error` state and appears to be leftover migration/testing debris.
-
-## Philosophy
-
-This is not an enterprise product and does not pretend to be one.
-
-It is a serious personal learning platform that happens to be live:
-
-- real users
-- real data
-- real outages
-- real recovery work
-
-That is exactly the point.
+On a more serious note this setup is very personal and unique to my circumstances. I welcome insight on idiomatic Kubernetes, but unless you have a similar platform to test changes against I'd prefer insights to be raised as discussions/issues, not PRs.

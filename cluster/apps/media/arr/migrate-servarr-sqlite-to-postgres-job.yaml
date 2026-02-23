@@ -29,8 +29,16 @@ spec:
               find_db() {
                 dir="$1"; shift
                 for name in "$@"; do
-                  if [ -f "${dir}/${name}" ]; then
+                  if [ -f "${dir}/${name}" ] && [ -s "${dir}/${name}" ]; then
                     echo "${dir}/${name}"
+                    return 0
+                  fi
+                done
+                # Some LinuxServer images store DB files in nested paths.
+                for name in "$@"; do
+                  found="$(find "${dir}" -type f -name "${name}" -size +0c 2>/dev/null | head -n1 || true)"
+                  if [ -n "${found}" ]; then
+                    echo "${found}"
                     return 0
                   fi
                 done
@@ -50,13 +58,22 @@ spec:
                 fi
 
                 echo "[${app}] migrating ${sqlite_path} -> ${pg_db}"
-                PGPASSWORD="${pg_password}" pgloader \
+                log_file="$(mktemp)"
+                if ! PGPASSWORD="${pg_password}" pgloader \
                   --with "data only" \
                   --with "truncate" \
                   --with "reset no sequences" \
                   --with "quote identifiers" \
                   "sqlite:///${sqlite_path}" \
-                  "postgresql://${pg_user}@${ARR_PG_HOST}:${ARR_PG_PORT}/${pg_db}"
+                  "postgresql://${pg_user}@${ARR_PG_HOST}:${ARR_PG_PORT}/${pg_db}" 2>&1 | tee "${log_file}"; then
+                  echo "[${app}] pgloader failed"
+                  return 1
+                fi
+
+                if grep -q "Code CANTOPEN" "${log_file}"; then
+                  echo "[${app}] pgloader reported sqlite CANTOPEN for ${sqlite_path}"
+                  return 1
+                fi
               }
 
               SONARR_MAIN="$(find_db /data/sonarr sonarr.db nzbdrone.db)"

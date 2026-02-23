@@ -13,6 +13,7 @@ resources:
   - metallb-config-app.yaml
   - haproxy-app.yaml
   - descheduler-app.yaml
+  - vpa-app.yaml
   - linkerd-crds-app.yaml
   - linkerd2-cni-app.yaml
   - linkerd-identity-app.yaml

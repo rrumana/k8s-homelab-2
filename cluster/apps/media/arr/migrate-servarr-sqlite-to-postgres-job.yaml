@@ -45,6 +45,20 @@ spec:
                 return 1
               }
 
+              stage_sqlite_db() {
+                src_path="$1"
+                stage_dir="$(mktemp -d /tmp/sqlite-stage.XXXXXX)"
+                stage_db="${stage_dir}/$(basename "${src_path}")"
+                cp "${src_path}" "${stage_db}"
+                if [ -f "${src_path}-wal" ]; then
+                  cp "${src_path}-wal" "${stage_db}-wal"
+                fi
+                if [ -f "${src_path}-shm" ]; then
+                  cp "${src_path}-shm" "${stage_db}-shm"
+                fi
+                echo "${stage_db}"
+              }
+
               migrate_sqlite_db() {
                 app="$1"
                 sqlite_path="$2"
@@ -58,13 +72,14 @@ spec:
                 fi
 
                 echo "[${app}] migrating ${sqlite_path} -> ${pg_db}"
+                staged_sqlite_path="$(stage_sqlite_db "${sqlite_path}")"
                 log_file="$(mktemp)"
                 if ! PGPASSWORD="${pg_password}" pgloader \
                   --with "data only" \
                   --with "truncate" \
                   --with "reset no sequences" \
                   --with "quote identifiers" \
-                  "sqlite:///${sqlite_path}" \
+                  "sqlite:///${staged_sqlite_path}" \
                   "postgresql://${pg_user}@${ARR_PG_HOST}:${ARR_PG_PORT}/${pg_db}" 2>&1 | tee "${log_file}"; then
                   echo "[${app}] pgloader failed"
                   return 1
@@ -74,6 +89,9 @@ spec:
                   echo "[${app}] pgloader reported sqlite CANTOPEN for ${sqlite_path}"
                   return 1
                 fi
+
+                rm -f "${log_file}" || true
+                rm -rf "$(dirname "${staged_sqlite_path}")" || true
               }
 
               SONARR_MAIN="$(find_db /data/sonarr sonarr.db nzbdrone.db)"
@@ -103,16 +121,12 @@ spec:
           volumeMounts:
             - name: sonarr-config
               mountPath: /data/sonarr
-              readOnly: true
             - name: radarr-config
               mountPath: /data/radarr
-              readOnly: true
             - name: lidarr-config
               mountPath: /data/lidarr
-              readOnly: true
             - name: prowlarr-config
               mountPath: /data/prowlarr
-              readOnly: true
           resources:
             requests:
               cpu: "100m"

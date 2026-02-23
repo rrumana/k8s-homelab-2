@@ -27,7 +27,7 @@ spec:
             - name: HEADSCALE_DATABASE_TYPE
               value: postgres
             - name: HEADSCALE_DATABASE_POSTGRES_HOST
-              value: headscale-postgres
+              value: pg-other-rw.databases.svc.cluster.local
             - name: HEADSCALE_DATABASE_POSTGRES_PORT
               value: "5432"
             - name: HEADSCALE_DATABASE_POSTGRES_NAME

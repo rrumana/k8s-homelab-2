@@ -44,7 +44,7 @@ data:
     database:
       type: postgres
       postgres:
-        host: headscale-postgres.other.svc.cluster.local
+        host: pg-other-rw.databases.svc.cluster.local
         port: 5432
         name: headscale
         user: headscale

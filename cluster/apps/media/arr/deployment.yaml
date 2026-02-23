@@ -270,7 +270,7 @@ spec:
           ports:
             - { name: http, containerPort: 5055, protocol: TCP }
           volumeMounts:
-            - { name: jellyseerr-config, mountPath: /config }
+            - { name: jellyseerr-config, mountPath: /app/config }
           resources:
             requests: { cpu: "200m", memory: "256Mi" }
             limits:   { cpu: "24", memory: "2Gi" }

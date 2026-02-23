@@ -1,14 +1,13 @@
 DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
 
-                  Version 2, February 2026
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Version 2, February 2026
 
 Copyright (C) 2026 Ryan Rumana ryan.rumana@gmail.com
 
-Everyone is permitted to copy and distribute verbatim or modified
-copies of this license document, and changing it is allowed as long
+Everyone is permitted to copy and distribute verbatim or modified<br>
+copies of this license document, and changing it is allowed as long<br>
 as the name is changed.
 
-           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE TERMS<br>
 
   0. You just DO WHAT THE FUCK YOU WANT TO.

@@ -17,7 +17,7 @@ spec:
       dnsPolicy: None
       dnsConfig:
         nameservers:
-          - 10.43.0.10
+          - 10.45.0.10
         options:
           - name: ndots
             value: "2"

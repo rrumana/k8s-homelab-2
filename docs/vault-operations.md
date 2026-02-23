@@ -1,4 +1,4 @@
-# Vault Operations Runbook (kubectl-only)
+# Vault Operations Runbook
 
 This is the canonical operational guide for Vault in this cluster.
 
@@ -17,14 +17,6 @@ With this setup:
 - Vault is the source of truth for runtime secrets
 - External Secrets Operator (ESO) syncs Vault values into Kubernetes Secrets
 - Apps consume Kubernetes Secrets, but secret authority stays centralized
-
-In short: this repo stores infrastructure and intent, not secret values.
-
-## Security Constraints For This Repo
-
-- Operate Vault through `kubectl exec` in Vault pods
-- Do not use direct local Vault CLI sessions against Vault endpoints
-- Do not commit `vault-init.json`, unseal keys, or root token anywhere in Git
 
 ## Cluster Context
 
@@ -48,7 +40,7 @@ Expected:
 - All three Vault pods are running
 - You have `~/vault-init.json` from original `vault operator init`
 
-## Daily Sanity Checks
+## Sanity Checks
 
 ### 1) Check pod and seal state
 
@@ -161,75 +153,6 @@ kubectl -n productivity get secret unifi-db-credentials -w
 ```bash
 kubectl -n productivity get externalsecret unifi-db-credentials \
   -o jsonpath='{range .status.conditions[*]}{.type}={.status} {.reason} {.message}{"\n"}{end}'
-```
-
-## Secret Rotation Example (UniFi)
-
-Use this exact sequence.
-
-```bash
-# 0) vars
-ROOT_TOKEN=$(jq -r '.root_token' ~/vault-init.json)
-OLD_PASS=$(kubectl -n productivity get secret unifi-db-credentials -o jsonpath='{.data.MONGO_PASS}' | base64 -d)
-NEW_PASS=$(openssl rand -base64 32 | tr -d '\n')
-echo "Generated NEW_PASS length: ${#NEW_PASS}"
-
-# 1) write new secret to Vault
-kubectl -n security exec vault-0 -- sh -ec "vault login '$ROOT_TOKEN' >/dev/null && \
-  vault kv put kv/apps/productivity/unifi-db-credentials MONGO_PASS='$NEW_PASS'"
-
-# 2) force ESO refresh quickly
-kubectl -n productivity delete secret unifi-db-credentials
-kubectl -n productivity get secret unifi-db-credentials -w
-# Ctrl+C after it reappears
-
-# 3) rotate DB user password to match
-kubectl -n productivity exec deploy/unifi-db -- sh -ec "mongosh --host localhost --quiet --eval '
-dbu = db.getSiblingDB(\"unifi\");
-dbu.updateUser(\"unifi\", {
-  pwd: \"$NEW_PASS\",
-  roles: [
-    { role: \"dbOwner\", db: \"unifi\" },
-    { role: \"dbOwner\", db: \"unifi_stat\" }
-  ]
-});
-'"
-
-# 4) restart app so it reads updated secret env var
-kubectl -n productivity rollout restart deploy/unifi-network-application
-kubectl -n productivity rollout status deploy/unifi-network-application --timeout=300s
-
-# 5) verify auth works with new password
-kubectl -n productivity exec deploy/unifi-db -- sh -ec "mongosh 'mongodb://unifi:$NEW_PASS@localhost:27017/unifi?authSource=unifi' --quiet --eval 'db.runCommand({ping:1}).ok'"
-kubectl -n productivity get pods
-
-# 6) cleanup
-unset ROOT_TOKEN OLD_PASS NEW_PASS
-```
-
-### Rollback
-
-```bash
-ROOT_TOKEN=$(jq -r '.root_token' ~/vault-init.json)
-
-kubectl -n security exec vault-0 -- sh -ec "vault login '$ROOT_TOKEN' >/dev/null && \
-  vault kv put kv/apps/productivity/unifi-db-credentials MONGO_PASS='$OLD_PASS'"
-
-kubectl -n productivity exec deploy/unifi-db -- sh -ec "mongosh --host localhost --quiet --eval '
-dbu = db.getSiblingDB(\"unifi\");
-dbu.updateUser(\"unifi\", {
-  pwd: \"$OLD_PASS\",
-  roles: [
-    { role: \"dbOwner\", db: \"unifi\" },
-    { role: \"dbOwner\", db: \"unifi_stat\" }
-  ]
-});
-'"
-
-kubectl -n productivity rollout restart deploy/unifi-network-application
-kubectl -n productivity rollout status deploy/unifi-network-application --timeout=300s
-
-unset ROOT_TOKEN
 ```
 
 ## Emergency Operations

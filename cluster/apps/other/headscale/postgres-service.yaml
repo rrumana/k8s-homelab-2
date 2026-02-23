@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: headscale-postgres
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
 spec:
   selector:
     app: headscale

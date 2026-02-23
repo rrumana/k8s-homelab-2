@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: nextcloud-appdata
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-20"
 spec:
   storageClassName: ceph-block
   accessModes: [ "ReadWriteOnce" ]
@@ -16,7 +16,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: nextcloud-postgresql-data
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-20"
 spec:
   storageClassName: ceph-block
   accessModes: [ "ReadWriteOnce" ]
@@ -29,7 +29,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: nextcloud-redis-data
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-20"
 spec:
   storageClassName: ceph-block
   accessModes: [ "ReadWriteOnce" ]

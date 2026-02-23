@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: jellyfin-config
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-20"
 spec:
   storageClassName: ceph-block
   accessModes: [ "ReadWriteOnce" ]

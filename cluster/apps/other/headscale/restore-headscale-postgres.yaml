@@ -3,7 +3,7 @@ kind: Job
 metadata:
   name: restore-headscale-postgres
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "10"
 spec:
   backoffLimit: 2
   template:

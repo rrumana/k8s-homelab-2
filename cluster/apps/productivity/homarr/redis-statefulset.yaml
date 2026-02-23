@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: homarr-redis
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
   labels:
     app: homarr-redis
 spec:

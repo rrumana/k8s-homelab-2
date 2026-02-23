@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: arr-stack-qbit-config
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-20"
 spec:
   accessModes: [ "ReadWriteOnce" ]
   storageClassName: ceph-block
@@ -16,7 +16,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: arr-stack-gluetun
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-20"
 spec:
   accessModes: [ "ReadWriteOnce" ]
   storageClassName: ceph-block
@@ -29,7 +29,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: arr-stack-sonarr-config
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-20"
 spec:
   accessModes: [ "ReadWriteOnce" ]
   storageClassName: ceph-block
@@ -42,7 +42,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: arr-stack-radarr-config
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-20"
 spec:
   accessModes: [ "ReadWriteOnce" ]
   storageClassName: ceph-block
@@ -55,7 +55,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: arr-stack-lidarr-config
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-20"
 spec:
   accessModes: [ "ReadWriteOnce" ]
   storageClassName: ceph-block
@@ -68,7 +68,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: arr-stack-prowlarr-config
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-20"
 spec:
   accessModes: [ "ReadWriteOnce" ]
   storageClassName: ceph-block
@@ -81,7 +81,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: arr-stack-jellyseerr-config
   annotations:
-    argocd.argoproj.io/sync-wave: "-2"
+    argocd.argoproj.io/sync-wave: "-20"
 spec:
   accessModes: [ "ReadWriteOnce" ]
   storageClassName: ceph-block

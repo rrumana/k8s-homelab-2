@@ -2,6 +2,8 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: pg-other
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
   labels:
     app.kubernetes.io/name: pg-other
     app.kubernetes.io/part-of: postgres

@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
   annotations:
     # Wait for HAProxy Ingress controller to be installed.
-    argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/sync-wave: "10"
 spec:
   project: default
   source:

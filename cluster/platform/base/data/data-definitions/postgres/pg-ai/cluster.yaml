@@ -2,6 +2,8 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: pg-ai
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
   labels:
     app.kubernetes.io/name: pg-ai
     app.kubernetes.io/part-of: postgres

@@ -2,6 +2,8 @@ apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
   name: pg-platform-daily
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
 spec:
   schedule: "0 0 3 * * *"
   backupOwnerReference: cluster

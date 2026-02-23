@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
   annotations:
     # Needs cert-manager CRDs; should exist before control plane starts.
-    argocd.argoproj.io/sync-wave: "12"
+    argocd.argoproj.io/sync-wave: "10"
 spec:
   project: default
   source:

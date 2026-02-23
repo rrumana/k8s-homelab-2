@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: headscale-postgres
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
   labels:
     app: headscale
     component: postgres

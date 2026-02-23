@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: homarr-helm-mysql
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
   labels:
     app: homarr-helm
     component: mysql
@@ -79,9 +81,7 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: data
-        annotations:
-          argocd.argoproj.io/sync-wave: '-2'
-        spec:
+      spec:
         accessModes: ["ReadWriteOnce"]
         storageClassName: ceph-block
         resources:

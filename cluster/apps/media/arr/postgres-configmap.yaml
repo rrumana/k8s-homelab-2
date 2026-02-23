@@ -5,25 +5,6 @@ metadata:
   labels:
     app: arr-stack
 data:
-  ARR_PG_HOST: "10.45.245.79"
-  ARR_PG_PORT: "5432"
-
-  SONARR_PG_USER: "sonarr"
-  SONARR_PG_MAIN_DB: "sonarr"
-  SONARR_PG_LOG_DB: "sonarr_log"
-
-  RADARR_PG_USER: "radarr"
-  RADARR_PG_MAIN_DB: "radarr"
-  RADARR_PG_LOG_DB: "radarr_log"
-
-  LIDARR_PG_USER: "lidarr"
-  LIDARR_PG_MAIN_DB: "lidarr"
-  LIDARR_PG_LOG_DB: "lidarr_log"
-
-  PROWLARR_PG_USER: "prowlarr"
-  PROWLARR_PG_MAIN_DB: "prowlarr"
-  PROWLARR_PG_LOG_DB: "prowlarr_log"
-
   JELLYSEERR_DB_HOST: "10.45.245.79"
   JELLYSEERR_DB_PORT: "5432"
   JELLYSEERR_DB_USER: "jellyseerr"

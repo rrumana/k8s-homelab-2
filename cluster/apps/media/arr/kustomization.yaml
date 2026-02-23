@@ -6,12 +6,10 @@ namespace: media
 resources:
   - externalsecret.yaml
   - postgres-configmap.yaml
-  - servarr-postgres-bootstrap-configmap.yaml
   - pvc.yaml
   - pf-sync-configmap.yaml
   - deployment.yaml
   - service.yaml
-  - migrate-servarr-sqlite-to-postgres-job.yaml
 
 commonLabels:
   app.kubernetes.io/name: arr

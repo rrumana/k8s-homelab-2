@@ -8,16 +8,16 @@ env:
   TZ: America/Los_Angeles
   LOG_LEVEL: debug
   REDIS_IS_EXTERNAL: "true"
-  REDIS_HOST: homarr-redis.productivity.svc.cluster.local
-  REDIS_PORT: "6379"
+  REDIS_HOST: redis-cache.databases.svc.cluster.local
+  REDIS_PORT: "15976"
   REDIS_DATABASE_INDEX: "0"
   
 database:
-  type: mysql
+  type: postgresql
 
 envSecrets:
   dbCredentials:
-    existingSecret: homarr-helm-db
+    existingSecret: homarr-helm-db-postgres
     dbUrlKey: db-url
   dbEncryption:
     existingSecret: homarr-helm-db-encryption

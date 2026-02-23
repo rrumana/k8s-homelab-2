@@ -7,14 +7,10 @@ resources:
   - externalsecret.yaml
   - configmap.yaml
   - pvc.yaml
-  - postgres-pvc.yaml
-  - postgres-service.yaml
-  - postgres-statefulset.yaml
   - service.yaml
   - deployment.yaml
   - ui-service.yaml
   - ui-deployment.yaml
-  - restore-headscale-postgres.yaml
 
 commonLabels:
   app.kubernetes.io/name: headscale

@@ -34,52 +34,6 @@ spec:
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: data-homarr-helm-mysql-0-backup
-  namespace: productivity
-spec:
-  sourcePVC: data-homarr-helm-mysql-0
-  trigger:
-    schedule: "35 4 * * *"
-  restic:
-    copyMethod: Snapshot
-    volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
-    pruneIntervalDays: 14
-    moverSecurityContext:
-      runAsUser: 0
-      runAsGroup: 0
-      fsGroup: 0
-    retain:
-      daily: 7
-      weekly: 4
-      monthly: 3
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
-metadata:
-  name: data-homarr-redis-0-backup
-  namespace: productivity
-spec:
-  sourcePVC: data-homarr-redis-0
-  trigger:
-    schedule: "50 4 * * *"
-  restic:
-    copyMethod: Snapshot
-    volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
-    pruneIntervalDays: 14
-    moverSecurityContext:
-      runAsUser: 0
-      runAsGroup: 0
-      fsGroup: 0
-    retain:
-      daily: 7
-      weekly: 4
-      monthly: 3
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
-metadata:
   name: elasticsearch-data-backup
   namespace: productivity
 spec:

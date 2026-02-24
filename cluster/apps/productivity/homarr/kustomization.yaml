@@ -5,10 +5,6 @@ namespace: productivity
 
 resources:
   - externalsecret.yaml
-  - mysql-service.yaml
-  - mysql-statefulset.yaml
-  - redis-service.yaml
-  - redis-statefulset.yaml
 
 commonLabels:
   app.kubernetes.io/name: homarr

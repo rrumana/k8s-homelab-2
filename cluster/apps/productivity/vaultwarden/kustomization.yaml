@@ -9,7 +9,7 @@ resources:
   - deployment.yaml
   - service.yaml
   # Intentionally excluded for now:
-  # - migrate-vaultwarden-sqlite-to-shared-postgres.yaml
+  - migrate-vaultwarden-sqlite-to-shared-postgres.yaml
   # Cutover switch:
   # - deployment-cutover-shared-postgres.yaml (replace deployment.yaml)
 

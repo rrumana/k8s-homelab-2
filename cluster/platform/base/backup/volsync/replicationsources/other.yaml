@@ -53,26 +53,3 @@ spec:
       daily: 7
       weekly: 4
       monthly: 3
----
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationSource
-metadata:
-  name: headscale-postgres-data-backup
-  namespace: other
-spec:
-  sourcePVC: headscale-postgres-data
-  trigger:
-    schedule: "20 4 * * *"
-  restic:
-    copyMethod: Snapshot
-    volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
-    pruneIntervalDays: 14
-    moverSecurityContext:
-      runAsUser: 0
-      runAsGroup: 0
-      fsGroup: 0
-    retain:
-      daily: 7
-      weekly: 4
-      monthly: 3

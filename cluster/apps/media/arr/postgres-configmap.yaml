@@ -5,6 +5,8 @@ metadata:
   labels:
     app: arr-stack
 data:
+  # Intentionally pinned to a whitelisted ClusterIP because jellyseerr egress is
+  # forced through gluetun firewall rules.
   JELLYSEERR_DB_HOST: "10.45.245.79"
   JELLYSEERR_DB_PORT: "5432"
   JELLYSEERR_DB_USER: "jellyseerr"

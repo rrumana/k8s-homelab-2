@@ -13,6 +13,7 @@ spec:
   memorySize: 2GB
   shardCount: 1
   replication: true
+  databaseServicePort: 6379
   persistence: aofEverySecond
   evictionPolicy: noeviction
   type: redis

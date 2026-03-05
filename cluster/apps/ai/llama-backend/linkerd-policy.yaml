@@ -65,6 +65,19 @@ spec:
   proxyProtocol: HTTP/1
 ---
 apiVersion: policy.linkerd.io/v1alpha1
+kind: MeshTLSAuthentication
+metadata:
+  name: ai-meshed-clients
+spec:
+  identityRefs:
+    - kind: ServiceAccount
+      name: librechat
+    - kind: ServiceAccount
+      name: librechat-rag-api
+    - kind: ServiceAccount
+      name: llm-gateway
+---
+apiVersion: policy.linkerd.io/v1alpha1
 kind: AuthorizationPolicy
 metadata:
   name: ai-meshed-clients
@@ -74,9 +87,6 @@ spec:
     kind: Namespace
     name: ai
   requiredAuthenticationRefs:
-    - kind: ServiceAccount
-      name: librechat
-    - kind: ServiceAccount
-      name: librechat-rag-api
-    - kind: ServiceAccount
-      name: llm-gateway
+    - group: policy.linkerd.io
+      kind: MeshTLSAuthentication
+      name: ai-meshed-clients

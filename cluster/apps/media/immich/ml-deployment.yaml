@@ -28,13 +28,19 @@ spec:
                 name: immich-secret
           env:
             - name: HSA_OVERRIDE_GFX_VERSION
-              value: "11.5.1"
+              value: "11.0.0"
             - name: HSA_USE_SVM
               value: "0"
             - name: MACHINE_LEARNING_WORKER_TIMEOUT
               value: "300"
             - name: MACHINE_LEARNING_CACHE_FOLDER
               value: "/cache"
+            - name: MACHINE_LEARNING_REQUEST_THREADS
+              value: "1"
+            - name: MACHINE_LEARNING_MODEL_INTRA_OP_THREADS
+              value: "1"
+            - name: MACHINE_LEARNING_WORKERS
+              value: "1"
           volumeMounts:
             - name: model-cache
               mountPath: /cache

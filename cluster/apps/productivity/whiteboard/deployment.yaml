@@ -8,6 +8,8 @@ spec:
     matchLabels: { app: whiteboard }
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels: { app: whiteboard }
     spec:
       containers:

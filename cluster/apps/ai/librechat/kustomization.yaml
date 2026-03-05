@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: ai
 
 resources:
+  - serviceaccount.yaml
   - externalsecret.yaml
   - configmap.yaml
   - librechat-yaml-configmap.yaml

@@ -14,6 +14,8 @@ spec:
       app: llama-swap
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         app: llama-swap
         app.kubernetes.io/component: model-worker

@@ -4,6 +4,8 @@ kind: Kustomization
 namespace: ai
 
 resources:
+  - serviceaccount.yaml
+  - linkerd-policy.yaml
   - externalsecret.yaml
   - litellm-configmap.yaml
   - litellm-deployment.yaml

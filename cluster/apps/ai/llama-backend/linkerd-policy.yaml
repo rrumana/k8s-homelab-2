@@ -1,0 +1,82 @@
+apiVersion: policy.linkerd.io/v1beta1
+kind: Server
+metadata:
+  name: librechat-rag-api
+spec:
+  podSelector:
+    matchLabels:
+      app: librechat-rag-api
+  port: http
+  proxyProtocol: HTTP/1
+---
+apiVersion: policy.linkerd.io/v1beta1
+kind: Server
+metadata:
+  name: librechat-meilisearch
+spec:
+  podSelector:
+    matchLabels:
+      app: librechat-meilisearch
+  port: http
+  proxyProtocol: HTTP/1
+---
+apiVersion: policy.linkerd.io/v1beta1
+kind: Server
+metadata:
+  name: llm-gateway
+spec:
+  podSelector:
+    matchLabels:
+      app: llm-gateway
+  port: http
+  proxyProtocol: HTTP/1
+---
+apiVersion: policy.linkerd.io/v1beta1
+kind: Server
+metadata:
+  name: llama-static-a
+spec:
+  podSelector:
+    matchLabels:
+      app: llama-static-a
+  port: http
+  proxyProtocol: HTTP/1
+---
+apiVersion: policy.linkerd.io/v1beta1
+kind: Server
+metadata:
+  name: llama-static-b
+spec:
+  podSelector:
+    matchLabels:
+      app: llama-static-b
+  port: http
+  proxyProtocol: HTTP/1
+---
+apiVersion: policy.linkerd.io/v1beta1
+kind: Server
+metadata:
+  name: llama-swap
+spec:
+  podSelector:
+    matchLabels:
+      app: llama-swap
+  port: http
+  proxyProtocol: HTTP/1
+---
+apiVersion: policy.linkerd.io/v1alpha1
+kind: AuthorizationPolicy
+metadata:
+  name: ai-meshed-clients
+spec:
+  targetRef:
+    group: core
+    kind: Namespace
+    name: ai
+  requiredAuthenticationRefs:
+    - kind: ServiceAccount
+      name: librechat
+    - kind: ServiceAccount
+      name: librechat-rag-api
+    - kind: ServiceAccount
+      name: llm-gateway

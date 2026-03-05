@@ -12,6 +12,8 @@ spec:
       app: vaultwarden
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         app: vaultwarden
     spec:

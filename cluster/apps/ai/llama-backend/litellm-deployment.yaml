@@ -12,9 +12,12 @@ spec:
       app: llm-gateway
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         app: llm-gateway
     spec:
+      serviceAccountName: llm-gateway
       terminationGracePeriodSeconds: 30
       containers:
         - name: litellm

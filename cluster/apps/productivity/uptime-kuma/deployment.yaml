@@ -11,6 +11,8 @@ spec:
       app: uptime-kuma
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         app: uptime-kuma
     spec:

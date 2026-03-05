@@ -12,9 +12,12 @@ spec:
       app: librechat
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         app: librechat
     spec:
+      serviceAccountName: librechat
       containers:
         - name: librechat
           image: ghcr.io/danny-avila/librechat:latest

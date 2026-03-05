@@ -4,6 +4,9 @@
 replicaCount: 1
 strategyType: RollingUpdate
 
+podAnnotations:
+  linkerd.io/inject: enabled
+
 env:
   TZ: America/Los_Angeles
   LOG_LEVEL: debug

@@ -14,6 +14,8 @@ spec:
       app: librechat-meilisearch
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         app: librechat-meilisearch
     spec:

@@ -12,9 +12,12 @@ spec:
       app: librechat-rag-api
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         app: librechat-rag-api
     spec:
+      serviceAccountName: librechat-rag-api
       containers:
         - name: rag-api
           image: ghcr.io/danny-avila/librechat-rag-api-dev-lite:latest

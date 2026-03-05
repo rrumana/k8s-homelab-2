@@ -7,18 +7,26 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: web
+  annotations:
+    config.linkerd.io/default-inbound-policy: audit
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: productivity
+  annotations:
+    config.linkerd.io/default-inbound-policy: audit
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: ai
+  annotations:
+    config.linkerd.io/default-inbound-policy: audit
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: other
+  annotations:
+    config.linkerd.io/default-inbound-policy: audit

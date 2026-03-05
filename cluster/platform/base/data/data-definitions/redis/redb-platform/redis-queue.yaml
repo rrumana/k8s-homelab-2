@@ -14,7 +14,6 @@ spec:
   shardCount: 1
   replication: true
   databasePort: 6379
-  databaseSecretName: redis-queue-auth
   persistence: aofEverySecond
   evictionPolicy: noeviction
   type: redis

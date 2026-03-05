@@ -1,0 +1,17 @@
+# platform/scheduling/metrics-server/values.yaml
+
+replicas: 1
+
+# Homelab nodes often use kubelet certs without complete SANs.
+# This keeps metrics available for VPA recommendation ingestion.
+args:
+  - --kubelet-insecure-tls
+  - --kubelet-preferred-address-types=InternalIP,Hostname,InternalDNS,ExternalDNS,ExternalIP
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi

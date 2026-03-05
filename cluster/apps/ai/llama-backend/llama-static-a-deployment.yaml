@@ -22,6 +22,7 @@ spec:
         app.kubernetes.io/component: model-worker
         app.kubernetes.io/part-of: llama-backend
     spec:
+      serviceAccountName: llama-static-a
       terminationGracePeriodSeconds: 120
       enableServiceLinks: false
       tolerations:

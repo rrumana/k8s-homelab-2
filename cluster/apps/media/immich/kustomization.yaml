@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: media
 
 resources:
+  - serviceaccount.yaml
   - externalsecret.yaml
   - server-deployment.yaml
   - ml-deployment.yaml

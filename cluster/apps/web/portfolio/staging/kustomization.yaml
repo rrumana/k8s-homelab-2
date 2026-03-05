@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: web
 
 resources:
+  - serviceaccount.yaml
   - deployment.yaml
   - service.yaml
   - vpa.yaml

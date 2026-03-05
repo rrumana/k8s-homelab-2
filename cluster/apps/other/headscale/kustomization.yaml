@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: other
 
 resources:
+  - serviceaccount.yaml
   - externalsecret.yaml
   - configmap.yaml
   - pvc.yaml

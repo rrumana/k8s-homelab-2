@@ -18,6 +18,7 @@ spec:
       labels:
         app: portfolio-staging
     spec:
+      serviceAccountName: portfolio-staging
       imagePullSecrets:
         - name: ghcr-creds
       affinity:

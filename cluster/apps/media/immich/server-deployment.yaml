@@ -19,6 +19,7 @@ spec:
         app: immich
         component: server
     spec:
+      serviceAccountName: immich-server
       containers:
         - name: immich-server
           image: ghcr.io/immich-app/immich-server:v2.5.6

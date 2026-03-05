@@ -13,6 +13,7 @@ spec:
         linkerd.io/inject: enabled
       labels: { app: collabora }
     spec:
+      serviceAccountName: collabora
       containers:
         - name: collabora
           image: collabora/code:latest

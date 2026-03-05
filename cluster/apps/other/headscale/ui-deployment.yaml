@@ -19,6 +19,7 @@ spec:
         app: headscale
         component: ui
     spec:
+      serviceAccountName: headscale-ui
       containers:
         - name: headscale-ui
           image: ghcr.io/gurucomputing/headscale-ui:latest

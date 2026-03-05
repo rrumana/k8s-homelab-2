@@ -9,5 +9,6 @@ spec:
     app: librechat-mongodb
   ports:
     - name: mongodb
+      appProtocol: linkerd.io/opaque
       port: 27017
       targetPort: mongodb

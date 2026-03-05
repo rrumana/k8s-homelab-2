@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: productivity
 
 resources:
+  - serviceaccount.yaml
   - deployment.yaml
   - service.yaml
   - vpa.yaml

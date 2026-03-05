@@ -23,6 +23,17 @@ spec:
 apiVersion: policy.linkerd.io/v1beta1
 kind: Server
 metadata:
+  name: librechat-mongodb
+spec:
+  podSelector:
+    matchLabels:
+      app: librechat-mongodb
+  port: mongodb
+  proxyProtocol: Opaque
+---
+apiVersion: policy.linkerd.io/v1beta1
+kind: Server
+metadata:
   name: llm-gateway
 spec:
   podSelector:

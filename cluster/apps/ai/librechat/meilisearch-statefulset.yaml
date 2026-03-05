@@ -19,6 +19,7 @@ spec:
       labels:
         app: librechat-meilisearch
     spec:
+      serviceAccountName: librechat-meilisearch
       terminationGracePeriodSeconds: 30
       containers:
         - name: meilisearch

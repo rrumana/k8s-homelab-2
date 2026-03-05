@@ -12,6 +12,7 @@ spec:
         linkerd.io/inject: enabled
       labels: { app: whiteboard }
     spec:
+      serviceAccountName: whiteboard
       containers:
         - name: wbo
           image: lovasoa/wbo:latest

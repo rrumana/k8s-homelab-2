@@ -47,13 +47,31 @@ spec:
               cpu: "2"
               memory: "4Gi"
           readinessProbe:
-            tcpSocket:
-              port: mongodb
+            exec:
+              command:
+                - /bin/sh
+                - -ec
+                - |
+                  mongosh --quiet \
+                    --username "$MONGO_INITDB_ROOT_USERNAME" \
+                    --password "$MONGO_INITDB_ROOT_PASSWORD" \
+                    --authenticationDatabase admin \
+                    mongodb://127.0.0.1:27017/admin \
+                    --eval 'db.adminCommand({ ping: 1 }).ok' | grep -qx '1'
             initialDelaySeconds: 10
             periodSeconds: 10
           livenessProbe:
-            tcpSocket:
-              port: mongodb
+            exec:
+              command:
+                - /bin/sh
+                - -ec
+                - |
+                  mongosh --quiet \
+                    --username "$MONGO_INITDB_ROOT_USERNAME" \
+                    --password "$MONGO_INITDB_ROOT_PASSWORD" \
+                    --authenticationDatabase admin \
+                    mongodb://127.0.0.1:27017/admin \
+                    --eval 'db.adminCommand({ ping: 1 }).ok' | grep -qx '1'
             initialDelaySeconds: 30
             periodSeconds: 20
           volumeMounts:

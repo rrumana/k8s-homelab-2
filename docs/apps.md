@@ -70,6 +70,7 @@ These are short descriptions for readers who are new to the platform.
 | Whiteboard | Collaborative whiteboard service primarily used by Nextcloud, which is currently its only client. |
 | Elasticsearch | Search/index backend deployed primarily for Nextcloud, which is currently its only client. |
 | Headscale | Self-hosted Tailscale-compatible coordination server for mesh VPN control. |
+| Hypermind | Experimental peer-to-peer shared room/map/chat service exposed through the cluster ingress. |
 | OPNsense service bridge | In-cluster service/ingress path to the external OPNsense router web UI/API endpoint. |
 | TrueNAS service bridge | In-cluster service/ingress path to the external TrueNAS web UI endpoint. |
 | Portfolio (prod) | Production personal website/application deployment. |
@@ -258,9 +259,10 @@ These are short descriptions for readers who are new to the platform.
 - Two deployments:
 - `immich-server`
 - `immich-machine-learning`
+- `immich-machine-learning` runs the Immich ROCm image with direct host GPU device access (`/dev/kfd`, `/dev/dri`) and does not reserve `amd.com/gpu`
 - Data dependencies:
 - PostgreSQL on shared cluster `pg-media-rw`
-- Redis on shared Redis Enterprise DB `redis-cache`
+- Redis on shared Redis Enterprise DB `redis-queue`
 - Persistent volumes:
 - `immich-photos` (1Ti, Ceph block)
 - `immich-ml-cache` (4Gi, Ceph block)
@@ -333,6 +335,12 @@ These are short descriptions for readers who are new to the platform.
 - UI under `/web` on same host via restricted ingress class
 - Includes restore job for postgres migration workflows.
 
+### Hypermind
+
+- Small single-pod `hypermind` deployment for experimental shared chat/map rooms.
+- Published on `hypermind.rcrumana.xyz` through restricted HAProxy ingress.
+- Runs with host networking because upstream expects direct DHT/Hyperswarm socket access.
+
 ### MinIO service bridge
 
 - Cluster-internal service wrappers around external MinIO (`192.168.1.10`).
@@ -384,7 +392,7 @@ These are short descriptions for readers who are new to the platform.
 - `ai`: LibreChat and local LLM backend services.
 - `media`: ARR stacks, Immich, Jellyfin, Plex.
 - `productivity`: Nextcloud, Collabora, Homarr, UniFi, Uptime Kuma, Vaultwarden, Whiteboard, Elasticsearch.
-- `other`: Headscale, MinIO bridge, OPNsense/TrueNAS bridges.
+- `other`: Headscale, Hypermind, MinIO bridge, OPNsense/TrueNAS bridges.
 - `web`: Portfolio prod/staging.
 
 ## Appendix A: Public ingress routing map
@@ -399,6 +407,7 @@ This table maps internet/LAN hostnames to the in-cluster service backends.
 | `headscale.rcrumana.xyz` | `/` | `other` | `headscale-api` | `haproxy` | `headscale:80` |
 | `headscale.rcrumana.xyz` | `/web` | `other` | `headscale-ui` | `haproxy-restricted` | `headscale-ui:80` |
 | `homarr.rcrumana.xyz` | `/` | `productivity` | `homarr` | `haproxy-restricted` | `homarr-helm:7575` |
+| `hypermind.rcrumana.xyz` | `/` | `other` | `hypermind` | `haproxy-restricted` | `hypermind:80` |
 | `immich.rcrumana.xyz` | `/` | `media` | `immich` | `haproxy-restricted` | `immich-server:2283` |
 | `jellyfin.rcrumana.xyz` | `/` | `media` | `jellyfin` | `haproxy-restricted` | `jellyfin:8096` |
 | `jellyseerr.rcrumana.xyz` | `/` | `media` | `jellyseerr` | `haproxy-restricted` | `jellyseerr:80` |

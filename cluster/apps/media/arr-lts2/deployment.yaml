@@ -132,4 +132,4 @@ spec:
             - { name: media,       mountPath: /media }
           resources:
             requests: { cpu: "200m", memory: "256Mi" }
-            limits:   { cpu: "24", memory: "2Gi" }
+            limits:   { cpu: "24", memory: "4Gi" }

@@ -190,3 +190,78 @@ Then run the full unseal procedure.
 
 - Run full unseal flow for all three pods.
 - Verify Raft peers from `vault-0`.
+
+### Follower unseal fails with `no expected answer for the server id provided`
+
+This indicates the follower's Raft join/bootstrap handshake is out of sync with
+the active node. It commonly happens after repeated `raft join` / `unseal`
+attempts or after a follower loses local state during a node disruption.
+
+Recommended recovery order:
+
+1. Verify `vault-0` is active and at least one other node is healthy.
+2. Check peers from `vault-0`:
+
+   ```bash
+   ROOT_TOKEN=$(jq -r '.root_token' ~/vault-init.json)
+   kubectl -n security exec vault-0 -- sh -ec "vault login '$ROOT_TOKEN' >/dev/null && vault operator raft list-peers"
+   unset ROOT_TOKEN
+   ```
+
+3. If the broken follower appears as a stale or duplicate peer, remove that
+   peer from `vault-0`.
+
+   ```bash
+   ROOT_TOKEN=$(jq -r '.root_token' ~/vault-init.json)
+
+   # Example: remove stale peer "vault-1" from the active node.
+   kubectl -n security exec vault-0 -- sh -ec "vault login '$ROOT_TOKEN' >/dev/null && vault operator raft remove-peer vault-1"
+
+   # Confirm the stale peer is gone.
+   kubectl -n security exec vault-0 -- sh -ec "vault login '$ROOT_TOKEN' >/dev/null && vault operator raft list-peers"
+
+   unset ROOT_TOKEN
+   ```
+
+   The `remove-peer` argument must be the Raft server ID from `vault operator
+   raft list-peers` output, not the pod IP.
+
+4. If you removed the peer and want that same pod ordinal back in the cluster,
+   clear its old Raft data before rejoining it.
+
+   ```bash
+   # Confirm which PVC belongs to the broken follower.
+   kubectl -n security get pvc | grep vault-1
+
+   # Remove the pod and its data PVC for that follower only.
+   kubectl -n security delete pod vault-1 --wait=true
+   kubectl -n security delete pvc data-vault-1
+
+   # Wait for StatefulSet to recreate the pod.
+   kubectl -n security get pod vault-1 -w
+   ```
+
+   Only do this when the remaining nodes still have quorum.
+
+5. Re-run `raft join` on the rebuilt follower once.
+
+   ```bash
+   kubectl -n security exec vault-1 -- vault operator raft join http://vault-0.vault-internal:8200
+   ```
+
+6. Immediately provide the two unseal keys again to that same follower.
+
+   ```bash
+   KEY1=$(jq -r '.unseal_keys_b64[0]' ~/vault-init.json)
+   KEY2=$(jq -r '.unseal_keys_b64[1]' ~/vault-init.json)
+
+   kubectl -n security exec vault-1 -- vault operator unseal "$KEY1"
+   kubectl -n security exec vault-1 -- vault operator unseal "$KEY2"
+
+   unset KEY1 KEY2
+   ```
+
+If the follower still reports `Vault is not initialized` after this sequence,
+repeat the peer list check from `vault-0` before issuing another `raft join`.
+Do not loop `raft join` / `unseal` blindly; each attempt can create a new
+bootstrap challenge on the leader.

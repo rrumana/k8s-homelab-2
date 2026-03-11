@@ -118,7 +118,7 @@ spec:
             - { name: pf-state, mountPath: /pf/state }
           resources:
             requests: { cpu: "200m", memory: "256Mi" }
-            limits:   { cpu: "24", memory: "2Gi" }
+            limits:   { cpu: "1", memory: "512Gi" }
 
         - name: pf-sync
           image: curlimages/curl:8.7.1
@@ -152,8 +152,8 @@ spec:
             - { name: media,       mountPath: /media }
             - { name: temp,        mountPath: /temp }
           resources:
-            requests: { cpu: "200m", memory: "256Mi" }
-            limits:   { cpu: "24", memory: "4Gi" }
+            requests: { cpu: "300m", memory: "128Mi" }
+            limits:   { cpu: "2", memory: "4Gi" }
 
         - name: sonarr
           image: lscr.io/linuxserver/sonarr:latest
@@ -165,8 +165,8 @@ spec:
             - { name: sonarr-config, mountPath: /config }
             - { name: media,         mountPath: /media }
           resources:
-            requests: { cpu: "200m", memory: "256Mi" }
-            limits:   { cpu: "24", memory: "2Gi" }
+            requests: { cpu: "50m", memory: "256Mi" }
+            limits:   { cpu: "2", memory: "2Gi" }
 
         - name: radarr
           image: lscr.io/linuxserver/radarr:latest
@@ -178,8 +178,8 @@ spec:
             - { name: radarr-config, mountPath: /config }
             - { name: media,         mountPath: /media }
           resources:
-            requests: { cpu: "200m", memory: "256Mi" }
-            limits:   { cpu: "24", memory: "2Gi" }
+            requests: { cpu: "50m", memory: "256Mi" }
+            limits:   { cpu: "2", memory: "2Gi" }
 
         - name: lidarr
           image: lscr.io/linuxserver/lidarr:latest
@@ -191,8 +191,8 @@ spec:
             - { name: lidarr-config, mountPath: /config }
             - { name: media,         mountPath: /media }
           resources:
-            requests: { cpu: "200m", memory: "256Mi" }
-            limits:   { cpu: "24", memory: "2Gi" }
+            requests: { cpu: "50m", memory: "256Mi" }
+            limits:   { cpu: "2", memory: "2Gi" }
 
         - name: prowlarr
           image: lscr.io/linuxserver/prowlarr:latest
@@ -204,8 +204,8 @@ spec:
           volumeMounts:
             - { name: prowlarr-config, mountPath: /config }
           resources:
-            requests: { cpu: "200m", memory: "256Mi" }
-            limits:   { cpu: "24", memory: "2Gi" }
+            requests: { cpu: "50m", memory: "256Mi" }
+            limits:   { cpu: "2", memory: "2Gi" }
 
         - name: jellyseerr
           image: ghcr.io/fallenbagel/jellyseerr:latest
@@ -244,8 +244,8 @@ spec:
           volumeMounts:
             - { name: jellyseerr-config, mountPath: /app/config }
           resources:
-            requests: { cpu: "200m", memory: "256Mi" }
-            limits:   { cpu: "24", memory: "2Gi" }
+            requests: { cpu: "50m", memory: "256Mi" }
+            limits:   { cpu: "2", memory: "2Gi" }
 
         - name: flaresolverr
           image: 21hsmw/flaresolverr:nodriver
@@ -255,5 +255,5 @@ spec:
             - { name: CAPTCHA_SOLVER, value: "none" }
             - { name: TZ,   value: "America/Los_Angeles" }
           resources:
-            requests: { cpu: "200m", memory: "256Mi" }
-            limits:   { cpu: "24", memory: "2Gi" }
+            requests: { cpu: "50m", memory: "256Mi" }
+            limits:   { cpu: "2", memory: "2Gi" }

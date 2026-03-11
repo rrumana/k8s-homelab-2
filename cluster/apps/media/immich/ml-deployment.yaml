@@ -55,10 +55,10 @@ spec:
             privileged: true
           resources:
             requests:
-              memory: "1Gi"
+              memory: "512Mi"
               cpu: "250m"
             limits:
-              memory: "8Gi"
+              memory: "48Gi"
               cpu: "24"
       volumes:
         - name: model-cache

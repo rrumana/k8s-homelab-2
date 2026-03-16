@@ -270,8 +270,7 @@ spec:
   trigger:
     schedule: "50 7 * * *"
   restic:
-    copyMethod: Snapshot
-    volumeSnapshotClassName: ceph-filesystem-snap
+    copyMethod: Direct
     repository: llama-models-cache-backup-restic
     cacheCapacity: 32Gi
     cacheStorageClassName: ceph-block

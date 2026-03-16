@@ -31,6 +31,46 @@ spec:
         key: apps/media/volsync-minio
         property: AWS_SECRET_ACCESS_KEY
 ---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: arr-lts-gluetun-backup-restic
+  namespace: media
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: arr-lts-gluetun-backup-restic
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        RESTIC_REPOSITORY: "{{ .resticRepository }}/arr-lts-gluetun-backup"
+        RESTIC_PASSWORD: "{{ .resticPassword }}"
+        AWS_ACCESS_KEY_ID: "{{ .awsAccessKeyId }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .awsSecretAccessKey }}"
+  data:
+    - secretKey: resticRepository
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_REPOSITORY
+    - secretKey: resticPassword
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_PASSWORD
+    - secretKey: awsAccessKeyId
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: awsSecretAccessKey
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_SECRET_ACCESS_KEY
+---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
@@ -43,7 +83,7 @@ spec:
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
+    repository: arr-lts-gluetun-backup-restic
     pruneIntervalDays: 14
     moverSecurityContext:
       runAsUser: 0
@@ -53,6 +93,46 @@ spec:
       daily: 7
       weekly: 4
       monthly: 3
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: arr-lts-qbit-config-backup-restic
+  namespace: media
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: arr-lts-qbit-config-backup-restic
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        RESTIC_REPOSITORY: "{{ .resticRepository }}/arr-lts-qbit-config-backup"
+        RESTIC_PASSWORD: "{{ .resticPassword }}"
+        AWS_ACCESS_KEY_ID: "{{ .awsAccessKeyId }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .awsSecretAccessKey }}"
+  data:
+    - secretKey: resticRepository
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_REPOSITORY
+    - secretKey: resticPassword
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_PASSWORD
+    - secretKey: awsAccessKeyId
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: awsSecretAccessKey
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_SECRET_ACCESS_KEY
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -66,7 +146,7 @@ spec:
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
+    repository: arr-lts-qbit-config-backup-restic
     pruneIntervalDays: 14
     moverSecurityContext:
       runAsUser: 0
@@ -76,6 +156,46 @@ spec:
       daily: 7
       weekly: 4
       monthly: 3
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: arr-lts2-gluetun-backup-restic
+  namespace: media
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: arr-lts2-gluetun-backup-restic
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        RESTIC_REPOSITORY: "{{ .resticRepository }}/arr-lts2-gluetun-backup"
+        RESTIC_PASSWORD: "{{ .resticPassword }}"
+        AWS_ACCESS_KEY_ID: "{{ .awsAccessKeyId }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .awsSecretAccessKey }}"
+  data:
+    - secretKey: resticRepository
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_REPOSITORY
+    - secretKey: resticPassword
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_PASSWORD
+    - secretKey: awsAccessKeyId
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: awsSecretAccessKey
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_SECRET_ACCESS_KEY
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -89,7 +209,7 @@ spec:
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
+    repository: arr-lts2-gluetun-backup-restic
     pruneIntervalDays: 14
     moverSecurityContext:
       runAsUser: 0
@@ -99,6 +219,46 @@ spec:
       daily: 7
       weekly: 4
       monthly: 3
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: arr-lts2-qbit-config-backup-restic
+  namespace: media
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: arr-lts2-qbit-config-backup-restic
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        RESTIC_REPOSITORY: "{{ .resticRepository }}/arr-lts2-qbit-config-backup"
+        RESTIC_PASSWORD: "{{ .resticPassword }}"
+        AWS_ACCESS_KEY_ID: "{{ .awsAccessKeyId }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .awsSecretAccessKey }}"
+  data:
+    - secretKey: resticRepository
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_REPOSITORY
+    - secretKey: resticPassword
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_PASSWORD
+    - secretKey: awsAccessKeyId
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: awsSecretAccessKey
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_SECRET_ACCESS_KEY
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -112,7 +272,7 @@ spec:
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
+    repository: arr-lts2-qbit-config-backup-restic
     pruneIntervalDays: 14
     moverSecurityContext:
       runAsUser: 0
@@ -122,6 +282,46 @@ spec:
       daily: 7
       weekly: 4
       monthly: 3
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: arr-stack-gluetun-backup-restic
+  namespace: media
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: arr-stack-gluetun-backup-restic
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        RESTIC_REPOSITORY: "{{ .resticRepository }}/arr-stack-gluetun-backup"
+        RESTIC_PASSWORD: "{{ .resticPassword }}"
+        AWS_ACCESS_KEY_ID: "{{ .awsAccessKeyId }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .awsSecretAccessKey }}"
+  data:
+    - secretKey: resticRepository
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_REPOSITORY
+    - secretKey: resticPassword
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_PASSWORD
+    - secretKey: awsAccessKeyId
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: awsSecretAccessKey
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_SECRET_ACCESS_KEY
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -135,7 +335,7 @@ spec:
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
+    repository: arr-stack-gluetun-backup-restic
     pruneIntervalDays: 14
     moverSecurityContext:
       runAsUser: 0
@@ -145,6 +345,46 @@ spec:
       daily: 7
       weekly: 4
       monthly: 3
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: arr-stack-jellyseerr-config-backup-restic
+  namespace: media
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: arr-stack-jellyseerr-config-backup-restic
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        RESTIC_REPOSITORY: "{{ .resticRepository }}/arr-stack-jellyseerr-config-backup"
+        RESTIC_PASSWORD: "{{ .resticPassword }}"
+        AWS_ACCESS_KEY_ID: "{{ .awsAccessKeyId }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .awsSecretAccessKey }}"
+  data:
+    - secretKey: resticRepository
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_REPOSITORY
+    - secretKey: resticPassword
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_PASSWORD
+    - secretKey: awsAccessKeyId
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: awsSecretAccessKey
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_SECRET_ACCESS_KEY
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -158,7 +398,7 @@ spec:
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
+    repository: arr-stack-jellyseerr-config-backup-restic
     pruneIntervalDays: 14
     moverSecurityContext:
       runAsUser: 0
@@ -168,6 +408,46 @@ spec:
       daily: 7
       weekly: 4
       monthly: 3
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: arr-stack-lidarr-config-backup-restic
+  namespace: media
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: arr-stack-lidarr-config-backup-restic
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        RESTIC_REPOSITORY: "{{ .resticRepository }}/arr-stack-lidarr-config-backup"
+        RESTIC_PASSWORD: "{{ .resticPassword }}"
+        AWS_ACCESS_KEY_ID: "{{ .awsAccessKeyId }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .awsSecretAccessKey }}"
+  data:
+    - secretKey: resticRepository
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_REPOSITORY
+    - secretKey: resticPassword
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_PASSWORD
+    - secretKey: awsAccessKeyId
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: awsSecretAccessKey
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_SECRET_ACCESS_KEY
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -181,7 +461,7 @@ spec:
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
+    repository: arr-stack-lidarr-config-backup-restic
     pruneIntervalDays: 14
     moverSecurityContext:
       runAsUser: 0
@@ -191,6 +471,46 @@ spec:
       daily: 7
       weekly: 4
       monthly: 3
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: arr-stack-prowlarr-config-backup-restic
+  namespace: media
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: arr-stack-prowlarr-config-backup-restic
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        RESTIC_REPOSITORY: "{{ .resticRepository }}/arr-stack-prowlarr-config-backup"
+        RESTIC_PASSWORD: "{{ .resticPassword }}"
+        AWS_ACCESS_KEY_ID: "{{ .awsAccessKeyId }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .awsSecretAccessKey }}"
+  data:
+    - secretKey: resticRepository
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_REPOSITORY
+    - secretKey: resticPassword
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_PASSWORD
+    - secretKey: awsAccessKeyId
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: awsSecretAccessKey
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_SECRET_ACCESS_KEY
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -204,7 +524,7 @@ spec:
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
+    repository: arr-stack-prowlarr-config-backup-restic
     pruneIntervalDays: 14
     moverSecurityContext:
       runAsUser: 0
@@ -214,6 +534,46 @@ spec:
       daily: 7
       weekly: 4
       monthly: 3
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: arr-stack-qbit-config-backup-restic
+  namespace: media
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: arr-stack-qbit-config-backup-restic
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        RESTIC_REPOSITORY: "{{ .resticRepository }}/arr-stack-qbit-config-backup"
+        RESTIC_PASSWORD: "{{ .resticPassword }}"
+        AWS_ACCESS_KEY_ID: "{{ .awsAccessKeyId }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .awsSecretAccessKey }}"
+  data:
+    - secretKey: resticRepository
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_REPOSITORY
+    - secretKey: resticPassword
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_PASSWORD
+    - secretKey: awsAccessKeyId
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: awsSecretAccessKey
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_SECRET_ACCESS_KEY
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -227,7 +587,7 @@ spec:
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
+    repository: arr-stack-qbit-config-backup-restic
     pruneIntervalDays: 14
     moverSecurityContext:
       runAsUser: 0
@@ -237,6 +597,46 @@ spec:
       daily: 7
       weekly: 4
       monthly: 3
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: arr-stack-radarr-config-backup-restic
+  namespace: media
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: arr-stack-radarr-config-backup-restic
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        RESTIC_REPOSITORY: "{{ .resticRepository }}/arr-stack-radarr-config-backup"
+        RESTIC_PASSWORD: "{{ .resticPassword }}"
+        AWS_ACCESS_KEY_ID: "{{ .awsAccessKeyId }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .awsSecretAccessKey }}"
+  data:
+    - secretKey: resticRepository
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_REPOSITORY
+    - secretKey: resticPassword
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_PASSWORD
+    - secretKey: awsAccessKeyId
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: awsSecretAccessKey
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_SECRET_ACCESS_KEY
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -250,7 +650,7 @@ spec:
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
+    repository: arr-stack-radarr-config-backup-restic
     pruneIntervalDays: 14
     moverSecurityContext:
       runAsUser: 0
@@ -260,6 +660,46 @@ spec:
       daily: 7
       weekly: 4
       monthly: 3
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: arr-stack-sonarr-config-backup-restic
+  namespace: media
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: arr-stack-sonarr-config-backup-restic
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        RESTIC_REPOSITORY: "{{ .resticRepository }}/arr-stack-sonarr-config-backup"
+        RESTIC_PASSWORD: "{{ .resticPassword }}"
+        AWS_ACCESS_KEY_ID: "{{ .awsAccessKeyId }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .awsSecretAccessKey }}"
+  data:
+    - secretKey: resticRepository
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_REPOSITORY
+    - secretKey: resticPassword
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_PASSWORD
+    - secretKey: awsAccessKeyId
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: awsSecretAccessKey
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_SECRET_ACCESS_KEY
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -273,7 +713,7 @@ spec:
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
+    repository: arr-stack-sonarr-config-backup-restic
     pruneIntervalDays: 14
     moverSecurityContext:
       runAsUser: 0
@@ -283,6 +723,46 @@ spec:
       daily: 7
       weekly: 4
       monthly: 3
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: immich-ml-cache-backup-restic
+  namespace: media
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: immich-ml-cache-backup-restic
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        RESTIC_REPOSITORY: "{{ .resticRepository }}/immich-ml-cache-backup"
+        RESTIC_PASSWORD: "{{ .resticPassword }}"
+        AWS_ACCESS_KEY_ID: "{{ .awsAccessKeyId }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .awsSecretAccessKey }}"
+  data:
+    - secretKey: resticRepository
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_REPOSITORY
+    - secretKey: resticPassword
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_PASSWORD
+    - secretKey: awsAccessKeyId
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: awsSecretAccessKey
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_SECRET_ACCESS_KEY
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -296,7 +776,7 @@ spec:
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
+    repository: immich-ml-cache-backup-restic
     pruneIntervalDays: 14
     moverSecurityContext:
       runAsUser: 0
@@ -306,6 +786,46 @@ spec:
       daily: 7
       weekly: 4
       monthly: 3
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: immich-photos-backup-restic
+  namespace: media
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: immich-photos-backup-restic
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        RESTIC_REPOSITORY: "{{ .resticRepository }}/immich-photos-backup"
+        RESTIC_PASSWORD: "{{ .resticPassword }}"
+        AWS_ACCESS_KEY_ID: "{{ .awsAccessKeyId }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .awsSecretAccessKey }}"
+  data:
+    - secretKey: resticRepository
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_REPOSITORY
+    - secretKey: resticPassword
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_PASSWORD
+    - secretKey: awsAccessKeyId
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: awsSecretAccessKey
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_SECRET_ACCESS_KEY
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -319,7 +839,8 @@ spec:
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
+    repository: immich-photos-backup-restic
+    cacheCapacity: 16Gi
     pruneIntervalDays: 14
     moverSecurityContext:
       runAsUser: 0
@@ -329,6 +850,46 @@ spec:
       daily: 7
       weekly: 4
       monthly: 3
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: jellyfin-config-backup-restic
+  namespace: media
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: jellyfin-config-backup-restic
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        RESTIC_REPOSITORY: "{{ .resticRepository }}/jellyfin-config-backup"
+        RESTIC_PASSWORD: "{{ .resticPassword }}"
+        AWS_ACCESS_KEY_ID: "{{ .awsAccessKeyId }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .awsSecretAccessKey }}"
+  data:
+    - secretKey: resticRepository
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_REPOSITORY
+    - secretKey: resticPassword
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_PASSWORD
+    - secretKey: awsAccessKeyId
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: awsSecretAccessKey
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_SECRET_ACCESS_KEY
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -342,7 +903,7 @@ spec:
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
+    repository: jellyfin-config-backup-restic
     pruneIntervalDays: 14
     moverSecurityContext:
       runAsUser: 0
@@ -352,6 +913,46 @@ spec:
       daily: 7
       weekly: 4
       monthly: 3
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: plex-config-backup-restic
+  namespace: media
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: plex-config-backup-restic
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        RESTIC_REPOSITORY: "{{ .resticRepository }}/plex-config-backup"
+        RESTIC_PASSWORD: "{{ .resticPassword }}"
+        AWS_ACCESS_KEY_ID: "{{ .awsAccessKeyId }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .awsSecretAccessKey }}"
+  data:
+    - secretKey: resticRepository
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_REPOSITORY
+    - secretKey: resticPassword
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: RESTIC_PASSWORD
+    - secretKey: awsAccessKeyId
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_ACCESS_KEY_ID
+    - secretKey: awsSecretAccessKey
+      remoteRef:
+        key: apps/media/volsync-minio
+        property: AWS_SECRET_ACCESS_KEY
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -365,7 +966,7 @@ spec:
   restic:
     copyMethod: Snapshot
     volumeSnapshotClassName: ceph-block-snap
-    repository: volsync-minio
+    repository: plex-config-backup-restic
     pruneIntervalDays: 14
     moverSecurityContext:
       runAsUser: 0

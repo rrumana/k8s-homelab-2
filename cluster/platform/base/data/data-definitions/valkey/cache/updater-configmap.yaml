@@ -16,6 +16,7 @@ data:
       )"
 
       if [[ -z "${pod}" ]]; then
+        echo "no running pods matched selector ${POD_LABEL_SELECTOR}"
         sleep 10
         continue
       fi
@@ -23,11 +24,12 @@ data:
       password="$(cat "${AUTH_FILE}")"
       master_ip="$(
         kubectl -n "${NAMESPACE}" exec "${pod}" -- sh -ec \
-          "valkey-cli --raw -p ${SENTINEL_PORT} -a \"${password}\" SENTINEL get-master-addr-by-name ${MASTER_SET}" \
-          2>/dev/null | head -n1 || true
+          'cli="$(command -v valkey-cli || command -v redis-cli || true)"; [ -n "${cli}" ] || exit 127; "${cli}" --raw -p '"${SENTINEL_PORT}"' -a '"'"${password}"'"' SENTINEL get-master-addr-by-name '"${MASTER_SET}"'' \
+          | head -n1 || true
       )"
 
       if [[ -z "${master_ip}" ]]; then
+        echo "failed to resolve master ip from sentinel via pod ${pod}"
         sleep 10
         continue
       fi
@@ -39,10 +41,12 @@ data:
       )"
 
       if [[ -z "${master_pod}" ]]; then
+        echo "could not map master ip ${master_ip} to a pod"
         sleep 10
         continue
       fi
 
+      echo "patching ${SERVICE_NAME} to primary pod ${master_pod} (${master_ip})"
       kubectl -n "${NAMESPACE}" patch service "${SERVICE_NAME}" --type=merge \
         -p "{\"spec\":{\"selector\":{\"statefulset.kubernetes.io/pod-name\":\"${master_pod}\"}}}" >/dev/null
 

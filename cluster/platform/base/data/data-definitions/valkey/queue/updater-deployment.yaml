@@ -16,7 +16,7 @@ spec:
       serviceAccountName: valkey-queue-primary-reconciler
       containers:
         - name: reconciler
-          image: docker.io/bitnami/kubectl:1.33.4
+          image: docker.io/bitnamilegacy/kubectl:1.33.4
           command:
             - /bin/bash
             - /scripts/reconcile.sh

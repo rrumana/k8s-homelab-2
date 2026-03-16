@@ -14,7 +14,7 @@ spec:
     metadata:
       annotations:
         linkerd.io/inject: enabled
-        config.linkerd.io/skip-outbound-ports: "15976,6379"
+        config.linkerd.io/skip-outbound-ports: "6379"
       labels:
         app: librechat
     spec:
@@ -32,16 +32,15 @@ spec:
             - secretRef:
                 name: librechat-secret
           env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: librechat-secret
+                  key: REDIS_PASSWORD
             - name: REDIS_URL
-              valueFrom:
-                secretKeyRef:
-                  name: librechat-secret
-                  key: REDIS_URI
+              value: redis://:$(REDIS_PASSWORD)@valkey-cache-rw.databases.svc.cluster.local:6379
             - name: REDIS_URI
-              valueFrom:
-                secretKeyRef:
-                  name: librechat-secret
-                  key: REDIS_URI
+              value: redis://:$(REDIS_PASSWORD)@valkey-cache-rw.databases.svc.cluster.local:6379
           volumeMounts:
             - name: librechat-data
               mountPath: /app/uploads

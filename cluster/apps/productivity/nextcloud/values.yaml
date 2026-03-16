@@ -35,7 +35,7 @@ strategy:
 
 podAnnotations:
   linkerd.io/inject: enabled
-  config.linkerd.io/skip-outbound-ports: "15976"
+  config.linkerd.io/skip-outbound-ports: "6379"
 
 dnsPolicy: None
 dnsConfig:
@@ -120,8 +120,8 @@ redis:
 
 externalRedis:
   enabled: true
-  host: redis-cache.databases.svc.cluster.local
-  port: "15976"
+  host: valkey-cache-rw.databases.svc.cluster.local
+  port: "6379"
   existingSecret:
     enabled: true
     secretName: nextcloud-redis-shared

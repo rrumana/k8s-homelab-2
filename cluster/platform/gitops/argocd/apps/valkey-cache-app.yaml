@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: valkey-cache
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  project: default
+  sources:
+    - repoURL: oci://registry-1.docker.io/bitnamicharts/valkey
+      targetRevision: "5.4.3"
+      path: .
+      helm:
+        releaseName: valkey-cache
+        valueFiles:
+          - $values/cluster/platform/base/data/data-definitions/valkey/cache/values.yaml
+    - repoURL: https://github.com/rrumana/k8s-homelab-2.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://github.com/rrumana/k8s-homelab-2.git
+      targetRevision: main
+      path: cluster/platform/base/data/data-definitions/valkey/cache
+      kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: databases
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

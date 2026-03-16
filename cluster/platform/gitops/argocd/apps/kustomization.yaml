@@ -53,6 +53,8 @@ resources:
   - redis-enterprise-operator-app.yaml
   - redis-platform-app.yaml
   - redis-platform-databases-app.yaml
+  - valkey-cache-app.yaml
+  - valkey-queue-app.yaml
   - pg-platform-app.yaml
   - pg-media-app.yaml
   - pg-ai-app.yaml

@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: valkey-queue-primary-reconciler
+  namespace: databases
+data:
+  reconcile.sh: |
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    while true; do
+      pod="$(
+        kubectl -n "${NAMESPACE}" get pods -l "${POD_LABEL_SELECTOR}" \
+          --field-selector=status.phase=Running \
+          -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || true
+      )"
+
+      if [[ -z "${pod}" ]]; then
+        sleep 10
+        continue
+      fi
+
+      password="$(cat "${AUTH_FILE}")"
+      master_ip="$(
+        kubectl -n "${NAMESPACE}" exec "${pod}" -- sh -ec \
+          "valkey-cli --raw -p ${SENTINEL_PORT} -a \"${password}\" SENTINEL get-master-addr-by-name ${MASTER_SET}" \
+          2>/dev/null | head -n1 || true
+      )"
+
+      if [[ -z "${master_ip}" ]]; then
+        sleep 10
+        continue
+      fi
+
+      master_pod="$(
+        kubectl -n "${NAMESPACE}" get pods -l "${POD_LABEL_SELECTOR}" \
+          -o jsonpath='{range .items[*]}{.status.podIP}{" "}{.metadata.name}{"\n"}{end}' \
+          | awk -v ip="${master_ip}" '$1 == ip { print $2 }'
+      )"
+
+      if [[ -z "${master_pod}" ]]; then
+        sleep 10
+        continue
+      fi
+
+      kubectl -n "${NAMESPACE}" patch service "${SERVICE_NAME}" --type=merge \
+        -p "{\"spec\":{\"selector\":{\"statefulset.kubernetes.io/pod-name\":\"${master_pod}\"}}}" >/dev/null
+
+      sleep 10
+    done

@@ -23,7 +23,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: UOS_SYSTEM_IP
-              value: unifios.rcrumana.xyz
+              value: unifi.rcrumana.xyz
           ports:
             - name: uos-ui
               containerPort: 443

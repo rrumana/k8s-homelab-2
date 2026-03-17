@@ -38,9 +38,9 @@ spec:
                   name: librechat-secret
                   key: REDIS_PASSWORD
             - name: REDIS_URL
-              value: redis://:$(REDIS_PASSWORD)@valkey-cache-rw.databases.svc.cluster.local:6379
+              value: redis://:$(REDIS_PASSWORD)@valkey-cache-primary.databases.svc.cluster.local:6379
             - name: REDIS_URI
-              value: redis://:$(REDIS_PASSWORD)@valkey-cache-rw.databases.svc.cluster.local:6379
+              value: redis://:$(REDIS_PASSWORD)@valkey-cache-primary.databases.svc.cluster.local:6379
           volumeMounts:
             - name: librechat-data
               mountPath: /app/uploads

@@ -12,7 +12,7 @@ env:
   TZ: America/Los_Angeles
   LOG_LEVEL: debug
   REDIS_IS_EXTERNAL: "true"
-  REDIS_HOST: valkey-cache-rw.databases.svc.cluster.local
+  REDIS_HOST: valkey-cache-primary.databases.svc.cluster.local
   REDIS_PORT: "6379"
   REDIS_DATABASE_INDEX: "0"
   

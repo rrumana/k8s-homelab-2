@@ -22,6 +22,7 @@ resources:
   - radarr.yaml
   - sonarr.yaml
   - unifi.yaml
+  - unifios.yaml
   - uptime-kuma.yaml
   - vaultwarden.yaml
   - whiteboard.yaml

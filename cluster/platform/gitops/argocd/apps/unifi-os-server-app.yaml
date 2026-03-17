@@ -1,0 +1,26 @@
+# platform/gitops/argocd/apps/unifi-os-server-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: unifi-os-server
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/rrumana/k8s-homelab-2.git
+    targetRevision: main
+    path: cluster/apps/productivity/unifi-os-server
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: productivity
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

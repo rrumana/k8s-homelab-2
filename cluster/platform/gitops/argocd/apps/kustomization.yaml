@@ -41,6 +41,7 @@ resources:
   - headscale-app.yaml
   - truenas-app.yaml
   - unifi-controller-app.yaml
+  - unifi-os-server-app.yaml
   - uptime-kuma-app.yaml
   - vaultwarden-app.yaml
   - whiteboard-app.yaml

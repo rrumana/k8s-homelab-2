@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: unifi-os-server-udp
+  annotations:
+    metallb.universe.tf/address-pool: default-pool
+    metallb.universe.tf/allow-shared-ip: "unifios-temporary"
+spec:
+  type: LoadBalancer
+  selector:
+    app: unifi-os-server
+  ports:
+    - name: stun
+      port: 3478
+      targetPort: 3478
+      protocol: UDP
+    - name: syslog
+      port: 5514
+      targetPort: 5514
+      protocol: UDP
+    - name: discovery
+      port: 10003
+      targetPort: 10003
+      protocol: UDP

@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: unifi-os-server-persistent
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  storageClassName: ceph-block
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: unifi-os-server-var-log
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  storageClassName: ceph-block
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: unifi-os-server-data
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  storageClassName: ceph-block
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 8Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: unifi-os-server-srv
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  storageClassName: ceph-block
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: unifi-os-server-var-lib-unifi
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  storageClassName: ceph-block
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 8Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: unifi-os-server-var-lib-mongodb
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  storageClassName: ceph-block
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 8Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: unifi-os-server-rabbitmq-ssl
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  storageClassName: ceph-block
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi

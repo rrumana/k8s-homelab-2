@@ -10,5 +10,4 @@ spec:
       port: 6379
       protocol: TCP
       targetPort: 6379
-  selector:
-    statefulset.kubernetes.io/pod-name: valkey-queue-node-0
+  selector: {}

@@ -9,27 +9,37 @@ data:
     set -euo pipefail
 
     while true; do
-      pod="$(
+      mapfile -t pods < <(
         kubectl -n "${NAMESPACE}" get pods -l "${POD_LABEL_SELECTOR}" \
           --field-selector=status.phase=Running \
-          -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || true
-      )"
+          -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' 2>/dev/null | sort
+      )
 
-      if [[ -z "${pod}" ]]; then
+      if [[ "${#pods[@]}" -eq 0 ]]; then
         echo "no running pods matched selector ${POD_LABEL_SELECTOR}"
         sleep 10
         continue
       fi
 
       password="$(cat "${AUTH_FILE}")"
-      master_ip="$(
-        kubectl -n "${NAMESPACE}" exec "${pod}" -- sh -ec \
-          'cli="$(command -v valkey-cli || command -v redis-cli || true)"; [ -n "${cli}" ] || exit 127; "${cli}" --raw -p '"${SENTINEL_PORT}"' -a '"'"${password}"'"' SENTINEL get-master-addr-by-name '"${MASTER_SET}"'' \
-          | head -n1 || true
-      )"
+      master_ip=""
+
+      for pod in "${pods[@]}"; do
+        master_ip="$(
+          kubectl -n "${NAMESPACE}" exec "${pod}" -- sh -ec \
+            'cli="$(command -v valkey-cli || command -v redis-cli || true)"; [ -n "${cli}" ] || exit 127; "${cli}" --raw -p '"${SENTINEL_PORT}"' -a '"'"${password}"'"' SENTINEL get-master-addr-by-name '"${MASTER_SET}"'' \
+            | head -n1 || true
+        )"
+
+        if [[ -n "${master_ip}" ]]; then
+          break
+        fi
+
+        echo "failed to resolve master ip from sentinel via pod ${pod}"
+      done
 
       if [[ -z "${master_ip}" ]]; then
-        echo "failed to resolve master ip from sentinel via pod ${pod}"
+        echo "failed to resolve master ip from any running pod"
         sleep 10
         continue
       fi

@@ -70,17 +70,6 @@ spec:
             - name: syslog
               containerPort: 5514
               protocol: UDP
-          readinessProbe:
-            tcpSocket:
-              port: 443
-            initialDelaySeconds: 60
-            periodSeconds: 15
-            failureThreshold: 8
-          startupProbe:
-            tcpSocket:
-              port: 443
-            periodSeconds: 15
-            failureThreshold: 40
           securityContext:
             privileged: true
             allowPrivilegeEscalation: true
@@ -109,9 +98,9 @@ spec:
               mountPath: /var/lib/mongodb
             - name: rabbitmq-ssl
               mountPath: /etc/rabbitmq/ssl
+            # UniFi OS runs under systemd and needs writable cgroup access.
             - name: cgroup
               mountPath: /sys/fs/cgroup
-              readOnly: true
       volumes:
         - name: persistent
           persistentVolumeClaim:

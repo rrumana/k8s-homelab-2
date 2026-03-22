@@ -13,25 +13,25 @@ data:
     layout:
       Services:
         style: row
-        columns: 6
+        columns: 5
       Torrenting:
         style: row
         columns: 4
       Networking:
         style: row
-        columns: 3
+        columns: 6
       Storage:
         style: row
-        columns: 3
+        columns: 6
+      Kubernetes:
+        style: row
+        columns: 5
       Hosting:
         style: row
         columns: 3
       Misc:
         style: row
         columns: 3
-      Kubernetes:
-        style: row
-        columns: 5
   custom.css: |
     @media (min-width: 1200px) {
       div:has(> [id^="headlessui-disclosure-panel-"] > ul.services-list > #torrent-calendar) {

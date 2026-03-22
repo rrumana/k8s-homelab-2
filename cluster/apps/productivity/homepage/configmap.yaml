@@ -53,6 +53,10 @@ data:
             href: https://nas.rcrumana.xyz
             siteMonitor: https://nas.rcrumana.xyz
             description: NAS and storage management
+            widget:
+              type: truenas
+              url: https://nas.rcrumana.xyz
+              key: "{{HOMEPAGE_VAR_TRUENAS_KEY}}"
         - Ceph:
             icon: si-ceph-#ef5c55
             href: https://ceph.rcrumana.xyz
@@ -70,16 +74,31 @@ data:
             href: https://router.rcrumana.xyz
             siteMonitor: https://router.rcrumana.xyz
             description: Router and firewall
+            widget:
+              type: opnsense
+              url: https://router.rcrumana.xyz
+              username: "{{HOMEPAGE_VAR_OPNSENSE_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_OPNSENSE_PASSWORD}}"
         - Headscale:
             icon: si-tailscale-#242424
             href: https://headscale.rcrumana.xyz/web
             siteMonitor: https://headscale.rcrumana.xyz/web
             description: Tailscale control plane
+            widget:
+              type: headscale
+              url: https://headscale.rcrumana.xyz
+              nodeId: "{{HOMEPAGE_VAR_HEADSCALE_NODE_ID}}"
+              key: "{{HOMEPAGE_VAR_HEADSCALE_KEY}}"
         - Unifi-OS:
             icon: si-ubiquiti-#0559c9
             href: https://unifi.rcrumana.xyz
             siteMonitor: https://unifi.rcrumana.xyz
             description: Network controller
+            widget:
+              type: unifi
+              url: https://unifi.rcrumana.xyz
+              username: "{{HOMEPAGE_VAR_UNIFI_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_UNIFI_PASSWORD}}"
 
     - Services:
         - Jellyfin:
@@ -164,6 +183,28 @@ data:
               password: "{{HOMEPAGE_VAR_QBIT_LTS2_PASSWORD}}"
 
     - Indexers:
+        - Calendar:
+            icon: mdi-calendar-month-outline
+            description: Upcoming media
+            widget:
+              type: calendar
+              view: agenda
+              maxEvents: 20
+              showTime: true
+              timezone: America/Los_Angeles
+              integrations:
+                - type: sonarr
+                  service_group: Indexers
+                  service_name: Sonarr
+                  baseUrl: https://sonarr.rcrumana.xyz
+                - type: radarr
+                  service_group: Indexers
+                  service_name: Radarr
+                  baseUrl: https://radarr.rcrumana.xyz
+                - type: lidarr
+                  service_group: Indexers
+                  service_name: Lidarr
+                  baseUrl: https://lidarr.rcrumana.xyz
         - Sonarr:
             icon: sonarr.png
             href: https://sonarr.rcrumana.xyz
@@ -207,11 +248,48 @@ data:
             href: https://argocd.rcrumana.xyz
             siteMonitor: https://argocd.rcrumana.xyz
             description: GitOps control plane
+            widget:
+              type: argocd
+              url: https://argocd.rcrumana.xyz
+              key: "{{HOMEPAGE_VAR_ARGOCD_KEY}}"
         - Uptime Kuma:
             icon: si-uptimekuma-#5cdd8b
             href: https://uptime.rcrumana.xyz
             siteMonitor: https://uptime.rcrumana.xyz
             description: Status and alerting
+        - Balthasar-2:
+            icon: mdi-server
+            description: Node monitoring via Glances
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_PASSWORD}}"
+              version: 4
+              metric: info
+              chart: false
+        - Casper-3:
+            icon: mdi-server
+            description: Node monitoring via Glances
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_CASPER_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_CASPER_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_CASPER_PASSWORD}}"
+              version: 4
+              metric: info
+              chart: false
+        - Melchior-1:
+            icon: mdi-server
+            description: Node monitoring via Glances
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_PASSWORD}}"
+              version: 4
+              metric: info
+              chart: false
 
     - Hosting:
         - Portfolio:

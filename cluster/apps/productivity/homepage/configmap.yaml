@@ -8,6 +8,7 @@ data:
   proxmox.yaml: ""
   settings.yaml: |
     title: Dashboard
+    headerStyle: boxed
     statusStyle: dot
   custom.css: ""
   custom.js: ""
@@ -23,34 +24,41 @@ data:
   services.yaml: |
     - Storage:
         - TrueNAS:
+            icon: si-truenas-#0095d5
             href: https://nas.rcrumana.xyz
             siteMonitor: https://nas.rcrumana.xyz
             description: NAS and storage management
         - Ceph:
+            icon: si-ceph-#ef5c55
             href: https://ceph.rcrumana.xyz
             siteMonitor: https://ceph.rcrumana.xyz
             description: Cluster storage dashboard
         - Minio:
+            icon: si-minio-#c72e49
             href: https://minio.rcrumana.xyz
             siteMonitor: https://minio.rcrumana.xyz
             description: Object storage console
 
     - Networking:
         - Opnsense:
+            icon: si-opnsense-#d94f00
             href: https://router.rcrumana.xyz
             siteMonitor: https://router.rcrumana.xyz
             description: Router and firewall
         - Headscale:
+            icon: si-tailscale-#242424
             href: https://headscale.rcrumana.xyz/web
             siteMonitor: https://headscale.rcrumana.xyz/web
             description: Tailscale control plane
         - Unifi-OS:
+            icon: si-ubiquiti-#0559c9
             href: https://unifi.rcrumana.xyz
             siteMonitor: https://unifi.rcrumana.xyz
             description: Network controller
 
     - Services:
         - Jellyfin:
+            icon: si-jellyfin-#aa5cc3
             href: https://jellyfin.rcrumana.xyz
             siteMonitor: https://jellyfin.rcrumana.xyz
             description: Media streaming
@@ -59,6 +67,7 @@ data:
               url: http://jellyfin.media.svc.cluster.local:8096
               key: "{{HOMEPAGE_VAR_JELLYFIN_KEY}}"
         - Immich:
+            icon: si-immich-#4250af
             href: https://immich.rcrumana.xyz
             siteMonitor: https://immich.rcrumana.xyz
             description: Photos and memories
@@ -68,6 +77,7 @@ data:
               key: "{{HOMEPAGE_VAR_IMMICH_KEY}}"
               version: 2
         - Nextcloud:
+            icon: si-nextcloud-#0082c9
             href: https://nextcloud.rcrumana.xyz
             siteMonitor: https://nextcloud.rcrumana.xyz
             description: Files and collaboration
@@ -77,14 +87,17 @@ data:
               username: "{{HOMEPAGE_VAR_NEXTCLOUD_USERNAME}}"
               password: "{{HOMEPAGE_VAR_NEXTCLOUD_PASSWORD}}"
         - Vaultwarden:
+            icon: si-bitwarden-#175ddc
             href: https://vault.rcrumana.xyz
             siteMonitor: https://vault.rcrumana.xyz
             description: Password vault
         - AI:
+            icon: mdi-robot-excited-outline
             href: https://chat.rcrumana.xyz
             siteMonitor: https://chat.rcrumana.xyz
             description: LibreChat instance
         - Jellyseerr:
+            icon: si-jellyseerr-#ed4e7a
             href: https://jellyseerr.rcrumana.xyz
             siteMonitor: https://jellyseerr.rcrumana.xyz
             description: Request management
@@ -95,6 +108,7 @@ data:
 
     - Torrenting:
         - Qbit:
+            icon: si-qbittorrent-#2f67ba
             href: https://qbit.rcrumana.xyz
             siteMonitor: https://qbit.rcrumana.xyz
             description: Main torrent client
@@ -104,6 +118,7 @@ data:
               username: "{{HOMEPAGE_VAR_QBIT_USERNAME}}"
               password: "{{HOMEPAGE_VAR_QBIT_PASSWORD}}"
         - Qbit-lts:
+            icon: si-qbittorrent-#5a7bbd
             href: https://qbit-lts.rcrumana.xyz
             siteMonitor: https://qbit-lts.rcrumana.xyz
             description: Long-term seed client
@@ -113,6 +128,7 @@ data:
               username: "{{HOMEPAGE_VAR_QBIT_LTS_USERNAME}}"
               password: "{{HOMEPAGE_VAR_QBIT_LTS_PASSWORD}}"
         - Qbit-lts2:
+            icon: si-qbittorrent-#7d91c8
             href: https://qbit-lts2.rcrumana.xyz
             siteMonitor: https://qbit-lts2.rcrumana.xyz
             description: Secondary long-term seed client
@@ -122,6 +138,7 @@ data:
               username: "{{HOMEPAGE_VAR_QBIT_LTS2_USERNAME}}"
               password: "{{HOMEPAGE_VAR_QBIT_LTS2_PASSWORD}}"
         - Sonarr:
+            icon: sonarr.png
             href: https://sonarr.rcrumana.xyz
             siteMonitor: https://sonarr.rcrumana.xyz
             description: TV automation
@@ -130,6 +147,7 @@ data:
               url: http://sonarr.media.svc.cluster.local
               key: "{{HOMEPAGE_VAR_SONARR_KEY}}"
         - Radarr:
+            icon: radarr.png
             href: https://radarr.rcrumana.xyz
             siteMonitor: https://radarr.rcrumana.xyz
             description: Movie automation
@@ -138,6 +156,7 @@ data:
               url: http://radarr.media.svc.cluster.local
               key: "{{HOMEPAGE_VAR_RADARR_KEY}}"
         - Lidarr:
+            icon: lidarr.png
             href: https://lidarr.rcrumana.xyz
             siteMonitor: https://lidarr.rcrumana.xyz
             description: Music automation
@@ -146,6 +165,7 @@ data:
               url: http://lidarr.media.svc.cluster.local
               key: "{{HOMEPAGE_VAR_LIDARR_KEY}}"
         - Prowlarr:
+            icon: prowlarr.png
             href: https://prowlarr.rcrumana.xyz
             siteMonitor: https://prowlarr.rcrumana.xyz
             description: Indexer management
@@ -156,30 +176,40 @@ data:
 
     - Kubernetes:
         - Argo CD:
+            icon: si-argo-#ef7b4d
             href: https://argocd.rcrumana.xyz
             siteMonitor: https://argocd.rcrumana.xyz
             description: GitOps control plane
         - Uptime Kuma:
+            icon: si-uptimekuma-#5cdd8b
             href: https://uptime.rcrumana.xyz
             siteMonitor: https://uptime.rcrumana.xyz
             description: Status and alerting
 
     - Hosting:
         - Portfolio:
+            icon: mdi-web
             href: https://rcrumana.xyz
             siteMonitor: https://rcrumana.xyz
             description: Primary site
         - Portfolio Staging:
+            icon: mdi-flask-outline
             href: https://staging.rcrumana.xyz
             siteMonitor: https://staging.rcrumana.xyz
             description: Staging site
 
     - Misc:
         - Hypermind:
+            icon: mdi-brain
             href: https://hypermind.rcrumana.xyz
             siteMonitor: https://hypermind.rcrumana.xyz
             description: Shared room and map
   widgets.yaml: |
+    - openmeteo:
+        units: imperial
+        cache: 5
+        format:
+          maximumFractionDigits: 0
     - kubernetes:
         cluster:
           show: true

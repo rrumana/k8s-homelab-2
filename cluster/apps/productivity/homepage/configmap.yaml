@@ -270,7 +270,7 @@ data:
               password: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_PASSWORD}}"
               version: 4
               metric: process
-              chart: false
+              chart: true
         - Balthasar-2 CPU:
             icon: mdi-meter-electric-outline
             description: CPU usage

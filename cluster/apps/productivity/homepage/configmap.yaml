@@ -13,7 +13,7 @@ data:
     layout:
       Services:
         style: row
-        columns: 3
+        columns: 6
       Torrenting:
         style: row
         columns: 3
@@ -34,18 +34,10 @@ data:
         columns: 3
       Kubernetes:
         style: row
-        columns: 3
+        columns: 4
   custom.css: ""
   custom.js: ""
-  bookmarks.yaml: |
-    - Cluster:
-        - GitOps Repo:
-            - abbr: GIT
-              href: https://github.com/rrumana/k8s-homelab-2
-    - Portfolio:
-        - Portfolio Repo:
-            - abbr: GIT
-              href: https://github.com/rrumana/portfolio
+  bookmarks.yaml: ""
   services.yaml: |
     - Storage:
         - TrueNAS:
@@ -271,6 +263,17 @@ data:
               version: 4
               metric: process
               chart: true
+        - Melchior-1 Network:
+            icon: mdi-network
+            description: Network traffic
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_PASSWORD}}"
+              version: 4
+              metric: network
+              chart: true
         - Balthasar-2 CPU:
             icon: mdi-meter-electric-outline
             description: CPU usage
@@ -304,6 +307,17 @@ data:
               version: 4
               metric: process
               chart: true
+        - Balthasar-2 Network:
+            icon: mdi-network
+            description: Network traffic
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_PASSWORD}}"
+              version: 4
+              metric: network
+              chart: true
         - Casper-3 CPU:
             icon: mdi-meter-electric-outline
             description: CPU usage
@@ -336,6 +350,17 @@ data:
               password: "{{HOMEPAGE_VAR_GLANCES_CASPER_PASSWORD}}"
               version: 4
               metric: process
+              chart: true
+        - Casper-3 Network:
+            icon: mdi-network
+            description: Network traffic
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_CASPER_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_CASPER_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_CASPER_PASSWORD}}"
+              version: 4
+              metric: network
               chart: true
 
     - Hosting:

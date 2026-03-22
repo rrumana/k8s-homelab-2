@@ -5,6 +5,7 @@ metadata:
 data:
   kubernetes.yaml: |
     mode: cluster
+  proxmox.yaml: ""
   settings.yaml: |
     title: Dashboard
   custom.css: ""

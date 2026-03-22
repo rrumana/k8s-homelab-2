@@ -132,16 +132,6 @@ data:
             href: https://chat.rcrumana.xyz
             siteMonitor: https://chat.rcrumana.xyz
             description: LibreChat instance
-        - Jellyseerr:
-            icon: si-jellyseerr-#ed4e7a
-            href: https://jellyseerr.rcrumana.xyz
-            siteMonitor: https://jellyseerr.rcrumana.xyz
-            description: Request management
-            widget:
-              type: seerr
-              url: http://jellyseerr.media.svc.cluster.local
-              key: "{{HOMEPAGE_VAR_JELLYSEERR_KEY}}"
-
     - Torrenting:
         - Calendar:
             icon: mdi-calendar-month-outline
@@ -154,15 +144,15 @@ data:
               timezone: America/Los_Angeles
               integrations:
                 - type: sonarr
-                  service_group: Indexers
+                  service_group: Torrenting
                   service_name: Sonarr
                   baseUrl: https://sonarr.rcrumana.xyz
                 - type: radarr
-                  service_group: Indexers
+                  service_group: Torrenting
                   service_name: Radarr
                   baseUrl: https://radarr.rcrumana.xyz
                 - type: lidarr
-                  service_group: Indexers
+                  service_group: Torrenting
                   service_name: Lidarr
                   baseUrl: https://lidarr.rcrumana.xyz
         - Qbit:
@@ -222,6 +212,24 @@ data:
               type: lidarr
               url: http://lidarr.media.svc.cluster.local
               key: "{{HOMEPAGE_VAR_LIDARR_KEY}}"
+        - Prowlarr:
+            icon: prowlarr.png
+            href: https://prowlarr.rcrumana.xyz
+            siteMonitor: https://prowlarr.rcrumana.xyz
+            description: Indexer management
+            widget:
+              type: prowlarr
+              url: http://prowlarr.media.svc.cluster.local
+              key: "{{HOMEPAGE_VAR_PROWLARR_KEY}}"
+        - Jellyseerr:
+            icon: si-jellyseerr-#ed4e7a
+            href: https://jellyseerr.rcrumana.xyz
+            siteMonitor: https://jellyseerr.rcrumana.xyz
+            description: Request management
+            widget:
+              type: seerr
+              url: http://jellyseerr.media.svc.cluster.local
+              key: "{{HOMEPAGE_VAR_JELLYSEERR_KEY}}"
 
     - Kubernetes:
         - Melchior-1 CPU:

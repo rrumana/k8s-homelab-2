@@ -37,28 +37,25 @@ data:
       .services-list:has(#torrent-calendar) {
         display: grid !important;
         grid-template-columns: 1.1fr repeat(3, minmax(0, 1fr)) !important;
-        grid-auto-rows: minmax(180px, auto);
         gap: 0.75rem !important;
-        align-items: stretch;
+        align-items: start;
       }
 
       .services-list:has(#torrent-calendar) > .service {
         grid-column: auto !important;
         grid-row: auto !important;
         min-width: 0;
-      }
-
-      .services-list:has(#torrent-calendar) > .service > div {
-        height: 100%;
+        align-self: start;
       }
 
       .services-list:has(#torrent-calendar) > #torrent-calendar {
         grid-column: 1;
         grid-row: 1 / span 3;
+        align-self: stretch;
       }
 
       .services-list:has(#torrent-calendar) > #torrent-calendar > div {
-        min-height: 100%;
+        height: 100%;
       }
 
       .services-list:has(#torrent-calendar) > #torrent-qbit {

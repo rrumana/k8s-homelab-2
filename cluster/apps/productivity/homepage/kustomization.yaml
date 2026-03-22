@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: productivity
 
 resources:
+  - externalsecret.yaml
   - serviceaccount.yaml
   - clusterrole.yaml
   - clusterrolebinding.yaml

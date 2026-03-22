@@ -33,6 +33,9 @@ spec:
               app: homepage
       containers:
         - name: homepage
+          envFrom:
+            - secretRef:
+                name: homepage-widget-secrets
           image: ghcr.io/gethomepage/homepage:v1.11.0
           imagePullPolicy: IfNotPresent
           securityContext:

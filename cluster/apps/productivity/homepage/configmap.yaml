@@ -13,10 +13,10 @@ data:
     layout:
       Services:
         style: row
-        columns: 6
+        columns: 3
       Torrenting:
         style: row
-        columns: 6
+        columns: 3
       Networking:
         style: row
         columns: 3
@@ -31,7 +31,7 @@ data:
         columns: 3
       Kubernetes:
         style: row
-        columns: 6
+        columns: 3
   custom.css: ""
   custom.js: ""
   bookmarks.yaml: |

@@ -34,7 +34,7 @@ data:
         columns: 3
       Kubernetes:
         style: row
-        columns: 4
+        columns: 5
   custom.css: ""
   custom.js: ""
   bookmarks.yaml: |
@@ -280,7 +280,18 @@ data:
               username: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_USERNAME}}"
               password: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_PASSWORD}}"
               version: 4
-              metric: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_NETWORK_METRIC}}"
+              metric: network:enp196s0
+              chart: true
+        - Melchior-1 Network 2:
+            icon: mdi-network-outline
+            description: Network traffic
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_PASSWORD}}"
+              version: 4
+              metric: network:enp197s0
               chart: true
         - Balthasar-2 CPU:
             icon: mdi-meter-electric-outline
@@ -324,7 +335,18 @@ data:
               username: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_USERNAME}}"
               password: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_PASSWORD}}"
               version: 4
-              metric: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_NETWORK_METRIC}}"
+              metric: network:enp196s0
+              chart: true
+        - Balthasar-2 Network 2:
+            icon: mdi-network-outline
+            description: Network traffic
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_PASSWORD}}"
+              version: 4
+              metric: network:enp197s0
               chart: true
         - Casper-3 CPU:
             icon: mdi-meter-electric-outline
@@ -368,7 +390,18 @@ data:
               username: "{{HOMEPAGE_VAR_GLANCES_CASPER_USERNAME}}"
               password: "{{HOMEPAGE_VAR_GLANCES_CASPER_PASSWORD}}"
               version: 4
-              metric: "{{HOMEPAGE_VAR_GLANCES_CASPER_NETWORK_METRIC}}"
+              metric: network:enp196s0
+              chart: true
+        - Casper-3 Network 2:
+            icon: mdi-network-outline
+            description: Network traffic
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_CASPER_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_CASPER_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_CASPER_PASSWORD}}"
+              version: 4
+              metric: network:enp197s0
               chart: true
 
     - Hosting:

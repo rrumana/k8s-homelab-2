@@ -34,68 +34,70 @@ data:
         columns: 5
   custom.css: |
     @media (min-width: 1200px) {
-      .services-list:has(#torrent-calendar) {
+      div:has(> [id^="headlessui-disclosure-panel-"] > ul.services-list > #torrent-calendar) {
+        grid-column: span 2 / span 2 !important;
+      }
+
+      [id^="headlessui-disclosure-panel-"]:has(> ul.services-list > #torrent-calendar) {
+        overflow: visible !important;
+      }
+
+      ul.services-list:has(> #torrent-calendar) {
         display: grid !important;
-        grid-template-columns: 1.1fr repeat(3, minmax(0, 1fr)) !important;
+        grid-template-columns: minmax(220px, 1.2fr) repeat(3, minmax(165px, 1fr)) !important;
+        grid-template-areas:
+          "calendar qbit qbit-lts qbit-lts2"
+          "calendar sonarr radarr lidarr"
+          "calendar jellyseerr prowlarr .";
         gap: 0.75rem !important;
-        align-items: start;
+        align-items: start !important;
       }
 
-      .services-list:has(#torrent-calendar) > .service {
-        grid-column: auto !important;
-        grid-row: auto !important;
+      ul.services-list:has(> #torrent-calendar) > li.service {
         min-width: 0;
-        align-self: start;
+        align-self: start !important;
+        justify-self: stretch !important;
       }
 
-      .services-list:has(#torrent-calendar) > #torrent-calendar {
-        grid-column: 1;
-        grid-row: 1 / span 3;
-        align-self: stretch;
+      ul.services-list:has(> #torrent-calendar) > #torrent-calendar {
+        grid-area: calendar !important;
+        align-self: stretch !important;
       }
 
-      .services-list:has(#torrent-calendar) > #torrent-calendar > div {
+      ul.services-list:has(> #torrent-calendar) > #torrent-calendar > div {
         height: 100%;
       }
 
-      .services-list:has(#torrent-calendar) > #torrent-qbit {
-        grid-column: 2;
-        grid-row: 1;
+      ul.services-list:has(> #torrent-calendar) > #torrent-qbit {
+        grid-area: qbit !important;
       }
 
-      .services-list:has(#torrent-calendar) > #torrent-qbit-lts {
-        grid-column: 3;
-        grid-row: 1;
+      ul.services-list:has(> #torrent-calendar) > #torrent-qbit-lts {
+        grid-area: qbit-lts !important;
       }
 
-      .services-list:has(#torrent-calendar) > #torrent-qbit-lts2 {
-        grid-column: 4;
-        grid-row: 1;
+      ul.services-list:has(> #torrent-calendar) > #torrent-qbit-lts2 {
+        grid-area: qbit-lts2 !important;
       }
 
-      .services-list:has(#torrent-calendar) > #torrent-sonarr {
-        grid-column: 2;
-        grid-row: 2;
+      ul.services-list:has(> #torrent-calendar) > #torrent-sonarr {
+        grid-area: sonarr !important;
       }
 
-      .services-list:has(#torrent-calendar) > #torrent-radarr {
-        grid-column: 3;
-        grid-row: 2;
+      ul.services-list:has(> #torrent-calendar) > #torrent-radarr {
+        grid-area: radarr !important;
       }
 
-      .services-list:has(#torrent-calendar) > #torrent-lidarr {
-        grid-column: 4;
-        grid-row: 2;
+      ul.services-list:has(> #torrent-calendar) > #torrent-lidarr {
+        grid-area: lidarr !important;
       }
 
-      .services-list:has(#torrent-calendar) > #torrent-jellyseerr {
-        grid-column: 2;
-        grid-row: 3;
+      ul.services-list:has(> #torrent-calendar) > #torrent-jellyseerr {
+        grid-area: jellyseerr !important;
       }
 
-      .services-list:has(#torrent-calendar) > #torrent-prowlarr {
-        grid-column: 3;
-        grid-row: 3;
+      ul.services-list:has(> #torrent-calendar) > #torrent-prowlarr {
+        grid-area: prowlarr !important;
       }
     }
   custom.js: ""

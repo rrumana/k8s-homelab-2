@@ -34,66 +34,69 @@ data:
         columns: 5
   custom.css: |
     @media (min-width: 1200px) {
-      .services-list.flex.flex-col:has(#torrent-calendar) {
+      .services-list:has(#torrent-calendar) {
         display: grid !important;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 0.75rem;
+        grid-template-columns: 1.1fr repeat(3, minmax(0, 1fr)) !important;
+        grid-auto-rows: minmax(180px, auto);
+        gap: 0.75rem !important;
         align-items: stretch;
       }
 
-      .services-list.flex.flex-col:has(#torrent-calendar) .service {
+      .services-list:has(#torrent-calendar) > .service {
         grid-column: auto !important;
+        grid-row: auto !important;
+        min-width: 0;
       }
 
-      .services-list.flex.flex-col:has(#torrent-calendar) .service > div {
+      .services-list:has(#torrent-calendar) > .service > div {
         height: 100%;
       }
 
-      .services-list.flex.flex-col:has(#torrent-calendar) .service:has(#torrent-calendar) {
+      .services-list:has(#torrent-calendar) > #torrent-calendar {
         grid-column: 1;
         grid-row: 1 / span 3;
       }
 
-      .services-list.flex.flex-col:has(#torrent-calendar) .service:has(#torrent-calendar) > div {
+      .services-list:has(#torrent-calendar) > #torrent-calendar > div {
         min-height: 100%;
       }
 
-      .services-list.flex.flex-col:has(#torrent-calendar) .service:has(#torrent-qbit) {
+      .services-list:has(#torrent-calendar) > #torrent-qbit {
         grid-column: 2;
         grid-row: 1;
       }
 
-      .services-list.flex.flex-col:has(#torrent-calendar) .service:has(#torrent-qbit-lts) {
+      .services-list:has(#torrent-calendar) > #torrent-qbit-lts {
         grid-column: 3;
         grid-row: 1;
       }
 
-      .services-list.flex.flex-col:has(#torrent-calendar) .service:has(#torrent-qbit-lts2) {
+      .services-list:has(#torrent-calendar) > #torrent-qbit-lts2 {
         grid-column: 4;
         grid-row: 1;
       }
 
-      .services-list.flex.flex-col:has(#torrent-calendar) .service:has(#torrent-sonarr) {
+      .services-list:has(#torrent-calendar) > #torrent-sonarr {
         grid-column: 2;
         grid-row: 2;
       }
 
-      .services-list.flex.flex-col:has(#torrent-calendar) .service:has(#torrent-radarr) {
+      .services-list:has(#torrent-calendar) > #torrent-radarr {
         grid-column: 3;
         grid-row: 2;
       }
 
-      .services-list.flex.flex-col:has(#torrent-calendar) .service:has(#torrent-lidarr) {
+      .services-list:has(#torrent-calendar) > #torrent-lidarr {
         grid-column: 4;
         grid-row: 2;
       }
 
-      .services-list.flex.flex-col:has(#torrent-calendar) .service:has(#torrent-jellyseerr) {
+      .services-list:has(#torrent-calendar) > #torrent-jellyseerr {
         grid-column: 2;
         grid-row: 3;
       }
 
-      .services-list.flex.flex-col:has(#torrent-calendar) .service:has(#torrent-prowlarr) {
+      .services-list:has(#torrent-calendar) > #torrent-prowlarr {
         grid-column: 3;
         grid-row: 3;
       }

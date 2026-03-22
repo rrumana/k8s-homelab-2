@@ -19,10 +19,10 @@ data:
         columns: 4
       Networking:
         style: row
-        columns: 6
+        columns: 3
       Storage:
         style: row
-        columns: 6
+        columns: 3
       Kubernetes:
         style: row
         columns: 5

@@ -10,6 +10,7 @@ data:
     headerStyle: boxed
     statusStyle: dot
     fullWidth: true
+    useEqualHeights: true
     layout:
       Services:
         style: row
@@ -253,30 +254,50 @@ data:
             href: https://sonarr.rcrumana.xyz
             siteMonitor: https://sonarr.rcrumana.xyz
             description: TV automation
+            widget:
+              type: sonarr
+              url: http://sonarr.media.svc.cluster.local
+              key: "{{HOMEPAGE_VAR_SONARR_KEY}}"
         - Radarr:
             id: torrent-radarr
             icon: radarr.png
             href: https://radarr.rcrumana.xyz
             siteMonitor: https://radarr.rcrumana.xyz
             description: Movie automation
+            widget:
+              type: radarr
+              url: http://radarr.media.svc.cluster.local
+              key: "{{HOMEPAGE_VAR_RADARR_KEY}}"
         - Lidarr:
             id: torrent-lidarr
             icon: lidarr.png
             href: https://lidarr.rcrumana.xyz
             siteMonitor: https://lidarr.rcrumana.xyz
             description: Music automation
+            widget:
+              type: lidarr
+              url: http://lidarr.media.svc.cluster.local
+              key: "{{HOMEPAGE_VAR_LIDARR_KEY}}"
         - Prowlarr:
             id: torrent-prowlarr
             icon: prowlarr.png
             href: https://prowlarr.rcrumana.xyz
             siteMonitor: https://prowlarr.rcrumana.xyz
             description: Indexer management
+            widget:
+              type: prowlarr
+              url: http://prowlarr.media.svc.cluster.local
+              key: "{{HOMEPAGE_VAR_PROWLARR_KEY}}"
         - Jellyseerr:
             id: torrent-jellyseerr
             icon: si-jellyseerr-#ed4e7a
             href: https://jellyseerr.rcrumana.xyz
             siteMonitor: https://jellyseerr.rcrumana.xyz
             description: Request management
+            widget:
+              type: seerr
+              url: http://jellyseerr.media.svc.cluster.local
+              key: "{{HOMEPAGE_VAR_JELLYSEERR_KEY}}"
 
     - Kubernetes:
         - Melchior-1 CPU:

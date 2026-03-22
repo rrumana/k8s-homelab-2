@@ -238,16 +238,7 @@ data:
               key: "{{HOMEPAGE_VAR_PROWLARR_KEY}}"
 
     - Kubernetes:
-        - Argo CD:
-            icon: si-argo-#ef7b4d
-            href: https://argocd.rcrumana.xyz
-            siteMonitor: https://argocd.rcrumana.xyz
-            description: GitOps control plane
-            widget:
-              type: argocd
-              url: https://argocd.rcrumana.xyz
-              key: "{{HOMEPAGE_VAR_ARGOCD_KEY}}"
-        - Balthasar-2:
+        - Balthasar-2 Info:
             icon: mdi-server
             description: Node monitoring via Glances
             widget:
@@ -258,7 +249,40 @@ data:
               version: 4
               metric: info
               chart: false
-        - Casper-3:
+        - Balthasar-2 CPU:
+            icon: mdi-meter-electric-outline
+            description: CPU usage
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_PASSWORD}}"
+              version: 4
+              metric: cpu
+              chart: true
+        - Balthasar-2 Memory:
+            icon: mdi-memory
+            description: Memory usage
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_PASSWORD}}"
+              version: 4
+              metric: memory
+              chart: true
+        - Balthasar-2 Processes:
+            icon: mdi-chart-box-outline
+            description: Top processes
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_BALTHASAR_PASSWORD}}"
+              version: 4
+              metric: process
+              chart: false
+        - Casper-3 Info:
             icon: mdi-server
             description: Node monitoring via Glances
             widget:
@@ -269,7 +293,40 @@ data:
               version: 4
               metric: info
               chart: false
-        - Melchior-1:
+        - Casper-3 CPU:
+            icon: mdi-meter-electric-outline
+            description: CPU usage
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_CASPER_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_CASPER_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_CASPER_PASSWORD}}"
+              version: 4
+              metric: cpu
+              chart: true
+        - Casper-3 Memory:
+            icon: mdi-memory
+            description: Memory usage
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_CASPER_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_CASPER_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_CASPER_PASSWORD}}"
+              version: 4
+              metric: memory
+              chart: true
+        - Casper-3 Processes:
+            icon: mdi-chart-box-outline
+            description: Top processes
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_CASPER_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_CASPER_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_CASPER_PASSWORD}}"
+              version: 4
+              metric: process
+              chart: false
+        - Melchior-1 Info:
             icon: mdi-server
             description: Node monitoring via Glances
             widget:
@@ -279,6 +336,39 @@ data:
               password: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_PASSWORD}}"
               version: 4
               metric: info
+              chart: false
+        - Melchior-1 CPU:
+            icon: mdi-meter-electric-outline
+            description: CPU usage
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_PASSWORD}}"
+              version: 4
+              metric: cpu
+              chart: true
+        - Melchior-1 Memory:
+            icon: mdi-memory
+            description: Memory usage
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_PASSWORD}}"
+              version: 4
+              metric: memory
+              chart: true
+        - Melchior-1 Processes:
+            icon: mdi-chart-box-outline
+            description: Top processes
+            widget:
+              type: glances
+              url: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_URL}}"
+              username: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_USERNAME}}"
+              password: "{{HOMEPAGE_VAR_GLANCES_MELCHIOR_PASSWORD}}"
+              version: 4
+              metric: process
               chart: false
 
     - Hosting:
@@ -304,22 +394,19 @@ data:
             href: https://hypermind.rcrumana.xyz
             siteMonitor: https://hypermind.rcrumana.xyz
             description: Shared room and map
+        - Argo CD:
+            icon: si-argo-#ef7b4d
+            href: https://argocd.rcrumana.xyz
+            siteMonitor: https://argocd.rcrumana.xyz
+            description: GitOps control plane
+            widget:
+              type: argocd
+              url: https://argocd.rcrumana.xyz
+              key: "{{HOMEPAGE_VAR_ARGOCD_KEY}}"
   widgets.yaml: |
     - openmeteo:
         units: imperial
         cache: 5
         format:
           maximumFractionDigits: 0
-    - kubernetes:
-        cluster:
-          show: true
-          cpu: true
-          memory: true
-          showLabel: true
-          label: Cluster
-        nodes:
-          show: true
-          cpu: true
-          memory: true
-          showLabel: true
   docker.yaml: ""

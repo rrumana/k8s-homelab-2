@@ -38,6 +38,14 @@ data:
         grid-column: span 2 / span 2 !important;
       }
 
+      div:has(> [id^="headlessui-disclosure-panel-"] > ul.services-list > li[data-name="Opnsense"]) {
+        grid-column: span 1 / span 1 !important;
+      }
+
+      div:has(> [id^="headlessui-disclosure-panel-"] > ul.services-list > li[data-name="TrueNAS"]) {
+        grid-column: span 1 / span 1 !important;
+      }
+
       [id^="headlessui-disclosure-panel-"]:has(> ul.services-list > #torrent-calendar) {
         overflow: visible !important;
       }
@@ -92,12 +100,12 @@ data:
         grid-area: lidarr !important;
       }
 
-      ul.services-list:has(> #torrent-calendar) > #torrent-jellyseerr {
-        grid-area: jellyseerr !important;
-      }
-
       ul.services-list:has(> #torrent-calendar) > #torrent-prowlarr {
         grid-area: prowlarr !important;
+      }
+
+      ul.services-list:has(> #torrent-calendar) > #torrent-jellyseerr {
+        grid-area: jellyseerr !important;
       }
     }
   custom.js: ""

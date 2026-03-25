@@ -113,18 +113,14 @@ database:
     sslmode: disable
 
 redis:
-  type: external
-  external:
-    addr: valkey-cache-primary.databases.svc.cluster.local:6379
-    username: default
-    existingSecret:
-      REDIS_PASSWORD: harbor-redis-secrets
-    coreDatabaseIndex: 0
-    jobserviceDatabaseIndex: 1
-    registryDatabaseIndex: 2
-    trivyAdapterIndex: 5
-    harborDatabaseIndex: 0
-    cacheLayerDatabaseIndex: 0
+  internal:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
 
 exporter:
   replicas: 1

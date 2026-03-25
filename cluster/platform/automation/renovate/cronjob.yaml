@@ -1,0 +1,57 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: renovate
+spec:
+  schedule: "15 9 * * *"
+  timeZone: America/Los_Angeles
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          annotations:
+            linkerd.io/inject: disabled
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: renovate
+              image: ghcr.io/renovatebot/renovate:42.38.1
+              imagePullPolicy: IfNotPresent
+              args:
+                - --config-file=/etc/renovate/config.js
+              env:
+                - name: LOG_LEVEL
+                  value: info
+                - name: RENOVATE_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: renovate-secrets
+                      key: RENOVATE_TOKEN
+                - name: HARBOR_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: renovate-secrets
+                      key: HARBOR_USERNAME
+                - name: HARBOR_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: renovate-secrets
+                      key: HARBOR_PASSWORD
+              resources:
+                requests:
+                  cpu: 250m
+                  memory: 512Mi
+                limits:
+                  cpu: "1"
+                  memory: 1Gi
+              volumeMounts:
+                - name: renovate-config
+                  mountPath: /etc/renovate
+                  readOnly: true
+          volumes:
+            - name: renovate-config
+              configMap:
+                name: renovate-config

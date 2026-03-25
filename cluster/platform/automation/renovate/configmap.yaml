@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: renovate-config
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
+data:
+  config.js: |
+    module.exports = {
+      platform: 'github',
+      endpoint: 'https://api.github.com/',
+      repositories: ['rrumana/k8s-homelab-2'],
+      onboarding: false,
+      requireConfig: 'required',
+      dependencyDashboard: true,
+      hostRules: [
+        {
+          matchHost: 'harbor.rcrumana.xyz',
+          hostType: 'docker',
+          username: process.env.HARBOR_USERNAME,
+          password: process.env.HARBOR_PASSWORD,
+        },
+      ],
+    };

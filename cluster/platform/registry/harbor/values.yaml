@@ -116,7 +116,8 @@ redis:
   type: external
   external:
     addr: valkey-cache-primary.databases.svc.cluster.local:6379
-    existingSecret: harbor-redis-secrets
+    existingSecret:
+      REDIS_PASSWORD: harbor-redis-secrets
     coreDatabaseIndex: 0
     jobserviceDatabaseIndex: 1
     registryDatabaseIndex: 2

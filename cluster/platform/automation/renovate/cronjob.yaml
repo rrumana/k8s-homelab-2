@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: renovate
 spec:
-  schedule: "15 9 * * *"
+  schedule: "15 9 1,15 * *"
   timeZone: America/Los_Angeles
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
@@ -18,7 +18,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: renovate
-              image: ghcr.io/renovatebot/renovate:42.38.1
+              image: ghcr.io/renovatebot/renovate:42.99.0
               imagePullPolicy: IfNotPresent
               env:
                 - name: LOG_LEVEL

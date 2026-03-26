@@ -29,6 +29,8 @@ spec:
             - name: mongodb
               containerPort: 27017
           env:
+            - name: GLIBC_TUNABLES
+              value: glibc.cpu.hwcaps=-SHSTK
             - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:
                 secretKeyRef:

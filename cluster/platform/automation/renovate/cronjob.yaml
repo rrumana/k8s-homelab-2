@@ -18,7 +18,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: renovate
-              image: ghcr.io/renovatebot/renovate:42.99.0
+              image: ghcr.io/renovatebot/renovate:43.91.1
               imagePullPolicy: IfNotPresent
               env:
                 - name: LOG_LEVEL

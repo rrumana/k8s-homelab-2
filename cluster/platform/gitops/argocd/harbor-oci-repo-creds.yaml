@@ -1,0 +1,35 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: harbor-oci-repo-creds
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault
+    kind: ClusterSecretStore
+  target:
+    name: harbor-oci-repo-creds
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      metadata:
+        labels:
+          argocd.argoproj.io/secret-type: repo-creds
+      data:
+        type: helm
+        url: harbor.rcrumana.xyz/thirdparty-charts
+        enableOCI: "true"
+        username: "{{ .username }}"
+        password: "{{ .password }}"
+  data:
+    - secretKey: username
+      remoteRef:
+        key: apps/platform/argocd-harbor-repo-creds
+        property: username
+    - secretKey: password
+      remoteRef:
+        key: apps/platform/argocd-harbor-repo-creds
+        property: password

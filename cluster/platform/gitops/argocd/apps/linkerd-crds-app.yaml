@@ -10,9 +10,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: harbor.rcrumana.xyz
+    repoURL: harbor.rcrumana.xyz/thirdparty-charts
+    chart: linkerd-crds
     targetRevision: "2026.3.3"
-    path: thirdparty-charts/linkerd-crds
     helm:
       releaseName: linkerd-crds
       values: |

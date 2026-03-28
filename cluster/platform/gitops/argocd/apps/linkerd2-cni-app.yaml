@@ -10,9 +10,9 @@ metadata:
 spec:
   project: default
   sources:
-    - repoURL: harbor.rcrumana.xyz
+    - repoURL: harbor.rcrumana.xyz/thirdparty-charts
+      chart: linkerd2-cni
       targetRevision: "2026.3.3"
-      path: thirdparty-charts/linkerd2-cni
       helm:
         releaseName: linkerd2-cni
         valueFiles:

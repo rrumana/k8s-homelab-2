@@ -8,9 +8,9 @@ metadata:
 spec:
   project: default
   sources:
-    - repoURL: harbor.rcrumana.xyz
+    - repoURL: harbor.rcrumana.xyz/thirdparty-charts
+      chart: valkey
       targetRevision: "5.4.9"
-      path: thirdparty-charts/valkey
       helm:
         releaseName: valkey-queue
         valueFiles:

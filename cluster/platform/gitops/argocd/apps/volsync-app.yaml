@@ -10,9 +10,9 @@ spec:
   project: default
 
   sources:
-    - repoURL: harbor.rcrumana.xyz
+    - repoURL: harbor.rcrumana.xyz/thirdparty-charts
+      chart: volsync
       targetRevision: "0.15.0"
-      path: thirdparty-charts/volsync
       helm:
         releaseName: volsync
         valueFiles:

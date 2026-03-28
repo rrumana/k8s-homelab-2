@@ -11,6 +11,8 @@ spec:
   description: "Shared PostgreSQL cluster for productivity apps."
 
   imageName: harbor.rcrumana.xyz/mirror/cloudnative-pg/postgresql:18.1
+  imagePullSecrets:
+    - name: harbor-pull-creds
   instances: 3
   primaryUpdateStrategy: unsupervised
   affinity:

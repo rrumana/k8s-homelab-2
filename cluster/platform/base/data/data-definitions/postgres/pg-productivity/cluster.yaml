@@ -10,7 +10,7 @@ metadata:
 spec:
   description: "Shared PostgreSQL cluster for productivity apps."
 
-  imageName: ghcr.io/cloudnative-pg/postgresql:18.1
+  imageName: harbor.rcrumana.xyz/mirror/cloudnative-pg/postgresql:18.1
   instances: 3
   primaryUpdateStrategy: unsupervised
   affinity:

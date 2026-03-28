@@ -10,6 +10,9 @@
 #
 # See also: `scripts/linkerd/generate-trust-anchor.sh`
 cniEnabled: true
+imagePullSecrets:
+  - name: harbor-pull-creds
+controllerImage: harbor.rcrumana.xyz/mirror/linkerd/controller
 
 # Must be a PEM-encoded certificate bundle.
 # Replace this placeholder before syncing Linkerd.
@@ -29,6 +32,10 @@ identityTrustAnchorsPEM: |
 identity:
   issuer:
     scheme: kubernetes.io/tls
+
+proxy:
+  image:
+    name: harbor.rcrumana.xyz/mirror/linkerd/proxy
 
 controllerReplicas: 3
 

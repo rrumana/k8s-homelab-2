@@ -1,1 +1,6 @@
+image:
+  repository: harbor.rcrumana.xyz/mirror/backube/volsync
+imagePullSecrets:
+  - name: harbor-pull-creds
+
 replicaCount: 1

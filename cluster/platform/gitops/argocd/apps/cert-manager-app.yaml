@@ -9,12 +9,17 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://charts.jetstack.io
-    chart: cert-manager
+    repoURL: oci://harbor.rcrumana.xyz/thirdparty-charts/cert-manager
     targetRevision: "v1.20.0"
+    path: .
     helm:
       values: |
         installCRDs: true
+        global:
+          imagePullSecrets:
+            - name: harbor-pull-creds
+        imageRegistry: harbor.rcrumana.xyz
+        imageNamespace: mirror/jetstack
         replicaCount: 2
         extraArgs:
           - --dns01-recursive-nameservers=1.1.1.1:53,8.8.8.8:53

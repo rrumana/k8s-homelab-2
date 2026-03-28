@@ -10,9 +10,9 @@ metadata:
 spec:
   project: default
   sources:
-    - repoURL: https://helm.linkerd.io/edge
-      chart: linkerd2-cni
+    - repoURL: oci://harbor.rcrumana.xyz/thirdparty-charts/linkerd2-cni
       targetRevision: "2026.3.3"
+      path: .
       helm:
         releaseName: linkerd2-cni
         valueFiles:

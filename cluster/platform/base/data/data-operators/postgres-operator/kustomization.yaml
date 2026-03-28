@@ -3,3 +3,17 @@ kind: Kustomization
 
 resources:
   - https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.27/releases/cnpg-1.27.1.yaml
+
+images:
+  - name: ghcr.io/cloudnative-pg/cloudnative-pg
+    newName: harbor.rcrumana.xyz/mirror/cloudnative-pg/cloudnative-pg
+    newTag: 1.27.1
+
+patches:
+  - target:
+      kind: Deployment
+    patch: |-
+      - op: add
+        path: /spec/template/spec/imagePullSecrets
+        value:
+          - name: harbor-pull-creds

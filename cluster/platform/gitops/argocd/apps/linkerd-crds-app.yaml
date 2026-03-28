@@ -10,9 +10,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://helm.linkerd.io/edge
-    chart: linkerd-crds
+    repoURL: oci://harbor.rcrumana.xyz/thirdparty-charts/linkerd-crds
     targetRevision: "2026.3.3"
+    path: .
     helm:
       releaseName: linkerd-crds
       values: |

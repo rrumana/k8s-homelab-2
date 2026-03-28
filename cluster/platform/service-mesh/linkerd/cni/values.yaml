@@ -1,4 +1,8 @@
 # Linkerd CNI Helm values.
+image:
+  name: harbor.rcrumana.xyz/mirror/linkerd/cni-plugin
+imagePullSecrets:
+  - name: harbor-pull-creds
 privileged: true
 useWaitFlag: true
 

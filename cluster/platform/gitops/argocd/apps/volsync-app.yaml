@@ -10,9 +10,9 @@ spec:
   project: default
 
   sources:
-    - repoURL: https://backube.github.io/helm-charts/
+    - repoURL: oci://harbor.rcrumana.xyz/thirdparty-charts/volsync
       targetRevision: "0.15.0"
-      chart: volsync
+      path: .
       helm:
         releaseName: volsync
         valueFiles:

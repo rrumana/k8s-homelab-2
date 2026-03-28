@@ -10,7 +10,7 @@ metadata:
 spec:
   description: "Shared PostgreSQL cluster for media apps."
 
-  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:18.2
+  imageName: harbor.rcrumana.xyz/mirror/tensorchord/cloudnative-vectorchord:18.2
   instances: 3
   primaryUpdateStrategy: unsupervised
   affinity:

@@ -1,6 +1,10 @@
 # cluster/platform/ingress/haproxy/values.yaml
 controller:
   configMap: haproxy-ingress-config
+  image:
+    repository: harbor.rcrumana.xyz/mirror/jcmoraisjr/haproxy-ingress
+  imageCredentials:
+    existingImagePullSecret: harbor-pull-creds
   extraArgs:
     publish-service: ingress-haproxy/haproxy-ingress
 
@@ -41,6 +45,8 @@ controller:
   logs:
     enabled: true
     level: debug
+    image:
+      repository: harbor.rcrumana.xyz/mirror/crisu1710/kube-syslog-sidecar
 
 defaultBackend:
   enabled: false

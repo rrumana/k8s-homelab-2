@@ -35,10 +35,6 @@ envSecrets:
 rbac:
   enabled: true
 
-serviceAccount:
-  create: false
-  name: homarr-helm
-
 ingress:
   enabled: false
   ingressClassName: haproxy-restricted

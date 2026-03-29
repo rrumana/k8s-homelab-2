@@ -24,6 +24,8 @@ spec:
     count: 2
     allowMultiplePerNode: false
     modules:
+      - name: rook
+        enabled: true
       - name: nfs
         enabled: false
 

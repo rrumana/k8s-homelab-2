@@ -53,7 +53,7 @@ imagePullSecrets:
   - name: harbor-pull-creds
 
 image:
-  repository: nextcloud
+  repository: harbor.rcrumana.xyz/mirror/library/nextcloud
   tag: "33.0.0-apache"
 
 # --- Ingress (managed separately) ---

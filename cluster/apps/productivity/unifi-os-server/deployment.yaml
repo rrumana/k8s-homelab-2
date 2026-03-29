@@ -16,10 +16,11 @@ spec:
       labels:
         app: unifi-os-server
     spec:
+      serviceAccountName: unifi-os-server
       terminationGracePeriodSeconds: 120
       containers:
         - name: unifi-os-server
-          image: ghcr.io/lemker/unifi-os-server:latest
+          image: harbor.rcrumana.xyz/mirror/lemker/unifi-os-server:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: UOS_SYSTEM_IP

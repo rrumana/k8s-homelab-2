@@ -6,8 +6,9 @@ strategyType: RollingUpdate
 
 image:
   repository: harbor.rcrumana.xyz/mirror/homarr-labs/homarr
-  pullSecrets:
-    - name: harbor-pull-creds
+
+imagePullSecrets:
+  - name: harbor-pull-creds
 
 podAnnotations:
   linkerd.io/inject: enabled

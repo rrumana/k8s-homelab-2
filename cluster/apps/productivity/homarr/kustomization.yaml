@@ -5,6 +5,7 @@ namespace: productivity
 
 resources:
   - externalsecret.yaml
+  - serviceaccount.yaml
   - vpa.yaml
 
 commonLabels:

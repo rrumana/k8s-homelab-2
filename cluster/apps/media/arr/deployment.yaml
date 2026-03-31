@@ -91,12 +91,14 @@ spec:
                 rm -f /gluetun/servers.json
               fi
               mkdir -p /temp
-              chown -R 1000:1000 /config /gluetun /temp 2>/dev/null || true
-              chmod -R u+rwX,g+rwX /config /gluetun /temp 2>/dev/null || true
+              mkdir -p /seerr-config/logs
+              chown -R 1000:1000 /config /gluetun /temp /seerr-config 2>/dev/null || true
+              chmod -R u+rwX,g+rwX /config /gluetun /temp /seerr-config 2>/dev/null || true
           volumeMounts:
             - { name: qbit-config, mountPath: /config }
             - { name: gluetun,     mountPath: /gluetun }
             - { name: temp,        mountPath: /temp }
+            - { name: jellyseerr-config, mountPath: /seerr-config }
 
       containers:
         - name: gluetun

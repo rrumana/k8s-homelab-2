@@ -126,7 +126,7 @@ spec:
               mountPath: /models
       containers:
         - name: llama-swap
-          image: harbor.rcrumana.xyz/proxy-ghcr/mostlygeek/llama-swap:v174
+          image: harbor.rcrumana.xyz/mirror/mostlygeek/llama-swap:v174-vulkan
           imagePullPolicy: IfNotPresent
           command:
             - /app/llama-swap

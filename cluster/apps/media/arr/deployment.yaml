@@ -208,10 +208,8 @@ spec:
             limits:   { cpu: "2", memory: "2Gi" }
 
         - name: jellyseerr
-          image: harbor.rcrumana.xyz/proxy-ghcr/fallenbagel/jellyseerr:v2.7.3
+          image: harbor.rcrumana.xyz/mirror/seerr-team/seerr:v3.1.0
           env:
-            - { name: PUID, value: "1000" }
-            - { name: PGID, value: "1000" }
             - { name: TZ,   value: "America/Los_Angeles" }
             - { name: DB_TYPE, value: "postgres" }
             - name: DB_HOST

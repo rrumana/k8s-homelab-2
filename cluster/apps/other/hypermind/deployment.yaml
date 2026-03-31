@@ -22,7 +22,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       containers:
         - name: hypermind
-          image: harbor.rcrumana.xyz/proxy-ghcr/lklynet/hypermind:v1.0.1
+          image: harbor.rcrumana.xyz/mirror/lklynet/hypermind:2026-03-31
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT

@@ -1,8 +1,5 @@
 # Linkerd Viz Helm values.
 #
-# Defaults are fine to start; we'll likely revisit this once
-# kube-prometheus-stack is installed and we decide whether Viz should use its
-# bundled Prometheus or an external one.
 linkerdNamespace: service-mesh
 defaultRegistry: harbor.rcrumana.xyz/mirror/linkerd
 imagePullSecrets:
@@ -14,9 +11,9 @@ namespaceMetadata:
     tag: v0.1.9
 
 prometheus:
-  image:
-    registry: harbor.rcrumana.xyz/mirror/prom
-    tag: v2.55.1
+  enabled: false
+
+prometheusUrl: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
 
 dashboard:
   enforcedHostRegexp: ""

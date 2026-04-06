@@ -71,6 +71,7 @@ Apps -> Ceph PVCs / CNPG / Valkey -> Snapshots + VolSync -> MinIO (external brid
 | Dependency updates | Renovate | Twice-monthly update discovery against GitHub + Harbor |
 | Shared SQL | CloudNativePG | 5 x HA Postgres clusters (`pg-ai`, `pg-media`, `pg-platform`, `pg-productivity`, `pg-other`) |
 | Shared cache / queue | Valkey | `valkey-cache` is replicated and ephemeral; `valkey-queue` is replicated, AOF-backed, and backed up with VolSync |
+| Observability | kube-prometheus-stack + Grafana + OpenSearch + Data Prepper + Fluent Bit | Persistent metrics, Linkerd-aware dashboards, and centralized pod logs in a shared OpenSearch backend |
 | Egress shaping | `egress-qos` DaemonSet | Shapes pods labeled `traffic-tier=bulk-seed` (media torrent workloads) |
 
 ## Storage And Data Durability

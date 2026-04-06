@@ -30,6 +30,10 @@ snapshot.
 | Rook/Ceph | Distributed block and filesystem storage for most persistent workloads. |
 | Snapshot Controller | Enables CSI snapshots for Ceph-backed volumes. |
 | VolSync | Runs scheduled PVC backups to MinIO through snapshot + restic flows. |
+| kube-prometheus-stack | Prometheus Operator stack providing persistent metrics, alerting, node monitoring, and Grafana. |
+| OpenSearch Operator | Manages the shared OpenSearch cluster used for centralized logs and future search workloads. |
+| Data Prepper | Receives cluster log events and writes normalized daily indices into OpenSearch. |
+| Fluent Bit | Node-level log collector that tails pod logs and forwards them to Data Prepper. |
 | metrics-server | Publishes pod and node metrics consumed by autoscaling and ops tooling. |
 | VPA | Produces right-sizing recommendations across the workload set. |
 | descheduler | Periodically evicts pods under policy to improve placement and balance. |
@@ -88,7 +92,7 @@ snapshot.
 - Shared ingress definitions live under `cluster/apps/shared/ingress`.
 - Harbor keeps its own chart-managed ingress instead of using the shared ingress bundle.
 - Active workload namespaces are `ai`, `media`, `productivity`, `other`, and `web`.
-- Active platform namespaces include `argocd`, `cert-manager`, `cnpg-system`, `metallb-system`, `ingress-haproxy`, `service-mesh`, `rook-ceph`, `security`, `backup`, `databases`, `harbor`, `automation`, and `scheduling`.
+- Active platform namespaces include `argocd`, `cert-manager`, `cnpg-system`, `metallb-system`, `ingress-haproxy`, `service-mesh`, `rook-ceph`, `security`, `backup`, `databases`, `harbor`, `automation`, `monitoring`, `search`, and `scheduling`.
 
 ### Cluster networking: Cilium + Hubble
 
@@ -117,6 +121,14 @@ snapshot.
 - Linkerd is installed as coordinated CRD, CNI, control-plane, identity, and viz applications.
 - CNI mode avoids init-container privilege requirements in meshed workloads.
 - Many user-facing apps have Linkerd injection enabled, with opt-out or opaque-port exceptions where needed.
+- Linkerd Viz is configured to use the shared Prometheus instance in `monitoring` rather than its bundled Prometheus.
+
+### Observability
+
+- `kube-prometheus-stack` runs in `monitoring` and provides Prometheus Operator CRDs, Prometheus, Alertmanager, node monitoring, and Grafana.
+- Grafana is exposed through restricted ingress at `grafana.rcrumana.xyz`.
+- The `search` namespace hosts the shared OpenSearch log cluster plus Data Prepper and Fluent Bit.
+- Cluster logs are collected from Kubernetes node log paths by Fluent Bit, forwarded to Data Prepper, and written into daily `logs-*` indices in OpenSearch.
 
 ### Registry and operational helpers
 
@@ -386,13 +398,15 @@ snapshot.
 - `databases`: shared PostgreSQL clusters and Valkey releases.
 - `harbor`: Harbor registry components.
 - `automation`: Renovate CronJob and related secrets.
+- `monitoring`: kube-prometheus-stack, Grafana, and dashboard provisioning.
+- `search`: shared OpenSearch log cluster, Data Prepper, and Fluent Bit.
 - `scheduling`: VPA components and descheduler.
 - `ai`: LibreChat and local LLM services.
 - `media`: ARR stacks, Jellyfin, Plex, and Immich.
 - `productivity`: Nextcloud, Collabora, Homarr, UniFi OS Server, Uptime Kuma, Vaultwarden, Whiteboard, and Elasticsearch.
 - `other`: Headscale, host dashboards, Folding@Home, Hypermind, and external service bridges.
 - `web`: portfolio production and staging.
-- Reserved placeholders declared in repo: `ingress`, `networking`, and `monitoring`.
+- Reserved placeholders declared in repo: `ingress` and `networking`.
 
 ## Appendix A: Ingress routing map
 
@@ -405,6 +419,7 @@ snapshot.
 | `chat.rcrumana.xyz` | `/` | `ai` | `librechat` | `haproxy-restricted` | `librechat:80` |
 | `collabora.rcrumana.xyz` | `/` | `productivity` | `collabora` | `haproxy-restricted` | `collabora:9980` |
 | `desktop.rcrumana.xyz` | `/` | `other` | `desktop-proxy` | `haproxy-restricted` | `desktop-http:7681` |
+| `grafana.rcrumana.xyz` | `/` | `monitoring` | `grafana` | `haproxy-restricted` | `kube-prometheus-stack-grafana:80` |
 | `harbor.rcrumana.xyz` | `/` | `harbor` | `harbor` | `haproxy` | `harbor-portal:80`, plus `harbor-core:80` for API and registry paths |
 | `headscale.rcrumana.xyz` | `/` | `other` | `headscale-api` | `haproxy` | `headscale:80` |
 | `headscale.rcrumana.xyz` | `/web` | `other` | `headscale-ui` | `haproxy-restricted` | `headscale-ui:80` |

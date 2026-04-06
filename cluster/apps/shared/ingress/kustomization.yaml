@@ -8,6 +8,7 @@ resources:
   - ceph-dashboard.yaml
   - collabora.yaml
   - desktop.yaml
+  - grafana.yaml
   - headscale.yaml
   - homarr.yaml
   - hypermind.yaml

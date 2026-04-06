@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: data-prepper-config
+  namespace: search
+data:
+  data-prepper-config.yaml: |
+    ssl: false
+    serverPort: 4900
+    metricRegistries:
+      - Prometheus

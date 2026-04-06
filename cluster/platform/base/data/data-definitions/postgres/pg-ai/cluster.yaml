@@ -49,6 +49,9 @@ spec:
 
   enableSuperuserAccess: true
 
+  monitoring:
+    enablePodMonitor: true
+
   postgresql:
     parameters:
       max_connections: "200"

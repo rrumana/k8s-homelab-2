@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: opensearch-operator
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"
+spec:
+  project: default
+  sources:
+    - repoURL: harbor.rcrumana.xyz/thirdparty-charts
+      chart: opensearch-operator
+      targetRevision: "2.8.0"
+      helm:
+        releaseName: opensearch-operator
+        valueFiles:
+          - $values/cluster/platform/observability/search/operator-values.yaml
+    - repoURL: https://github.com/rrumana/k8s-homelab-2.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: search
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

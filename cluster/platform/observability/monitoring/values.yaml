@@ -1,0 +1,205 @@
+global:
+  imageRegistry: harbor.rcrumana.xyz/mirror
+  imagePullSecrets:
+    - harbor-pull-creds
+
+crds:
+  enabled: true
+
+defaultRules:
+  create: true
+  rules:
+    kubeProxy: false
+
+kubeProxy:
+  enabled: false
+
+kubeEtcd:
+  enabled: false
+
+kubeControllerManager:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+alertmanager:
+  config:
+    global: {}
+    route:
+      receiver: blackhole
+      group_by:
+        - namespace
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 12h
+    receivers:
+      - name: blackhole
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 2Gi
+          storageClassName: ceph-block
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+
+grafana:
+  envFromSecret: opensearch-admin-credentials
+  persistence:
+    enabled: true
+    type: pvc
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+    storageClassName: ceph-block
+  grafana.ini:
+    server:
+      domain: grafana.rcrumana.xyz
+      root_url: https://grafana.rcrumana.xyz
+    auth.anonymous:
+      enabled: false
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      labelValue: "1"
+      searchNamespace: monitoring
+  additionalDataSources:
+    - name: OpenSearch
+      uid: opensearch-logs
+      type: grafana-opensearch-datasource
+      access: proxy
+      url: https://opensearch-logs.search.svc.cluster.local:9200
+      basicAuth: true
+      basicAuthUser: ${OPENSEARCH_USERNAME}
+      database: logs-*
+      jsonData:
+        flavor: Opensearch
+        version: 3.0.0
+        timeField: "@timestamp"
+        maxConcurrentShardRequests: 5
+        pplEnabled: true
+        tlsSkipVerify: true
+        logMessageField: message
+        logLevelField: level
+      secureJsonData:
+        basicAuthPassword: ${OPENSEARCH_PASSWORD}
+      editable: true
+
+prometheusOperator:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+prometheus:
+  prometheusSpec:
+    retention: 30d
+    retentionSize: 90GiB
+    scrapeInterval: 10s
+    evaluationInterval: 10s
+    enableRemoteWriteReceiver: false
+    serviceMonitorSelector: {}
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorNamespaceSelector: {}
+    podMonitorSelector: {}
+    podMonitorSelectorNilUsesHelmValues: false
+    podMonitorNamespaceSelector: {}
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 100Gi
+          storageClassName: ceph-block
+    resources:
+      requests:
+        cpu: 500m
+        memory: 4Gi
+      limits:
+        cpu: "4"
+        memory: 8Gi
+    additionalScrapeConfigs:
+      - job_name: linkerd-controller
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - service-mesh
+        relabel_configs:
+          - source_labels:
+              - __meta_kubernetes_pod_container_port_name
+            action: keep
+            regex: admin-http
+          - source_labels:
+              - __meta_kubernetes_pod_container_name
+            action: replace
+            target_label: component
+      - job_name: linkerd-service-mirror
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels:
+              - __meta_kubernetes_pod_label_component
+              - __meta_kubernetes_pod_container_port_name
+            action: keep
+            regex: linkerd-service-mirror;admin-http$
+          - source_labels:
+              - __meta_kubernetes_pod_container_name
+            action: replace
+            target_label: component
+      - job_name: linkerd-proxy
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels:
+              - __meta_kubernetes_pod_container_name
+              - __meta_kubernetes_pod_container_port_name
+              - __meta_kubernetes_pod_label_linkerd_io_control_plane_ns
+            action: keep
+            regex: ^linkerd-proxy;linkerd-admin;service-mesh$
+          - source_labels:
+              - __meta_kubernetes_namespace
+            action: replace
+            target_label: namespace
+          - source_labels:
+              - __meta_kubernetes_pod_name
+            action: replace
+            target_label: pod
+          - source_labels:
+              - __meta_kubernetes_pod_label_linkerd_io_proxy_job
+            action: replace
+            target_label: k8s_job
+          - action: labeldrop
+            regex: __meta_kubernetes_pod_label_linkerd_io_proxy_job
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_linkerd_io_proxy_(.+)
+          - action: labeldrop
+            regex: __meta_kubernetes_pod_label_linkerd_io_proxy_(.+)
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_linkerd_io_(.+)
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_(.+)
+            replacement: __tmp_pod_label_$1
+          - action: labelmap
+            regex: __tmp_pod_label_linkerd_io_(.+)
+            replacement: __tmp_pod_label_$1
+          - action: labeldrop
+            regex: __tmp_pod_label_linkerd_io_(.+)
+          - action: labelmap
+            regex: __tmp_pod_label_(.+)

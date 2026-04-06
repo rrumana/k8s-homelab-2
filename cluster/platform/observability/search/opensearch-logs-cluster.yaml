@@ -16,6 +16,8 @@ spec:
     version: "1.36"
   dashboards:
     enable: false
+    replicas: 1
+    version: "3.4.0"
   security:
     tls:
       transport:

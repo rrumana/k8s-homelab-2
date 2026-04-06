@@ -3,9 +3,12 @@ kind: Kustomization
 
 resources:
   - namespaces-app.yaml
+  - monitoring-shared-app.yaml
+  - search-shared-app.yaml
   - kube-prometheus-stack-app.yaml
   - opensearch-operator-app.yaml
   - opensearch-logs-app.yaml
+  - search-monitors-app.yaml
   - kube-system-shared-app.yaml
   - scheduling-shared-app.yaml
   - backup-shared-app.yaml

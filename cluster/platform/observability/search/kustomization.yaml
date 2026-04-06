@@ -4,23 +4,15 @@ kind: Kustomization
 namespace: search
 
 resources:
-  - harbor-pull-creds.yaml
-  - opensearch-admin-credentials.yaml
-  - data-prepper-pipeline-secret.yaml
-  - opensearch-serviceaccount.yaml
   - opensearch-logs-cluster.yaml
   - data-prepper-configmap.yaml
-  - data-prepper-serviceaccount.yaml
   - data-prepper-deployment.yaml
   - data-prepper-service.yaml
-  - data-prepper-servicemonitor.yaml
-  - fluent-bit-serviceaccount.yaml
   - fluent-bit-clusterrole.yaml
   - fluent-bit-clusterrolebinding.yaml
   - fluent-bit-configmap.yaml
   - fluent-bit-daemonset.yaml
   - fluent-bit-service.yaml
-  - fluent-bit-servicemonitor.yaml
 
 commonLabels:
   app.kubernetes.io/part-of: observability-logging

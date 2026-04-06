@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: search
+
+resources:
+  - harbor-pull-creds.yaml
+  - opensearch-admin-credentials.yaml
+  - data-prepper-pipeline-secret.yaml
+  - opensearch-serviceaccount.yaml
+  - data-prepper-serviceaccount.yaml
+  - fluent-bit-serviceaccount.yaml
+
+commonLabels:
+  app.kubernetes.io/part-of: observability-search-shared
+  app.kubernetes.io/managed-by: argocd

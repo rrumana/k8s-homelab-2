@@ -7,6 +7,7 @@ HARBOR_CHARTS_REPO="oci://${HARBOR_HOST}/thirdparty-charts"
 HARBOR_MIRROR_PREFIX="${HARBOR_HOST}/mirror"
 KPS_CHART_VERSION="80.13.3"
 OPENSEARCH_OPERATOR_CHART_VERSION="2.8.0"
+KPS_VALUES_FILE=${KPS_VALUES_FILE:-${REPO_ROOT}/cluster/platform/observability/monitoring/values.yaml}
 
 need_cmd() {
   command -v "$1" >/dev/null 2>&1 || {
@@ -77,7 +78,11 @@ OPENSEARCH_ADMIN_PASSWORD=$(openssl rand -hex 32)
 echo "Seeding kv/apps/search/opensearch-admin in Vault"
 kubectl -n security exec vault-0 -- sh -ec \
   "vault login '$ROOT_TOKEN' >/dev/null && \
-   vault kv patch kv/apps/search/opensearch-admin username=admin password='$OPENSEARCH_ADMIN_PASSWORD'"
+   if vault kv get kv/apps/search/opensearch-admin >/dev/null 2>&1; then \
+     vault kv patch kv/apps/search/opensearch-admin username=admin password='$OPENSEARCH_ADMIN_PASSWORD'; \
+   else \
+     vault kv put kv/apps/search/opensearch-admin username=admin password='$OPENSEARCH_ADMIN_PASSWORD'; \
+   fi"
 
 echo "Logging into Harbor OCI and image registries at ${HARBOR_HOST}"
 helm registry login "$HARBOR_HOST" --username admin --password "$HARBOR_ADMIN_PASSWORD"
@@ -113,11 +118,20 @@ helm push "${WORKDIR}/kube-prometheus-stack-${KPS_CHART_VERSION}.tgz" "$HARBOR_C
 helm push "${WORKDIR}/opensearch-operator-${OPENSEARCH_OPERATOR_CHART_VERSION}.tgz" "$HARBOR_CHARTS_REPO"
 
 echo "Collecting kube-prometheus-stack image list"
-helm template kube-prometheus-stack prometheus-community/kube-prometheus-stack \
-  --version "$KPS_CHART_VERSION" \
-  -f "${REPO_ROOT}/cluster/platform/observability/monitoring/values.yaml" \
-  --set global.imageRegistry= \
-  > "${WORKDIR}/kube-prometheus-stack.yaml"
+KPS_TEMPLATE_ARGS=(
+  kube-prometheus-stack
+  prometheus-community/kube-prometheus-stack
+  --version "$KPS_CHART_VERSION"
+  --set global.imageRegistry=
+)
+
+if [[ -f "$KPS_VALUES_FILE" ]]; then
+  KPS_TEMPLATE_ARGS+=(-f "$KPS_VALUES_FILE")
+else
+  echo "warning: ${KPS_VALUES_FILE} not found; templating kube-prometheus-stack with chart defaults for image discovery" >&2
+fi
+
+helm template "${KPS_TEMPLATE_ARGS[@]}" > "${WORKDIR}/kube-prometheus-stack.yaml"
 
 mapfile -t KPS_IMAGES < <(
   sed -n 's/^[[:space:]]*image:[[:space:]]*//p' "${WORKDIR}/kube-prometheus-stack.yaml" \
@@ -128,7 +142,7 @@ mapfile -t KPS_IMAGES < <(
 
 EXTRA_IMAGES=(
   "docker.io/opensearchproject/opensearch-operator:2.8.0"
-  "gcr.io/kubebuilder/kube-rbac-proxy:v0.15.0"
+  "quay.io/brancz/kube-rbac-proxy:v0.15.0"
   "docker.io/opensearchproject/opensearch:3.4.0"
   "docker.io/library/busybox:1.36"
   "docker.io/opensearchproject/data-prepper:2.13.0"

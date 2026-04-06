@@ -11,6 +11,5 @@ manager:
 
 kubeRbacProxy:
   image:
-    repository: harbor.rcrumana.xyz/mirror/kubebuilder/kube-rbac-proxy
+    repository: harbor.rcrumana.xyz/mirror/brancz/kube-rbac-proxy
     tag: "v0.15.0"
-

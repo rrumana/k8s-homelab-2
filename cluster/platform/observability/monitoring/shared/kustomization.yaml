@@ -4,9 +4,9 @@ kind: Kustomization
 namespace: monitoring
 
 resources:
-  - grafana-dashboard-linkerd.yaml
-  - grafana-dashboard-logging-stack.yaml
+  - harbor-pull-creds.yaml
+  - opensearch-admin-credentials.yaml
 
 commonLabels:
-  app.kubernetes.io/part-of: observability-monitoring
+  app.kubernetes.io/part-of: observability-monitoring-shared
   app.kubernetes.io/managed-by: argocd

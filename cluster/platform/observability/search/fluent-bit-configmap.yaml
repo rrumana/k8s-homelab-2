@@ -33,7 +33,10 @@ data:
         Merge_Log           On
         Merge_Log_Trim      On
         Keep_Log            On
-        Labels              On
+        # Preserve stable pod metadata, but drop raw labels until they are
+        # normalized. Dotted label keys like app.kubernetes.io/name collide
+        # with plain labels such as app when indexed into OpenSearch.
+        Labels              Off
         Annotations         Off
 
     [FILTER]

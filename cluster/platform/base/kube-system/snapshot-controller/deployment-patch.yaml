@@ -10,4 +10,4 @@ spec:
         - name: harbor-pull-creds
       containers:
         - name: snapshot-controller
-          image: harbor.rcrumana.xyz/mirror/sig-storage/snapshot-controller:v8.4.0
+          image: harbor.rcrumana.xyz/mirror/sig-storage/snapshot-controller:v8.5.0

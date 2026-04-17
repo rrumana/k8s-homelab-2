@@ -63,7 +63,7 @@ trivy:
   enabled: true
 
 portal:
-  replicas: 1
+  replicas: 2
   resources:
     requests:
       cpu: 100m
@@ -73,7 +73,7 @@ portal:
       memory: 1Gi
 
 core:
-  replicas: 1
+  replicas: 2
   resources:
     requests:
       cpu: 250m
@@ -94,13 +94,22 @@ jobservice:
 
 registry:
   replicas: 1
-  resources:
-    requests:
-      cpu: 250m
-      memory: 512Mi
-    limits:
-      cpu: "4"
-      memory: 4Gi
+  registry:
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: "4"
+        memory: 4Gi
+  controller:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
 
 database:
   type: external
